@@ -35,6 +35,8 @@ main = (args...) ->
 
 	console.log '500'
 
+	'string literal'
+
 
 	makeObj = (obj) ->
 		f = ->

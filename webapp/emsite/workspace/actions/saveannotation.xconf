@@ -1,0 +1,6 @@
+<page>
+	<path-action name="DataEditModule.saveData">
+		<property name="searchtype">annotation</property>
+	</path-action>
+	<property name="virtual">true</property>
+</page>

@@ -58,6 +58,8 @@ main = function() {
 
   })();
   console.log('500');
+  'string literal';
+
   makeObj = function(obj) {
     var f;
     f = function() {};

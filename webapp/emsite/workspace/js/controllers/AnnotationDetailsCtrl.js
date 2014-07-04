@@ -2,7 +2,7 @@
 
 Workspace.controller('AnnotationDetailsCtrl', [
   '$rootScope', '$scope', '$stateParams', '$timeout', 'annotationService', 'fabricJsService', function($rootScope, $scope, $stateParams, $timeout, annotationService, fabricJsService) {
-    var commentPin, metaUser, timeoutFunc, usefulKeys;
+    var applicationid, commentPin, metaUser, timeoutFunc, usefulKeys;
     $rootScope.$broadcast('navigatedTo', 'Annotations');
     $scope.selectable = false;
     $scope.canSelect = function() {
@@ -19,7 +19,8 @@ Workspace.controller('AnnotationDetailsCtrl', [
     metaUser = {
       type: 'normal',
       name: 'Rob',
-      email: md5('jrchipman1@gmail.com')
+      email: md5('jrchipman1@gmail.com'),
+      id: 1
     };
     $scope.currentUser = metaUser;
     $scope.events = [];
@@ -43,6 +44,7 @@ Workspace.controller('AnnotationDetailsCtrl', [
         id: 103
       }
     ];
+    applicationid = 'emsite/workspace';
     $scope.loadImages = function() {
       var markers;
       markers = {
@@ -66,11 +68,12 @@ Workspace.controller('AnnotationDetailsCtrl', [
           tempArray = [];
           $.each(data.results, function(index, obj) {
             var path;
-            path = "http://localhost:8080/emshare/views/modules/asset/downloads/preview/thumbsmall/" + obj.sourcepath + "/thumb.jpg";
+            path = "/" + applicationid + "/views/modules/asset/downloads/preview/thumbsmall/" + obj.sourcepath + "/thumb.jpg";
             console.log(path);
-            console.log(fabric.util.loadImage(path, function(src) {
+            fabric.util.loadImage(path, function(src) {
+              console.log(new fabric.Image(src));
               return em.unit;
-            }));
+            });
             return em.unit;
           });
           return em.unit;
@@ -81,6 +84,23 @@ Workspace.controller('AnnotationDetailsCtrl', [
         }
       });
       return em.unit;
+    };
+    $scope.exportCanvas = function() {
+      var jsonObject;
+      jsonObject = $scope.fabric.canvas.toJSON();
+      return $.ajax({
+        type: "POST",
+        url: "/" + applicationid + "/actions/saveannotation.html?save=true&field=userid&userid.value=" + $scope.currentUser.id + "&field=json&json.value=" + (JSON.stringify(jsonObject)),
+        async: false,
+        success: function(data) {
+          alert("Not an error");
+          return em.unit;
+        },
+        failure: function(errMsg) {
+          alert(errMsg);
+          return em.unit;
+        }
+      });
     };
     $scope.removeComment = function(annotationid) {
       var which;
@@ -96,13 +116,15 @@ Workspace.controller('AnnotationDetailsCtrl', [
       pin = commentPin();
       $scope.currentAnnotationGroup.push(pin);
       pinnedGroup = new fabric.Group($scope.currentAnnotationGroup);
+      console.log("pingroup: " + (pinnedGroup.getObjects()));
+      console.log("annotationgroup: " + $scope.currentAnnotationGroup);
       _ref = $scope.currentAnnotationGroup;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         obj = _ref[_i];
         $scope.fabric.canvas.remove(obj);
       }
-      pinnedGroup._restoreObjectsState();
       $scope.fabric.canvas.add(pinnedGroup);
+      console.log("canvas: " + ($scope.fabric.canvas.getObjects()));
       annotationSpec = {
         id: $scope.currentCommentIndex++,
         group: pinnedGroup,

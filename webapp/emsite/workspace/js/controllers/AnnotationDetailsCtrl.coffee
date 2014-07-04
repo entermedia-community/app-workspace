@@ -29,6 +29,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		type: 'normal'
 		name: 'Rob'
 		email: md5 'jrchipman1@gmail.com'
+		id: 1
 
 	$scope.currentUser = metaUser
 	$scope.events = []			# events attribute holds information about the unique event
@@ -80,6 +81,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	# $scope.approved = [1..4]	# deprecated? unless property approach more favored in angular vs methods?
 	# $scope.rejected = [1]		# deprecated? maybe not since method method doesn't work?
 	# $scope.images = [1..6]		# deprecated but so is below line since thumb generation is free from EM
+	applicationid = 'emsite/workspace'
 	$scope.loadImages = () ->
 		markers = {
 			"query": [
@@ -104,6 +106,8 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		# since JSON automatically adds the applicationid to the path, it doesn't get thumbs correctly
 		# when my assets are on emshare and my app is on emsite, so I hacked it to work for now
 
+		# catalogid = model
+		# applicationid = frontend
 		$.ajax {
 			type: "POST"
 			url: "/entermedia/services/json/search/data/asset?catalogid=media/catalogs/public"
@@ -115,11 +119,11 @@ Workspace.controller 'AnnotationDetailsCtrl',
 				tempArray = []
 				$.each data.results, (index, obj) ->
 					# this path should be changed according to the specifications above
-					path = "http://localhost:8080/emshare/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg"
+					path = "/#{applicationid}/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg"
 					console.log path
 					# $scope.thumbs.push path
-					console.log fabric.util.loadImage path, (src) ->
-						# $scope.fabric.canvas.add new fabric.Image(src)
+					fabric.util.loadImage path, (src) ->
+						console.log new fabric.Image(src)
 						em.unit
 					em.unit
 				em.unit
@@ -129,6 +133,23 @@ Workspace.controller 'AnnotationDetailsCtrl',
 				em.unit
 			}
 		em.unit
+
+	$scope.exportCanvas = () ->
+		jsonObject = $scope.fabric.canvas.toJSON()
+		$.ajax {
+			type: "POST"
+			url: "/#{applicationid}/actions/saveannotation.html?save=true&field=userid&userid.value=#{$scope.currentUser.id}&field=json&json.value=#{JSON.stringify(jsonObject)}"
+			async: false
+			success: (data) ->
+				alert "Not an error"
+				em.unit
+			,
+			failure: (errMsg) ->
+				alert errMsg
+				em.unit
+			}
+		# annotation table in database
+
 	$scope.removeComment = (annotationid) ->
 		which = _.findWhere $scope.annotations, id: annotationid
 		$scope.fabric.canvas.remove which.group
@@ -138,10 +159,13 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		pin = commentPin()
 		$scope.currentAnnotationGroup.push pin
 		pinnedGroup = new fabric.Group $scope.currentAnnotationGroup
+		console.log "pingroup: #{pinnedGroup.getObjects()}"
+		console.log "annotationgroup: #{$scope.currentAnnotationGroup}"
 		for obj in $scope.currentAnnotationGroup
 			$scope.fabric.canvas.remove obj
-		pinnedGroup._restoreObjectsState()
+		# pinnedGroup._restoreObjectsState()
 		$scope.fabric.canvas.add pinnedGroup
+		console.log "canvas: #{$scope.fabric.canvas.getObjects()}"
 		# self.origX = null
 		# self.origY = null
 		annotationSpec =

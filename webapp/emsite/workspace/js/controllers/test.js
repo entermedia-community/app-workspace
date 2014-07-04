@@ -3,7 +3,7 @@ var main,
   __slice = [].slice;
 
 main = function() {
-  var args, func2, inherit, makeObj, objarray, someClass, someFunc, useless;
+  var args, christ, func2, inherit, makeObj, objarray, recursion, repeat, someClass, someFunc, useless;
   args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
   someFunc = function(func, arg) {
     return func(arg);
@@ -43,6 +43,44 @@ main = function() {
       }
     };
   })(path);
+  repeat = function(str, n) {
+    var res;
+    res = '';
+    while (n > 0) {
+      if (n & 1) {
+        res += str;
+      }
+      n >>>= 1;
+      str += str;
+    }
+    return res;
+  };
+  recursion = function(obj) {
+    var prop, _i, _len;
+    if (obj == null) {
+      obj = {
+        dick: {
+          balls: 2
+        },
+        ass: {
+          hole: 1
+        },
+        head: {
+          face: 1
+        },
+        hair: 'brown'
+      };
+    }
+    for (_i = 0, _len = obj.length; _i < _len; _i++) {
+      prop = obj[_i];
+      if (typeof obj[prop] === "object") {
+        recursion(obj[prop]);
+      } else {
+        console.log(obj[prop]);
+      }
+    }
+    return null;
+  };
   (function(path) {
     return function() {
       return 'f';
@@ -55,6 +93,15 @@ main = function() {
     }
 
     return useless;
+
+  })();
+  christ = (function() {
+
+    function christ(unit) {
+      this.unit = unit != null ? unit : {};
+    }
+
+    return christ;
 
   })();
   console.log('500');

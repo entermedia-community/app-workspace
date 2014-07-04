@@ -24,6 +24,20 @@ main = (args...) ->
 
 		}
 
+	repeat = (str, n) ->
+		res = ''
+		while n > 0
+			res += str if n & 1
+			n >>>= 1
+			str += str
+		res
+
+	recursion = (obj = dick: {balls: 2}, ass: {hole: 1}, head: {face: 1}, hair: 'brown') ->
+		for prop in obj
+			if typeof obj[prop] is "object" then recursion obj[prop] else console.log obj[prop]
+		null
+
+
 	( (path)->
 		() -> 'f'
 	)()
@@ -32,6 +46,8 @@ main = (args...) ->
 		constructor: () ->
 			@unit = {}
 
+	class christ
+		constructor: (@unit={}) ->
 
 	console.log '500'
 
