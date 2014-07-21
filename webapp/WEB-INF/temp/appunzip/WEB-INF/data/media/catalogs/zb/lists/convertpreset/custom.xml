@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <data id="1354916416013" inputtype="document" outputfile="image1024x768.jpg" fileexportformat="${filename}1024x768.jpg" type="imagemagick" guid="imagepreview" onimport="true">Document Large</data>  
+  <data id="1354916491321" inputtype="document" outputfile="image640x480.jpg" fileexportformat="${filename}640x480.jpg" type="imagemagick" guid="imagemedium" onimport="true">Document Medium</data>  
+  <data id="1354916572151" inputtype="document" outputfile="image200x200.jpg" fileexportformat="${filename}200x200.jpg" type="imagemagick" guid="imagethumb" onimport="true">Document Thumbnail</data>  
+  <data id="1354916639627" inputtype="document" outputfile="image110x62cropped.jpg" fileexportformat="${filename}110x62cropped.jpg" type="imagemagick" guid="imagecrop" onimport="true">Small Document Crop</data>  
+  <data id="imagepreviewfpo" inputtype="image" outputfile="image1024x768wm.jpg" fileexportformat="${filename}1024x768-fpo.jpg" type="imagemagick" guid="imagepreviewfpo" ordering="01">Image Large FPO</data>  
+  <data id="0" inputtype="all" type="original" ordering="00">Original Format</data>  
+  <data id="attachments" inputtype="all" type="original" ordering="01">Attachments</data>  
+  <data id="largeimage" inputtype="image" outputfile="image1024x768.jpg" fileexportformat="${filename}1024x768.jpg" type="imagemagick" guid="imagepreview" onimport="true" ordering="02">Image Large</data>  
+  <data id="mediumimage" inputtype="image" outputfile="image640x480.jpg" fileexportformat="${filename}640x480.jpg" type="imagemagick" guid="imagemedium" onimport="true" ordering="03">Image Medium</data>  
+  <data id="thumbimage" inputtype="image" outputfile="image200x200.jpg" fileexportformat="${filename}200x200.jpg" type="imagemagick" guid="imagethumb" onimport="true" ordering="04">Image Thumbnail</data>  
+  <data id="imagecrop" inputtype="image" outputfile="image110x62cropped.jpg" fileexportformat="${filename}110x62cropped.jpg" type="imagemagick" guid="imagecrop" onimport="true" ordering="05">Small Crop</data>  
+  <data id="largedocument" inputtype="document" outputfile="image1024x768.jpg" fileexportformat="${filename}.jpg" type="imagemagick" guid="imagepreview" onimport="true" ordering="04">Document Preview</data>  
+  <data id="mp3audio" inputtype="audio" outputfile="audio.mp3" fileexportformat="${filename}.mp3" type="audio" guid="mp3audio" onimport="true" ordering="06">Mp3 Audio</data>  
+  <data id="previewffmpeg" inputtype="video" outputfile="video.mp4" fileexportformat="${filename}proxy.mp4" type="ffmpeg" guid="ffmpeg480p" onimport="true" ordering="06">Video MP4 Preview</data>  
+  <data id="previewflv" inputtype="video" outputfile="preview.flv" fileexportformat="${filename}.flv" type="ffmpeg" guid="ffmpegpreviewmp4" ordering="07">Video FLV</data>  
+  <data id="2" inputtype="video" outputfile="video720p.avi" fileexportformat="${filename}HQ.avi" type="ffmpeg" guid="ffmpeg720p" ordering="08">Video HQ AVI</data>  
+  <data id="1" inputtype="video" outputfile="video1080p.mp4" fileexportformat="${filename}1080p.mp4" type="ffmpeg" guid="ffmpeg1080p" ordering="09">Video HQ MP4</data>  
+  <data id="previewffmpegthumb" inputtype="video" outputfile="image1024x768.jpg" fileexportformat="${filename}1024x768.jpg" type="ffmpegimage" onimport="true" ordering="10">Video Thumb</data>
+</root>

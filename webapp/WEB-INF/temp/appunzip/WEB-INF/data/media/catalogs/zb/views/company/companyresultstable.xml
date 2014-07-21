@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="id"/>  
+  <property id="name"/>
+  <property id="description"/>  
+  <property id="employees"/>  
+  <property id="facilities"/>  
+  <property id="market"/>  
+  <property id="revenuerange"/> 
+</root>

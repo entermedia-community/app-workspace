@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="email"/>  
+  <property id="workphone"/>  
+  <property id="workphoneextension"/>  
+  <property id="cellphone"/>  
+  <property id="homephone"/>  
+  <property id="fax"/>  
+  <property id="website"/>  
+  <property id="agentid"/>  
+  <property id="agency"/>
+</root>

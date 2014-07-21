@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<distributionchannels> 
+  <distributionchannel id="ebook" name="E-Book">E-Book</distributionchannel>  
+  <distributionchannel id="teachersedition">Teachers' Edition</distributionchannel>  
+  <distributionchannel id="studentedition" name="Student Edition">Student Edition</distributionchannel>
+</distributionchannels>

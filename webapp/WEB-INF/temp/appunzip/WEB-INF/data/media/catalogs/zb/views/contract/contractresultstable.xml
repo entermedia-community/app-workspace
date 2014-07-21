@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="id"/>  
+  <property id="companyname"/>  
+  <property id="market"/>  
+  <property id="xmlcapable"/>  
+  <property id="employees"/>  
+  <property id="offices"/>  
+  <property id="facilities"/>  
+  <property id="yearest"/>  
+  <property id="revenuerange"/>  
+  <property id="contactid"/>  
+  <property id="program"/>  
+  <property id="component"/>  
+  <property id="datesent"/>  
+  <property id="datereceived"/>  
+  <property id="contractthumbnail"/>
+</root>

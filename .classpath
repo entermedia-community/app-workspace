@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_60">
+		<attributes>
+			<attribute name="owner.project.facets" value="java"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/entermedia-server"/>
+	<classpathentry kind="lib" path="lib/compile/websocket-api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/entermedia-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extension-ooffice"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extension-openedit"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/tomcat8"/>
+	<classpathentry kind="output" path="build/classes"/>
 </classpath>

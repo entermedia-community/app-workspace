@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="enabled">true</property>
+  <property name="period">30m</property>
+  <property name="eventname">Push Assets</property>
+</page>

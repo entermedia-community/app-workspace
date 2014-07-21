@@ -1,0 +1,6 @@
+
+<properties prefix="jobtypes" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="jobtype" internalfield="true">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="jobtype">Name</property>
+  <property id="sourcepath">SourcePath</property>
+</properties>

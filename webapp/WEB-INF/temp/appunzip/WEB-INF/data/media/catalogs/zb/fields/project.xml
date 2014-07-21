@@ -1,0 +1,12 @@
+
+<properties prefix="project" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="project" internalfield="true">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="project">Name</property>
+  <property id="sourcepath" searchtype="project">SourcePath</property>
+  <property id="program" index="true" stored="true" editable="true" type="list" viewtype="autocomplete" searchtype="project" internalfield="false" datatype="list">Program</property>
+  <property id="copyright" index="true" stored="true" editable="true" searchtype="project">Copyright</property>
+  <property id="startdate" index="true" stored="true" editable="true" sortable="true" type="date" viewtype="date" searchtype="project" internalfield="false" datatype="date">Start Date</property>
+  <property id="thumbnail" index="true" stored="true" editable="true" viewtype="asset" searchtype="project" internalfield="false">Thumbnail</property>
+  <property id="tags" index="true" stored="true" editable="true" viewtype="tageditor" searchtype="project" internalfield="false">Tags</property>
+  <property id="notes" index="true" stored="true" editable="true" searchtype="project" internalfield="false">Notes</property>
+</properties>

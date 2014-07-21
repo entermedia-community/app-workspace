@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="companyname"/>  
+  <property id="contactid"/>  
+  <property id="description"/>  
+  <property id="employees"/>  
+  <property id="facilities"/>  
+  <property id="id"/>  
+  <property id="market"/>  
+  <property id="offices"/>  
+  <property id="revenuerange"/>  
+  <property id="website"/>  
+  <property id="xmlcapable"/>  
+  <property id="yearest"/>  
+  <property id="name"/> 
+</root>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<levels> 
+  <level id="advanced" name="Advanced">Advanced</level>  
+  <level id="basic" name="Basic">Basic</level>  
+  <level id="intermediate" name="Intermediate">Intermediate</level>
+</levels>

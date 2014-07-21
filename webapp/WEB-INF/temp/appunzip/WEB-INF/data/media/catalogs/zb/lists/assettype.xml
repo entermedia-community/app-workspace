@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<properties> 
+  <assettype id="1336497862888" name="InDesign File" extensions="indd ind .indd"/>  
+  <assettype id="1336498167100" name="MS Office" extensions="doc docx xls xlsx ppt pptx"/>  
+  <assettype id="1336498377282" name="Image" extensions="jpg tif jpeg tiff ai psd raw eps .jpg png .png"/>  
+  <assettype id="1336498509955" name="Audio" extensions="mp3 wav aiff flac m4a"/>  
+  <assettype id="1336498630135" name="Video" extensions="mov mp4 swf mpeg mpeg2 avi mpg flv proj wmv ifo vob"/> 
+</properties>

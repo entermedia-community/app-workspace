@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="thumbnail"/>
+  <property id="id"/>  
+  <property id="salutation"/>  
+  <property id="firstname"/>  
+  <property id="middlename"/>  
+  <property id="lastname"/>  
+  <property id="suffix"/>  
+  <property id="name"/>  
+  <property id="jobtype"/>  
+  <property id="position"/>  
+  <property id="email"/> 
+</root>

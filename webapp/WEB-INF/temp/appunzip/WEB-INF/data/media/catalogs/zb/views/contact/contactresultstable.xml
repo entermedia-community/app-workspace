@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="thumbnail"/>
+  <property id="id"/>  
+  <property id="lastname"/>  
+  <property id="firstname"/>  
+  <property id="jobtype"/>  
+  <property id="companyid"/>  
+  <property id="address1"/>  
+  <property id="address2"/>  
+  <property id="city"/>  
+  <property id="state"/>  
+  <property id="zip"/>  
+  <property id="workphone"/>  
+  <property id="email"/>  
+  <property id="agentid"/> 
+</root>

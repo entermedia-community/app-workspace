@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="thumbnail"/>  
+  <property id="name"/>  
+  <property id="startdate"/> 
+</root>

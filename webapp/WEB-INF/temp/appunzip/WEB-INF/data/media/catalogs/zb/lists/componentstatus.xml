@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<componentstatuss> 
+  <componentstatus id="finished" name="Finished">Finished</componentstatus>  
+  <componentstatus id="pending" name="Pending">Pending</componentstatus>  
+  <componentstatus id="1rapproved" name="1 R Approved">1 R Approved</componentstatus>  
+  <componentstatus id="2rapproved" name="2 R Approved">2 R Approved</componentstatus>
+</componentstatuss>

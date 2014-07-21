@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="id"/>  
+  <property id="contactid"/>  
+  <property id="program"/>  
+  <property id="component"/>  
+  <property id="datesent"/>  
+  <property id="datereceived"/>
+</root>

@@ -1,0 +1,17 @@
+
+<properties prefix="companies" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="company" internalfield="false">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="company">Name</property>
+  <property id="sourcepath" searchtype="company">SourcePath</property>
+  <property id="companyname" index="true" stored="true" editable="true" searchtype="company">CompanyName</property>
+  <property id="description" index="true" stored="true" editable="true" viewtype="html" searchtype="company" internalfield="false">Description</property>
+  <property id="employees" index="true" stored="true" editable="true" searchtype="company">Employees</property>
+  <property id="facilities" index="true" stored="true" editable="true" searchtype="company">Facilities</property>
+  <property id="market" index="true" stored="true" editable="true" searchtype="company">Market</property>
+  <property id="offices" index="true" stored="true" editable="true" searchtype="company">Offices</property>
+  <property id="revenuerange" index="true" stored="true" editable="true" searchtype="company">RevenueRange</property>
+  <property id="website" index="true" stored="true" editable="true" viewtype="url" searchtype="company" internalfield="false">WebSite</property>
+  <property id="xmlcapable" index="true" stored="true" editable="true" sortable="true" type="boolean" viewtype="boolean" searchtype="company" internalfield="false" datatype="boolean">XMLcapable</property>
+  <property id="yearest" index="true" stored="true" editable="true" searchtype="company">YearEst</property>
+  <property id="contactid" index="true" stored="true" editable="true" searchtype="company">ContactID</property>
+</properties>

@@ -1,0 +1,17 @@
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="togglesidebar:  -&gt; true" catalogid="media/catalogs/public" date="2013-11-18 13:40:30 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="viewlibrarysearch:  -&gt; true" catalogid="media/catalogs/public" date="2013-11-18 13:44:06 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="users" details="convert: true true -&gt; , viewmodulesettings:  -&gt; true" catalogid="media/catalogs/public" date="2013-12-11 00:58:52 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="viewassets: true -&gt; " catalogid="media/catalogs/public" date="2014-01-28 16:31:03 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="editadvancedsearch:  -&gt; true" catalogid="media/catalogs/public" date="2014-01-28 16:31:53 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="viewassets:  -&gt; true" catalogid="media/catalogs/public" date="2014-01-28 16:32:10 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="name: Administrators -&gt; Administrators2, viewupload: true -&gt; , viewassets: true -&gt; , vieworders: true -&gt; , viewsettings: true -&gt; " catalogid="media/catalogs/public" date="2014-01-30 13:54:44 -0500" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="viewlibrarysearch:  -&gt; true" catalogid="media/catalogs/public" date="2014-03-12 12:12:47 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="printpreview:  -&gt; true" catalogid="media/catalogs/public" date="2014-03-25 11:50:46 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" details="name:  -&gt; Vendors, profilesearchfilters:  -&gt; hideassettype" catalogid="media/catalogs/public" date="2014-03-25 11:50:51 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="1395762651155" details="viewvoting:  -&gt; true" catalogid="media/catalogs/public" date="2014-03-25 11:50:53 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="embedlinks:  -&gt; true" catalogid="media/catalogs/public" date="2014-04-14 11:03:21 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="administrator" details="viewlibrarysearch:  -&gt; true, quicksearch: false -&gt; " catalogid="media/catalogs/public" date="2014-06-19 10:30:51 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="metadatageneral:  -&gt; true, view:  -&gt; true, viewlibrarysearch:  -&gt; true, viewmetadatageneral:  -&gt; true" catalogid="media/catalogs/public" date="2014-06-19 10:46:35 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="viewhomelink:  -&gt; true" catalogid="media/catalogs/public" date="2014-06-19 10:48:44 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="metadatageneral: true -&gt; " catalogid="media/catalogs/public" date="2014-06-19 10:49:13 -0400" indexed="false"/>
+<event operation="settingsgroup/edit" user="admin" id="guest" details="viewassets: true -&gt; , resultview:  -&gt; gallery" catalogid="media/catalogs/public" date="2014-07-03 13:01:25 +1000" indexed="false"/>

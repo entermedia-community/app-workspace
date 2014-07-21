@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="agentaddress1"/>  
+  <property id="agentaddress2"/>  
+  <property id="agentcellphone"/>  
+  <property id="agentcountry"/>  
+  <property id="agentcity"/>  
+  <property id="agentfax"/>  
+  <property id="agentstate"/>  
+  <property id="agentworkphone"/>  
+  <property id="agentzip"/>  
+  <property id="contactid"/>  
+  <property id="name"/>  
+  <property id="id"/>
+</root>

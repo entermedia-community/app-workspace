@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <data id="program" name="Programs"/>  
+  <data id="project" name="Projects"/>  
+  <property id="library" href="/views/modules/library/index.html" name="Libraries"/>  
+  <data id="package" name="Packages"></data>
+  <data id="contact" name="Contacts"/>  
+  <data id="company" name="Companies"/>  
+  <data id="contract" name="Contracts"/>  
+  <data id="agent" name="Agents"/>  
+  <property id="division" href="/views/modules/division/index.html" name="Divisions"/>  
+  <property id="librarycollection" href="/views/modules/collection/index.html" name="Collections"/>  
+  <property id="asset" href="/views/modules/assets/index.html" name="Assets"/>  
+  <data id="rfp" name="RFPs"/>  
+  <data id="component" name="Components" recordstatus="deleted"/>  
+</root>

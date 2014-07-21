@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="id"/>  
+  <property id="name"/>  
+  <property id="salutation"/>  
+  <property id="firstname"/>  
+  <property id="middlename"/>  
+  <property id="lastname"/>  
+  <property id="suffix"/>  
+  <property id="companyid"/>  
+  <property id="address1"/>  
+  <property id="address2"/>  
+  <property id="city"/>  
+  <property id="state"/>  
+  <property id="zip"/>  
+  <property id="country"/>  
+  <property id="email"/>  
+  <property id="cellphone"/>  
+  <property id="homephone"/>  
+  <property id="workphone"/>  
+  <property id="workphoneextension"/>  
+  <property id="fax"/>  
+  <property id="website"/>
+  <property id="agentid"/>  
+  <property id="position"/>  
+  <property id="type"/> 
+</root>

@@ -1,0 +1,31 @@
+
+<properties prefix="contacts" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" searchtype="contact" internalfield="false">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="contact" internalfield="false" render="${firstname} ${lastname}">Name</property>
+  <property id="sourcepath" searchtype="contact">SourcePath</property>
+  <property id="lastname" index="true" stored="true" editable="true" searchtype="contact">LastName</property>
+  <property id="firstname" index="true" stored="true" editable="true" searchtype="contact">FirstName</property>
+  <property id="middlename" index="true" stored="true" editable="true" searchtype="contact">MiddleName</property>
+  <property id="salutation" index="true" stored="true" editable="true" searchtype="contact">Salutation</property>
+  <property id="suffix" index="true" stored="true" editable="true" searchtype="contact">Suffix</property>
+  <property id="companyid" index="true" stored="true" editable="true" type="list" viewtype="autocomplete" searchtype="contact" internalfield="false" searchcomponent="autocompletefulltext" listid="company" datatype="list">CompanyID</property>
+  <property id="position" index="true" stored="true" editable="true" searchtype="contact">Position</property>
+  <property id="agency" index="true" stored="true" editable="true" searchtype="contact">Agency</property>
+  <property id="address1" index="true" stored="true" editable="true" searchtype="contact">Address1</property>
+  <property id="address2" index="true" stored="true" editable="true" searchtype="contact">Address2</property>
+  <property id="city" index="true" stored="true" editable="true" searchtype="contact">City</property>
+  <property id="state" index="true" stored="true" editable="true" searchtype="contact">State</property>
+  <property id="zip" index="true" stored="true" editable="true" searchtype="contact">Zip</property>
+  <property id="country" index="true" stored="true" editable="true" searchtype="contact">Country</property>
+  <property id="workphone" index="true" stored="true" editable="true" searchtype="contact">WorkPhone</property>
+  <property id="workphoneextension" index="true" stored="true" editable="true" searchtype="contact">WorkPhoneExtension</property>
+  <property id="fax" index="true" stored="true" editable="true" searchtype="contact">Fax</property>
+  <property id="homephone" index="true" stored="true" editable="true" searchtype="contact">HomePhone</property>
+  <property id="cellphone" index="true" stored="true" editable="true" searchtype="contact">CellPhone</property>
+  <property id="email" index="true" stored="true" editable="true" searchtype="contact">Email</property>
+  <property id="website" index="true" stored="true" editable="true" viewtype="url" searchtype="contact" internalfield="false">Website</property>
+  <property id="type" index="true" stored="true" editable="true" searchtype="contact" internalfield="false">Comments</property>
+  <property id="agentid" index="true" stored="true" editable="true" type="list" viewtype="autocomplete" searchtype="contact" internalfield="false" listid="agent" datatype="list">Agent</property>
+  <property id="thumbnail" index="true" stored="true" editable="true" type="list" viewtype="asset" searchtype="contact" internalfield="false" datatype="list">Thumbnail</property>
+  <property id="jobtype" index="true" stored="true" editable="true" type="list" viewtype="multiselect" searchtype="contact" internalfield="false" datatype="list">Job Type</property>
+</properties>

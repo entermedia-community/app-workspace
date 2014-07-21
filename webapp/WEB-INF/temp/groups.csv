@@ -1,0 +1,44 @@
+id	name
+TT	2+2 Program
+JD	Joint Degree Student
+OFRA	OFR Applicant
+OFRR	OFR Recommender
+OFRU	OFR User
+AL	Alumnus
+CC	Company Contact
+EC	Emergency Contact
+FC	Faculty
+FF	Friend/Family
+FP	Faculty Prospect
+GS	Guest
+DP	Doctoral Prospect
+DS	Doctoral Student
+WD	Widow
+DA	Doctoral Applicant
+EA	Exed Ed Applicant
+EP	Exed Ed Prospect
+ES	Exed Ed Participant
+MA	MBA Applicant
+MP	MBA Prospect
+MS	MBA Student
+AP	Author/Publisher
+WKU	Working Knowledge User
+SF	Staff
+CR	Cross Registered Student
+SP	Exec Ed Sponsor
+MR	MBA Referrer
+FE	Faculty Emeritus
+CP	CLER Participant
+WB	Web User
+CMP	CMP Registered User
+RS	Researcher
+NSC	Non Staff Contractor
+DL	Distance Learning Affiliate
+GI	Guest Instructor
+MC	MOC Alumnus
+CPG	CP Guest Admin
+ICC	International Cluster Competitiveness Project
+PT	Partner
+RCR	Recruiter
+CA	Outside Case Records Author
+PSU	Portal Sharepoint User

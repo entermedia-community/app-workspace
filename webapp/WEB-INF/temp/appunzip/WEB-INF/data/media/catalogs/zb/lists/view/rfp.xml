@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<properties> 
+  <property id="rfpadvancedsearch" module="rfp" systemdefined="true" byassettype="false">Advanced Search</property>  
+  <property id="rfpresultstable" module="rfp" systemdefined="true" byassettype="false">Results Table</property>  
+  <property id="rfpbatchedit" module="rfp" systemdefined="true" byassettype="false">Batch Edit</property>  
+  <property id="rfppopupdetail" module="rfp" systemdefined="true" byassettype="false">Popup Details</property>  
+  <property id="rfpheaderdetail" module="rfp" systemdefined="true" byassettype="false">Header Details</property> 
+</properties>

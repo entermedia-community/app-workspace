@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<grades> 
+  <grade id="1" name="1">1</grade>  
+  <grade id="2" name="2">2</grade>  
+  <grade id="3" name="3">3</grade>  
+  <grade id="4" name="4">4</grade>  
+  <grade id="5" name="5">5</grade>  
+  <grade id="6" name="6">6</grade>  
+  <grade id="7" name="7">7</grade>  
+  <grade id="8" name="8">8</grade>
+</grades>

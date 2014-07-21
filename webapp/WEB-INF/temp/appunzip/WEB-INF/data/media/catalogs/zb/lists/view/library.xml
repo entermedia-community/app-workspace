@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<properties> 
+  <property id="libraryadvancedsearch" module="library" systemdefined="true" byassettype="false">Advanced Search</property>  
+  <property id="libraryresultstable" module="library" systemdefined="true" byassettype="false">Results Table</property>  
+  <property id="librarybatchedit" module="library" systemdefined="true" byassettype="false">Batch Edit</property>  
+  <property id="librarypopupdetail" module="library" systemdefined="true" byassettype="false">Popup Details</property>  
+  <property id="libraryheaderdetail" module="library" systemdefined="true" byassettype="false">Header Details</property> 
+</properties>

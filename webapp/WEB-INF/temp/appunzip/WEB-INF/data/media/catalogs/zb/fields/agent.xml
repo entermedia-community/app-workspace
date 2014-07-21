@@ -1,0 +1,17 @@
+
+<properties prefix="agents" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="agent" internalfield="false">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="agent">Name</property>
+  <property id="sourcepath" searchtype="agent">SourcePath</property>
+  <property id="agentaddress1" index="true" stored="true" editable="true" searchtype="agent">AgentAddress1</property>
+  <property id="agentaddress2" index="true" stored="true" editable="true" searchtype="agent">AgentAddress2</property>
+  <property id="agentcellphone" index="true" stored="true" editable="true" searchtype="agent">AgentCellPhone</property>
+  <property id="agentcity" index="true" stored="true" editable="true" searchtype="agent">AgentCity</property>
+  <property id="agentcountry" index="true" stored="true" editable="true" searchtype="agent">AgentCountry</property>
+  <property id="agentfax" index="true" stored="true" editable="true" searchtype="agent">AgentFax</property>
+  <property id="agentname" index="true" stored="true" editable="true" searchtype="agent">AgentName</property>
+  <property id="agentstate" index="true" stored="true" editable="true" searchtype="agent">AgentState</property>
+  <property id="agentworkphone" index="true" stored="true" editable="true" searchtype="agent">AgentWorkPhone</property>
+  <property id="agentzip" index="true" stored="true" editable="true" searchtype="agent">AgentZip</property>
+  <property id="contactid" index="true" stored="true" editable="true" searchtype="agent">ContactID</property>
+</properties>

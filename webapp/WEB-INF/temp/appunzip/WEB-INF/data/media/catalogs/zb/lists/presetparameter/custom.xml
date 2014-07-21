@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <parameter id="mp3audio5" parameterdata="mp3audio" value="false" name="useoriginalmediawhenpossible"/>  
+  <data name="prefwidth" value="prefheight" parameterdata="$id" id="1393596938791"/>  
+  <data name="prefwidth" value="1920" parameterdata="$id" id="1393596954750"/>  
+  <data name="prefwidth" value="1920" parameterdata="1393596958384" id="1393596979335"/>  
+  <data name="prefheight" value="1080" parameterdata="1393596958384" id="1393597003016"/>  
+  <data name="acodec" value="libfaac" parameterdata="1393596958384" id="1393597025074"/>  
+  <data name="vcodec" value="libx264" parameterdata="1393596958384" id="1393597050144"/>  
+  <data name="preset" value="slow" parameterdata="1393596958384" id="1393597055260"></data>
+</root>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="name"/>  
+  <property id="distributionchannel"/>  
+  <property id="componentstatus"/>  
+  <property id="isbn"/>  
+  <property id="grade"/>  
+  <property id="jobnumber"/>  
+  <property id="language"/>  
+  <property id="level"/>  
+  <property id="tags"/> 
+</root>

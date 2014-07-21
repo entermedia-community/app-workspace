@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="enabled">true</property>
+  <property name="delay">50</property>
+  <property name="period">5m</property>
+  <property name="eventname">Publish Assets</property>
+</page>

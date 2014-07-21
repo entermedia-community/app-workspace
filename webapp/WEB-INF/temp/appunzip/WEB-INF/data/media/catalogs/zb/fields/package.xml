@@ -1,0 +1,17 @@
+
+<properties prefix="component" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="component" internalfield="true">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="component">Name</property>
+  <property id="sourcepath" searchtype="component">SourcePath</property>
+  <property id="isbn" index="true" stored="true" editable="true" searchtype="component">ISBN</property>
+  <property id="distributionchannel" index="true" stored="true" editable="true" type="list" viewtype="multiselect" searchtype="component" internalfield="false" datatype="list">Distribution Channel</property>
+  <property id="componentstatus" index="true" stored="true" editable="true" type="list" searchtype="component" internalfield="false" datatype="list">Edit Status</property>
+  <property id="tags" index="true" stored="true" editable="true" viewtype="tageditor" searchtype="component" internalfield="false">Tags</property>
+  <property id="language" index="true" stored="true" editable="true" type="list" viewtype="multiselect" searchtype="component" internalfield="false" datatype="list">Language</property>
+  <property id="level" index="true" stored="true" editable="true" type="list" viewtype="multiselect" searchtype="component" internalfield="false" datatype="list">Level</property>
+  <property id="notes" index="true" stored="true" editable="true" searchtype="component">Notes</property>
+  <property id="grade" index="true" stored="true" editable="true" type="list" viewtype="multiselect" searchtype="component" internalfield="false" datatype="list">Grades</property>
+  <property id="jobnumber" index="true" stored="true" editable="true" searchtype="component">Job Number</property>
+  <property id="folder" index="true" stored="true" editable="true" searchtype="component">Folder</property>
+  <property id="library" index="true" stored="true" editable="true" type="list" viewtype="autocomplete" searchtype="component" internalfield="false" datatype="list">Library</property>
+</properties>

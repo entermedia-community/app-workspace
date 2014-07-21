@@ -1,0 +1,3 @@
+<event operation="libraryroles/edit" user="admin" details="roleid:  -&gt; Users, libraryid:  -&gt; Test_Library_577215" catalogid="media/catalogs/public" date="2014-03-25 11:33:41 -0400" indexed="false"/>
+<event operation="libraryroles/edit" user="admin" details="roleid:  -&gt; Users, libraryid:  -&gt; Test_Library_577215" catalogid="media/catalogs/public" date="2014-03-25 11:48:55 -0400" indexed="false"/>
+<event operation="libraryroles/edit" details="roleid:  -&gt; Anonymous, libraryid:  -&gt; Ford Online Media" catalogid="media/catalogs/public" date="2014-06-19 15:10:38 -0400" indexed="false"/>

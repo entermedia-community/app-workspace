@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="companyname"/>  
+  <property id="market"/>  
+  <property id="xmlcapable"/>  
+  <property id="employees"/>  
+  <property id="offices"/>  
+  <property id="facilities"/>  
+  <property id="yearest"/>  
+  <property id="revenuerange"/>  
+  <property id="website"/>  
+  <property id="id"/>  
+  <property id="program"/>  
+  <property id="component"/>  
+  <property id="componentid"/>  
+  <property id="contactid"/>  
+  <property id="contractamount"/>  
+  <property id="contractortitle"/>  
+  <property id="datereceived"/>  
+  <property id="datesent"/>  
+  <property id="description"/>  
+  <property id="name"/>  
+  <property id="percentage"/>  
+  <property id="program"/>  
+  <property id="programid"/>  
+  <property id="rfpid"/>  
+  <property id="csumpayments"/>  
+  <property id="contractthumbnail"/>
+</root>

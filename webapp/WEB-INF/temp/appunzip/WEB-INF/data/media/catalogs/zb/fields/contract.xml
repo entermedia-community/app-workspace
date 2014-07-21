@@ -1,0 +1,20 @@
+
+<properties prefix="contracts" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="contract" internalfield="false">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="contract">Name</property>
+  <property id="sourcepath" searchtype="contract">SourcePath</property>
+  <property id="contactid" index="true" stored="true" editable="true" type="list" viewtype="autocomplete" searchtype="contract" internalfield="false" datatype="list">ContactID</property>
+  <property id="program" index="true" stored="true" editable="true" searchtype="contract">Program</property>
+  <property id="component" index="true" stored="true" editable="true" searchtype="contract">Component</property>
+  <property id="contractortitle" index="true" stored="true" editable="true" searchtype="contract">ContractorTitle</property>
+  <property id="description" index="true" stored="true" editable="true" searchtype="contract">Description</property>
+  <property id="contractamount" index="true" stored="true" editable="true" searchtype="contract">ContractAmount</property>
+  <property id="percentage" index="true" stored="true" editable="true" searchtype="contract">Percentage</property>
+  <property id="datesent" index="true" stored="true" editable="true" sortable="true" type="date" viewtype="date" searchtype="contract" internalfield="false" datatype="date">DateSent</property>
+  <property id="datereceived" index="true" stored="true" editable="true" sortable="true" type="date" viewtype="date" searchtype="contract" internalfield="false" datatype="date">DateReceived</property>
+  <property id="rfpid" index="true" stored="true" editable="true" searchtype="contract">RFPID</property>
+  <property id="programid" index="true" stored="true" editable="true" searchtype="contract">ProgramID</property>
+  <property id="componentid" index="true" stored="true" editable="true" searchtype="contract">ComponentID</property>
+  <property id="csumpayments" index="true" stored="true" editable="true" searchtype="contract">cSumPayments</property>
+  <property id="contractthumbnail" index="true" stored="true" editable="true" viewtype="asset" searchtype="contract" internalfield="false">Contract Thumbnail</property>
+</properties>

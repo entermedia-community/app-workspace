@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <data id="contractcontract_info" name="Contract Info" module="contract" systemdefined="false" ordering="1396466525270"/>  
+  <data id="companycompany_info" name="Company Info" module="company" systemdefined="false" ordering="1396467678483"/>  
+  <data id="companyrelated_contacts" name="Related Contacts" module="company" ordering="1396467896026" rendertype="table" rendertable="contact" renderexternalid="companyid"/>  
+  <data id="contractrelated_contacts" name="Related Contacts" module="contract" ordering="1396466582767" rendertype="table" rendertable="contact" renderexternalid="companyid" recordstatus="deleted"/>  
+  <data id="agentagent_info" name="Agent Info" module="agent" systemdefined="false" ordering="1396469553693"/>  
+  <data id="agentrelated_contacts" name="Related Contacts" module="agent" ordering="1396469583786" rendertype="table" rendertable="contact" renderexternalid="agentid"/>  
+  <data id="programgeneral" name="General" module="program" systemdefined="false" ordering="1396903394863"/>  
+  <data id="programprojects" name="Projects" module="program" ordering="1396903419525" rendertype="table" rendertable="project" renderexternalid="program"/>  
+  <data id="projectgeneral" name="General" module="project" systemdefined="false" ordering="0"/>  
+  <data id="projectlibraries" name="Libraries" module="project" ordering="1" rendertype="table" rendertable="library" renderexternalid="project"/>  
+  <property id="librarygeneral" module="library" systemdefined="false" byassettype="false" ordering="0">Details</property>  
+  <data id="librarycollection" module="library" systemdefined="false" ordering="2" rendertable="librarycollection" renderexternalid="library">Collections</data>  
+  <data id="componentgeneral" name="General" module="component" systemdefined="false" ordering="1396904542731"/>  
+  <data id="rfpgeneral" name="General" module="rfp" systemdefined="false" ordering="0"/>  
+  <data id="contactgeneral" name="General" module="contact" systemdefined="false" ordering="0"/>  
+  <data id="contactcontact_info" name="Contact Info" module="contact" systemdefined="false" ordering="1"/>  
+  <data id="contactaddress_info" name="Address Info" module="contact" systemdefined="false" ordering="2"/>  
+  <data id="contactcontracts" name="Contracts" module="contact" ordering="3" rendertype="table" rendertable="contract" renderexternalid="contactid"/>  
+  <data id="librarycomponents" name="Packages" module="library" ordering="1" rendertype="table" rendertable="package" renderexternalid="library"/>  
+  <data id="packagegeneral" name="General" module="package" systemdefined="false" ordering="0"/>  
+  <property id="general" module="asset" systemdefined="false" byassettype="true" ordering="0">General</property>  
+  <data id="assetfolder_data" name="Folder Data" module="asset" systemdefined="false" ordering="1"/>  
+  <property id="fileproperties" module="asset" systemdefined="false" byassettype="true" ordering="2">File Properties</property>  
+  <data id="assetrights" name="Rights" module="asset" systemdefined="false" ordering="3"/>
+</root>

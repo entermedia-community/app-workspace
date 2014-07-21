@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="address1"/>  
+  <property id="address2"/>  
+  <property id="city"/>  
+  <property id="state"/>  
+  <property id="zip"/>  
+  <property id="email"/>  
+  <property id="cellphone"/>  
+  <property id="fax"/>  
+  <property id="homephone"/>  
+  <property id="country"/>
+</root>

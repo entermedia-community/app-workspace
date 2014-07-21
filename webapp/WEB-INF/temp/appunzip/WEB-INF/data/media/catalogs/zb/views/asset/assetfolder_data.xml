@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="programfolder"/>  
+  <property id="projectfolder"/>  
+  <property id="libraries"/>  
+  <property id="packagefolder"/>
+</root>

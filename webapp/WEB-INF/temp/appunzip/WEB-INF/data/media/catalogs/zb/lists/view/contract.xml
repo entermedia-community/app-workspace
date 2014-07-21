@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<properties> 
+  <property id="contractadvancedsearch" module="contract" systemdefined="true" byassettype="false">Advanced Search</property>  
+  <property id="contractresultstable" module="contract" systemdefined="true" byassettype="false">Results Table</property>  
+  <property id="contractbatchedit" module="contract" systemdefined="true" byassettype="false">Batch Edit</property>  
+  <property id="contractpopupdetail" module="contract" systemdefined="true" byassettype="false">Popup Details</property>  
+  <property id="contractheaderdetail" module="contract" systemdefined="true" byassettype="false">Header Details</property> 
+</properties>

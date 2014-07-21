@@ -1,0 +1,9 @@
+
+<properties prefix="program" beanname="dataSearcher">
+  <property id="id" index="true" stored="true" editable="true" searchtype="program" internalfield="true">Id</property>
+  <property id="name" index="true" stored="true" editable="true" searchtype="program">Name</property>
+  <property id="sourcepath" searchtype="program">SourcePath</property>
+  <property id="logo" index="true" stored="true" editable="true" viewtype="asset" searchtype="program" internalfield="false">Logo</property>
+  <property id="notes" index="true" stored="true" editable="true" searchtype="program" internalfield="false">Notes</property>
+  <property id="program" index="true" stored="true" editable="true">program</property>
+</properties>

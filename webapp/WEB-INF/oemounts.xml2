@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mounts>
+  <mount path="/WEB-INF/data/media/catalogs/public/generated/users" repositorytype="fileRepository"/>
+  <mount path="/WEB-INF/data/media/catalogs/public/generated/asdf" repositorytype="versionRepository"/>
+  <mount path="/WEB-INF/data/media/catalogs/public/originals/asdf" repositorytype="versionRepository"/>
+  <mount path="/WEB-INF/data/media/catalogs/public/originals/users" repositorytype="versionRepository"/>
+  <mount path="/WEB-INF/data/media/catalogs/public/originals/Sample_Pictures" externalpath="C:\Users\Public\Pictures\Sample_Pictures"/>
+  <mount path="/WEB-INF/data/media/catalogs/public/generated/Sample_Pictures"/>
+</mounts>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="division"/>  
+  <property id="project"/>
+  <property id="thumbnail"/>  
+  <property id="name"/>  
+  <property id="project.thumbnail"/>  
+  <property id="projecttype"/>  
+  <property id="projectstatus"/>  
+  <property id="tags"/>  
+  <property id="grade"/>  
+  <property id="duedate"/>  
+  <property id="notes"/> 
+</root>

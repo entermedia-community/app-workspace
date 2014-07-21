@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<page>
+  <property name="enabled">true</property>
+  <property name="period">1d</property>
+  <property name="eventname">Remove deleted records &gt; 1 day</property>
+</page>

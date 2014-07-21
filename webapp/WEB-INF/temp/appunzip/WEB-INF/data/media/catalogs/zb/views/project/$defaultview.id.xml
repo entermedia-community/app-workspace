@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <property id="name"/>  
+  <property id="copyright"/>  
+  <property id="program"/>  
+  <property id="startdate"/>  
+  <property id="thumbnail"/>
+</root>

@@ -1,0 +1,57 @@
+#set($viewid = $context.getRequestParameter("viewid"))
+#set($viewpath = $context.getRequestParameter("viewpath"))
+#set( $moduleid = $context.findValue("module") )
+#set($searchtype = $context.getRequestParameter("searchtype"))
+#if( !$searchtype)
+	#set( $searchtype = $moduleid)
+#end
+<div id="default-top" class="clearfix" style="margin: -20px 0 20px 0;">
+    #set($module = $searcherManager.getData($catalogid, "module", $moduleid ) )
+
+      <div class="main-info" style="padding-bottom: 20px; margin-top: 20px;">
+      	<div class="primary">
+
+
+#set( $val = $data.thumbnail)
+#set( $foundrow = $mediaarchive.getAsset($val)  )
+
+#set( $click = "$home$apphome/views/modules/asset/editor/viewer/index.html?assetid=$!val&hitssessionid=$!rootid" )
+#set( $type = $mediaarchive.getMediaRenderType($foundrow.fileFormat))
+
+<a href="$click" alt="$foundrow" name="$foundrow.sourcepath" style="text-decoration: none;" id="${detail.id}-preview">
+			$context.putPageValue("cell", $foundrow)
+			$context.putPageValue("hit", $foundrow)
+			
+			$context.putPageValue("showdetails", "false")
+			$context.putPageValue("thumbsize", "crop")
+		   	#set( $sourcepath = $foundrow.sourcePath )
+			$pages.include("${apphome}/components/results/thumbnails/${type}.html", $context)
+			</a> 
+#set( $project = $searcherManager.getData($catalogid,"project",$data.project) )
+#set( $program = $searcherManager.getData($catalogid,"program",$project.program) )
+Library:  <a href="$home$apphome/views/modules/program/edit/edit.html?id=${program.id}&viewid=programgeneral&viewpath=program/programgeneral&hitssessionid=hitsprogrammedia/catalogs/zb&searchtype=program&detailsreadonly=true$preview=true">$program</a>  /
+ <a href="$home$apphome/views/modules/project/edit/edit.html?id=${project.id}&viewid=projectgeneral&viewpath=project/projectgeneral&hitssessionid=hitsprojectmedia/catalogs/zb&searchtype=project&detailsreadonly=true$preview=true">$!project.name</a>
+#if( $data.id )
+ /
+<a href="$home$apphome/views/modules/library/edit/edit.html?id=${data.id}&viewid=librarygeneral&viewpath=library/librarygeneral&searchtype=library&detailsreadonly=true$preview=true">$!data.name</a> 
+#end
+ </div>
+      	
+#if( $data.id )
+	      	#set( $size = $mediaarchive.getSearcher("package").fieldSearch("library",$data.id).size() )
+	      	#if( $size > 0)
+	      	<div class="secondary"><a href="$home$apphome/views/search/search.html?field=package&operation=exact&library.value=$data.id">Packages ( $size )</a></div>
+	      	#else
+	      ##	No assets are associated
+	      	#end
+      	#end
+      </div>       
+          
+</div>
+
+<div class="editholder">
+              <img style="padding-left: 15px;" src="$apphome/theme/images/toggle.png" class="sidetoggle" data-target="left-col">
+
+<a id="editboxlink" class="ir" href="$home$apphome/views/settings/modules/$moduleid/metadata/views/index.html?viewid=${viewid}&viewpath=${viewpath}&assettype=$!type&searchtype=$searchtype">Edit</a>
+
+</div>
