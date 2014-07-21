@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<user enabled="false">
+  <user-name><![CDATA[testuser]]></user-name>
+  <password><![CDATA[DES:rDpdaQNtmOQ47RMMVoR5Tg==]]></password>
+  <creation-date>1237057734887</creation-date>
+  <lastLogined-Time>2013-07-16 11:41:51 -0400</lastLogined-Time>
+  <properties>
+    <property name="enabled" value="false"/>
+    <property name="lastName" value="Mellow"/>
+    <property name="phone" value=""/>
+    <property name="state_province" value=""/>
+    <property name="screenname" value="RachelM"/>
+    <property name="searchtype" value="categories"/>
+    <property name="address1" value=""/>
+    <property name="address2" value=""/>
+    <property name="country" value=""/>
+    <property name="city" value=""/>
+    <property name="email" value=""/>
+    <property name="postal_code" value=""/>
+    <property name="userName" value="testuser"/>
+    <property name="notes" value=""/>
+    <property name="firstName" value="Rachel"/>
+  </properties>
+  <group id="guest"/>
+</user>

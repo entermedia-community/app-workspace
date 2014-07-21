@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<user enabled="true">
+  <user-name><![CDATA[test577215]]></user-name>
+  <password><![CDATA[DES:zCLSpMhF88ojjEhg3JYBOQ==]]></password>
+  <creation-date>1395762581228</creation-date>
+  <lastLogined-Time>2014-03-25 11:49:41 -0400</lastLogined-Time>
+  <properties>
+    <property name="enabled" value="true"/>
+    <property name="lastName" value="User"/>
+    <property name="email" value="test@user.com"/>
+    <property name="userName" value="test577215"/>
+    <property name="notes" value=""/>
+    <property name="firstName" value="Test"/>
+  </properties>
+  <group id="$content.mastergroup"/>
+</user>

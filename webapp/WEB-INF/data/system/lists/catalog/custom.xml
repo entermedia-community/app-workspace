@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root> 
+  <data id="ca/catalog" name="Hippo"/>  
+  <data id="1390495564177"/>  
+  <data id="media/catalogs/photo" name="New Catalog"/>  
+  <data id="media/catalogs/test2" name="Test 2"/>  
+  <data id="media/catalogs/newcatalog" name="XXX"/>  
+  <data id="media/catalogs/newcatalog2" name="New Catalog"/>  
+  <data id="media/catalogs/zb" name="ZB"></data>
+</root>
