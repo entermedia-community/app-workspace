@@ -5,4 +5,7 @@
   <property name="appmodule">asset</property>
   <property name="catalogid">emsite/catalog</property>
   <property name="applicationid">emsite</property>
+  
+  <path-action name="SessionValue.loadSessionVariable" bean="moduleManager" />
+  
 </page>

@@ -10,8 +10,6 @@
 	<cache-mapping url-pattern='*.gif'  expires='1h'/>
   	<cache-mapping url-pattern='*.jpg'       expires='25h'/>
 
-
-
 	<filter>
 		<filter-name>EMFilter</filter-name>
 		<filter-class>com.openedit.servlet.OpenEditFilter</filter-class>
@@ -38,12 +36,28 @@
 	
 	<filter-mapping>
 		<filter-name>EMFilter</filter-name>
-		<url-pattern>/emshare/*</url-pattern>
+		<url-pattern>/entermedia/services/rest/*</url-pattern>
 	</filter-mapping>
-	
+
+	<filter-mapping>
+		<filter-name>EMFilter</filter-name>
+		<url-pattern>/entermedia/services/json/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>EMFilter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>EMFilter</filter-name>
+		<url-pattern>/manager/*</url-pattern>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>EMFilter</filter-name>
 		<url-pattern>/emsite/*</url-pattern>
 	</filter-mapping>
+	
 	
 </web-app>

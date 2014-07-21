@@ -28,6 +28,8 @@ import websocket.echo.EchoEndpoint;
 
 public class ExamplesConfig implements ServerApplicationConfig {
 
+	
+	
     @Override
     public Set<ServerEndpointConfig> getEndpointConfigs(
             Set<Class<? extends Endpoint>> scanned) {
@@ -35,9 +37,13 @@ public class ExamplesConfig implements ServerApplicationConfig {
         Set<ServerEndpointConfig> result = new HashSet<>();
 
         if (scanned.contains(EchoEndpoint.class)) {
-            result.add(ServerEndpointConfig.Builder.create(
+        	
+        	ServerEndpointConfig conf = ServerEndpointConfig.Builder.create(
                     EchoEndpoint.class,
-                    "/websocket/echoProgrammatic").build());
+                    "/entermedia/services/websocket/echoProgrammatic").
+                    configurator(new GetHttpSessionConfigurator()).build();
+        	//conf.setConfigurator
+            result.add(conf);
         }
 
         if (scanned.contains(DrawboardEndpoint.class)) {
