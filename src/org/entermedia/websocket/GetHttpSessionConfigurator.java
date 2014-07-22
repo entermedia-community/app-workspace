@@ -1,4 +1,4 @@
-package websocket;
+package org.entermedia.websocket;
 
 
 import javax.servlet.http.HttpSession;

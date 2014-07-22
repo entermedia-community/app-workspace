@@ -14,13 +14,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package websocket.echo;
+package org.entermedia.websocket.annotation;
 
 import groovy.json.JsonSlurper;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.http.HttpSession;
 import javax.websocket.Endpoint;
@@ -34,10 +36,13 @@ import org.openedit.data.SearcherManager;
 
 import com.openedit.ModuleManager;
 
-public class EchoEndpoint extends Endpoint {
+public class AnnotationServer extends Endpoint {
 
+	 private static final Set<AnnotationConnection> connections =
+	            new CopyOnWriteArraySet<>();
     @Override
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
+    public void onOpen(Session session, EndpointConfig endpointConfig) 
+    {
         RemoteEndpoint.Basic remoteEndpointBasic = session.getBasicRemote();
         
         javax.servlet.http.HttpSession http = (javax.servlet.http.HttpSession)session.getUserProperties().get("javax.servlet.http.HttpSession");
@@ -57,65 +62,10 @@ public class EchoEndpoint extends Endpoint {
         //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
         
         //TODO: Load from spring
-        session.addMessageHandler(new AnnotationServer(searchers,catalogid, collectionid,http,remoteEndpointBasic) );
+        session.addMessageHandler(new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic) );
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
-    protected static class AnnotationServer
-            implements MessageHandler.Partial<String> {
-
-        private final RemoteEndpoint.Basic remoteEndpointBasic;
-        protected SearcherManager fieldSearcherManager;
-        protected String fieldCollectionId;
-        protected String fieldCatalogId;
-        protected HttpSession fieldSession;
-        protected JsonSlurper fieldJSOSlurper;
-        
-        public JsonSlurper getJSOSlurper() {
-			return fieldJSOSlurper;
-		}
-
-		public void setJSOSlurper(JsonSlurper fieldJSOSlurper) {
-			this.fieldJSOSlurper = fieldJSOSlurper;
-		}
-
-		protected AnnotationServer( SearcherManager searchers, String inCatalogId, String collectionid, HttpSession http, RemoteEndpoint.Basic remoteEndpointBasic) 
-        {
-            this.remoteEndpointBasic = remoteEndpointBasic;
-            fieldSearcherManager = searchers;
-            fieldCatalogId = inCatalogId;
-            fieldCollectionId = collectionid;
-            fieldSession = http;
-        }
-
-        @Override
-        public void onMessage(String message, boolean last) {
-        	 if (remoteEndpointBasic != null) {
-        		 return;
-        	 }
-            try 
-            {
-            	Map<String,String> json = (Map<String,String>)getJSOSlurper().parse(new StringReader(message));
-            	String command = json.get("command");
-            	if( "list".equals(command))  //Return all the annotation on this asset
-            	{
-            		JSONObject obj = new JSONObject();
-            		obj.put("stuff","array of annotations");
-                    remoteEndpointBasic.sendText(obj.toJSONString(), last);
-            	}
-            	else if( "save".equals(command))   //Return all the annotation on this asset
-            	{
-            		//see if ID is set
-            		JSONObject obj = new JSONObject();
-            		obj.put("stuff","array of annotations");
-                    remoteEndpointBasic.sendText(obj.toJSONString(), last);
-            	}
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
+}    
 //    private static class EchoMessageHandlerBinary
 //            implements MessageHandler.Partial<ByteBuffer> {
 //
@@ -137,4 +87,4 @@ public class EchoEndpoint extends Endpoint {
 //            }
 //        }
 //    }
-}
+
