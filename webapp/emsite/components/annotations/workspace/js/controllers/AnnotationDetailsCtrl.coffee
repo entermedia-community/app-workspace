@@ -1,12 +1,10 @@
-# working js file is located at AnnotationDetailsCtrl_orig.js
-# this is a buggy CoffeeScript
 Workspace.controller 'AnnotationDetailsCtrl',
-['$rootScope', '$scope', '$stateParams', '$timeout', 'annotationService', 'fabricJsService', 'annotationSocket',
-($rootScope, $scope, $stateParams, $timeout, annotationService, fabricJsService, annotationSocket) ->
+['$rootScope', '$scope', '$stateParams', '$timeout', 'annotationService', 'fabricJsService', 'annotationSocket', 'collectionAssetData'
+($rootScope, $scope, $stateParams, $timeout, annotationService, fabricJsService, annotationSocket, collectionAssetData) ->
 
 	$rootScope.$broadcast 'navigatedTo', 'Annotations'
-	annotationSocket.forward 'updateAnnotationResponse', $scope
-	annotationSocket.forward 'removeAnnotationResponse', $scope
+	# annotationSocket.forward 'updateAnnotationResponse', $scope
+	# annotationSocket.forward 'removeAnnotationResponse', $scope
 	###
 	USER AUTHENTICATION LOGIC
 	###
@@ -22,27 +20,10 @@ Workspace.controller 'AnnotationDetailsCtrl',
 
 	$scope.currentUser = metaUser
 
-	$.getJSON "#{apphome}/services/json/users/status.json", (data) ->
+	$.getJSON '/entermedia/services/json/users/status.json', (data) ->
 			$scope.currentUser = data
 			console.log 'from user auth:', data
 			em.unit
-
-	# $scope.getUser = () ->
-	# 	console.log 'We are actually clicking this button'
-	# 	# console.log $.getJSON '/entermedia/services/json/users/status.json', (data) ->
-	# 	# 	alert data
-	# 	$.ajax {
-	# 		type: "GET"
-	# 		url: '/entermedia/services/json/users/status.json'
-	# 		success: (data) ->
-	# 			alert data
-	# 			em.unit
-	# 		,
-	# 		failure: (errMsg) ->
-	# 			alert errMsg
-	# 			em.unit
-	# 	}
-	# 	em.unit
 
 	###
 	/ USER AUTHENTICATION LOGIC
@@ -70,17 +51,29 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		em.unit
 
 
-	$scope.currentAnnotation = _.find annotationService.mockData,
-	(item) ->
-		item.annotation.id is parseInt $stateParams.annotationID
+	# $scope.currentAnnotation = _.find annotationService.mockData,
+	# (item) ->
+	# 	item.annotation.id is parseInt $stateParams.annotationID
+	$scope.currentAnnotation = _.find collectionAssetData.assetData, (item) ->
+		item.annotation.id is $stateParams.annotationID
 	# uses init function to create the fabric environment
-	$scope.fabric = fabricJsService.init $scope.currentAnnotation.annotation.path
+	$scope.fabric = fabricJsService.init "#{apphome}/views/modules/asset/downloads/preview/large/#{$scope.currentAnnotation.annotation.sourcepath}/image.jpg"
 
 	if fromExistingState # TODO: remove
 		$.getJSON "#{apphome}/components/annotations/json/dummyAnnotationData.json", (data) ->
 			for annotation in data
 				$scope.pushAnnotation annotation
-		
+	
+	###
+	instead of dummy state we must actually check the database
+	for annotations on this asset before proceeding, and update the
+	application state if necessary
+	TODO: turn annotationService into a real anotation service instead of dummy object service
+	TODO: wire up websocket connection code into factory and make connection available to angular
+	TODO: remove/rewrite sloppy JSON stuff to act more like a sensible API
+
+	###
+
 
 	###
 	/ INITIALIZE CANVAS
@@ -101,7 +94,8 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	$scope.annotationAction = null
 	$scope.currentAnnotationGroup = []
 	$scope.currentAnnotationGroupId = 0
-	$scope.thumbs = []
+	$scope.currentAssetId = 0
+	$scope.images = collectionAssetData.images
 
 
 	###
@@ -281,75 +275,55 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	/ FABRIC TOOLS SETUP
 	###
 
-
-	$scope.testSocket = () ->
-		# emit the 'test socket' event to be heard by the listener
-
-		em.unit
-
 	###
 	JSON IMPORT/EXPORT LOGIC
 	###
 
-	applicationid = "emshare"	
+	# Moved stuff to collectionAssetData service
 
-	$scope.loadImages = () ->
-		# markers = {
-		# 	"query": [
-		# 		{
-		# 			"field": ""
-		# 			"operator": "matches"
-		# 			"values": ["*"]
-		# 		}
-		# 	]
-		# }
-		imageArray = []
+	# $scope.loadImages = () ->
+	# 	# markers = {
+	# 	# 	"query": [
+	# 	# 		{
+	# 	# 			"field": ""
+	# 	# 			"operator": "matches"
+	# 	# 			"values": ["*"]
+	# 	# 		}
+	# 	# 	]
+	# 	# }
+	# 	imageArray = []
 
-		# applicationid = /emsite/workspace -- this is already added by the ajax request
-		# #{applicationid}/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
-		# the above should be the actual location of the thumbnail image
-		# this worked once:
-		# "/entermedia/services/json/search/data/asset?catalogid=media/catalogs/public"
+	# 	# applicationid = /emsite/workspace -- this is already added by the ajax request
+	# 	# #{applicationid}/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
+	# 	# the above should be the actual location of the thumbnail image
+	# 	# this worked once:
+	# 	# "/entermedia/services/json/search/data/asset?catalogid=media/catalogs/public"
 
-		# this is what emshare's asset thumb is:
-		# localhost:8080/emshare/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
-		# this all temporarily works, but it isn't the way it should be in the end
+	# 	# this is what emshare's asset thumb is:
+	# 	# localhost:8080/emshare/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
+	# 	# this all temporarily works, but it isn't the way it should be in the end
 
-		###
-		$.getJSON "#{apphome}/components/annotations/json/viewassets.json?id=#{collectionid}", (data) ->
-			console.log 'from get images:', data
-		###
-
-		debugVar = $.ajax {
-			type: "GET"
-			url: "#{apphome}/components/annotations/json/viewassets.json?id=#{collectionid}"
-			# contentType: "application/json; charset=utf-8"
-			# dataType: "json"
-			async: false
-			error: (data, status, err) ->
-				console.log 'from error:', data
-				console.log 'status:', status
-				console.log 'error:', err
-				# imageArray = data.results
-				# $.each data.results, (index, obj) ->
-				# 	# this path should be changed according to the specifications above
-					
-				em.unit
-			,	
-			success: (data) ->
-				console.log 'from success:', data
-				imageArray = data
-				# $.each data.results, (index, obj) ->
-				# 	# this path should be changed according to the specifications above
-					
-				em.unit
-			,
-			failure: (errMsg) ->
-				alert errMsg
-				em.unit
-			}
-		console.log 'from finish:', imageArray	
-		imageArray
+	# 	debugVar = $.ajax {
+	# 		type: "GET"
+	# 		url: "#{apphome}/components/annotations/json/viewassets.json?id=#{collectionid}"
+	# 		# contentType: "application/json; charset=utf-8"
+	# 		# dataType: "json"
+	# 		async: false
+	# 		error: (data, status, err) ->
+	# 			console.log 'from error:', data
+	# 			em.unit
+	# 		,	
+	# 		success: (data) ->
+	# 			console.log 'from success:', data
+	# 			imageArray = data
+	# 			em.unit
+	# 		,
+	# 		failure: (errMsg) ->
+	# 			alert errMsg
+	# 			em.unit
+	# 		}
+	# 	console.log 'from finish:', imageArray	
+	# 	imageArray
 
 
 	$scope.exportCanvas = () ->
@@ -367,12 +341,53 @@ Workspace.controller 'AnnotationDetailsCtrl',
 			}
 		em.unit
 
-	$scope.thumbs = $scope.loadImages()
-	console.log $scope.thumbs
+	# $scope.thumbs = collectionAssetData.thumbs
 
 	###
 	/ JSON IMPORT/EXPORT LOGIC
 	###
+
+	###
+	WEBSOCKET FUNCTIONS
+	###
+
+	# so to get/send information about the whole session, we'll need
+	# to wrap the current list of annotations ($scope.annotations)
+	# in an object that is aware of the collectionid and the catalogid
+
+	# perhaps this is in a structure of:
+	###
+	{
+	collectionid: n
+	catalogid: n
+	sessions: [
+			{
+			assetid: 1
+			annotations: [obj, obj, ...]
+			}
+		]
+	}
+
+	###
+
+	$scope.switchToAsset = (id) ->
+		# we need to save current state and load new state
+		console.log "Trying to switch to asset #{id}"
+		# out = {
+		# 	assetid: $scope.currentAssetId
+		# 	command: 'saveall'
+		# 	annotations: $scope.annotations
+		# }
+		# let's send a baby object instead... to deal with chunking
+		out = {assetid: $scope.currentAssetId, command: 'debug'}
+		console.log $scope.currentAnnotation
+		payload = JSON.stringify out
+		# console.log 'Trying to send saveall payload: ', payload		
+		annotationSocket.send payload
+
+
+	$scope.getAnnotationById = (id) ->
+		_.findWhere $scope.annotations, id: id
 
 	###
 	TOOLBAR SELECTOR METHODS
@@ -493,7 +508,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 				timestamp: moment().fromNow()
 
 		# now push annotation info to scope for longer-term tracking
-		console.log JSON.stringify annotationSpec
+		console.log 'Attempting to send annotation data.'
 		$scope.annotations.unshift annotationSpec
 		$scope.currentAnnotationGroup = []
 		$scope.newCommentText = null
@@ -502,14 +517,27 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		$scope.left = null
 		$scope.top = null
 		# annotationSpec object describing individual annotation group is pushed to socket
-		annotationSocket.emit 'updateAnnotation', JSON.stringify annotationSpec
+		# annotationSocket.emit 'updateAnnotation', JSON.stringify annotationSpec
+		payload = JSON.stringify {
+				assetid: $scope.currentAssetId
+				command: 'save'
+				annotation: annotationSpec
+			}
+		console.log 'Trying to send add payload: ', payload
+		annotationSocket.send payload
 		em.unit
 
 	$scope.removeComment = (annotationid) ->
-		annotationToRemove = _.findWhere $scope.annotations, id: annotationid
+		annotationToRemove = $scope.getAnnotationById annotationid
 
 		# send request to server to remove annotation by id
-		annotationSocket.emit 'removeAnnotation', annotationid
+		payload = JSON.stringify {
+				assetid: $scope.currentAssetId
+				command: 'removeAnnotation'
+				annotationid: annotationid
+			}
+		console.log 'Trying to send remove payload: ', payload
+		annotationSocket.send payload
 
 		# remove all local objects from canvas
 		_.forEach annotationToRemove.group, (item) ->
@@ -528,28 +556,16 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		$('.upper-canvas').css({'background':'none'})
 		em.unit
 
-
-
-	###
-	Because of fabric.js quirks with object addition (on addition to the canvas, the object is mutated to a state where it cannot be added again)
-	the logic for transmitting the state of the canvas must not rely on the ability to pass the objects
-	Luckily, Fabric.js includes handy toJSON and loadFromJSON methods that can send the entire canvas object
-	All we need to do is attach the information we need to that object and let our data be transmitted along with the canvas
-	Then we can load the canvas, let fabric do all of its logic, and insert our own data into hte current $scope when it is finished
-	This may cause complications with being able to track the comments, because the efforts to link annotation with comment
-	will be thwarted using this method of canvas transport.  This also means that large annotations may be slow to load
-	since the process involves completely destroying and rebuilding the entire canvas
-
-	It also remains to be seen if attributes added to the canvas object will still be populated on the loaded canvas (don't see why not)
-
-	###
-
 	###
 	FABRIC CANVAS EVENT HANDLERS
 	###
 
+	# This code uses the old socket.io socket after being redirected to Angular
+	# Therefore its behavior will have to be adjusted to use the 
+	# Websocket interface instead
+
 	# Server raised events
-	$scope.$on 'socket:updateAnnotationResponse', (e, data) ->
+	$scope.$on 'save', (e, data) ->
 		# the data object is now the JSONified annotationSpec, let's rebuild
 		# if this works, at least we know we can update the canvas, though this probably screws up anyone
 		# who is currently annotating
@@ -562,7 +578,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		$scope.pushAnnotation incomingAnnotation
 		em.unit
 
-	$scope.$on 'socket:removeAnnotationResponse', (e, id) ->
+	$scope.$on 'removeAnnotation', (e, id) ->
 		# id here is just the annotation id to remove
 		# check annotations model to find all of the moving parts
 		clientCopy = _.findWhere $scope.annotations, id: id
@@ -572,6 +588,14 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		$scope.annotations = _.without $scope.annotations, clientCopy
 		em.unit
 
+	# $scope.$on 'saveall', (e, data) ->
+	# 	console.log '$scope got some data'
+	# 	console.log e, data
+	# 	em.unit
+
+	$scope.$on 'debug', (e, data) ->
+		console.log 'Scope debug listener: ', e, data
+		em.unit
 
 	$scope.fabric.canvas.on 'mouse:down', (e) ->
 		pointer = $scope.fabric.canvas.getPointer e.e

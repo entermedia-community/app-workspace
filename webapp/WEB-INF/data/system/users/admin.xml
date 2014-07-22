@@ -4,7 +4,7 @@
   <user-name><![CDATA[admin]]></user-name>
   <password><![CDATA[DES:2JPGMLB8Y60=]]></password>
   <creation-date>1146231775645</creation-date>
-  <lastLogined-Time>2014-07-21 12:07:36 -0400</lastLogined-Time>
+  <lastLogined-Time>2014-07-21 17:07:06 -0400</lastLogined-Time>
   <properties>
     <property name="productvpa" value="false"/>
     <property name="officecountry" value="237"/>
@@ -50,6 +50,6 @@
     <property name="mailingzip" value=""/>
     <property name="mailingstate" value=""/>
   </properties>
-  <group id="visualdata"/>
   <group id="administrators"/>
+  <group id="visualdata"/>
 </user>

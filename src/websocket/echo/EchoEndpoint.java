@@ -71,6 +71,9 @@ public class EchoEndpoint extends Endpoint {
         protected JsonSlurper fieldJSOSlurper;
         
         public JsonSlurper getJSOSlurper() {
+        	if (fieldJSOSlurper == null) {
+        		fieldJSOSlurper = new JsonSlurper();
+        	}
 			return fieldJSOSlurper;
 		}
 
@@ -89,7 +92,7 @@ public class EchoEndpoint extends Endpoint {
 
         @Override
         public void onMessage(String message, boolean last) {
-        	 if (remoteEndpointBasic != null) {
+        	 if (remoteEndpointBasic == null) {
         		 return;
         	 }
             try 
@@ -109,7 +112,11 @@ public class EchoEndpoint extends Endpoint {
             		obj.put("stuff","array of annotations");
                     remoteEndpointBasic.sendText(obj.toJSONString(), last);
             	}
-            } catch (IOException e) {
+            	else
+            	{
+            		remoteEndpointBasic.sendText(message, last);
+            	}
+            } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }

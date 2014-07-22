@@ -116,3 +116,10 @@
 <event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 12:05:03 -0400" indexed="false"/>
 <event operation="authentication" user="admin" details="logout" catalogid="system" date="2014-07-21 12:07:34 -0400" indexed="false"/>
 <event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 12:07:36 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="invalidpassword" catalogid="system" date="2014-07-21 16:42:16 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="invalidpassword" catalogid="system" date="2014-07-21 16:42:19 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 16:48:56 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="logout" catalogid="system" date="2014-07-21 17:04:21 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 17:04:25 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="logout" catalogid="system" date="2014-07-21 17:07:02 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 17:07:06 -0400" indexed="false"/>

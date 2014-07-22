@@ -63,9 +63,9 @@
                     <li class="previous">
                         <svg class="icon icon-arrow-left" viewBox="0 0 32 32"><use xlink:href="#icon-arrow-left"></use></svg>
                     </li>
-                    <li ng-repeat="thumb in thumbs" class="thumb clearfix" ng-class="{'active': currentAnnotation.annotation.id === thumb.id}">
-                    	<a ui-sref="app.annotations.details({annotationID: thumb.id})">
-                            <img ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{thumb.sourcepath}}/thumb.jpg"></img>
+                    <li ng-repeat="image in images" class="thumb clearfix" ng-class="{'active': currentAnnotation.annotation.id === image.id}">
+                    	<a ui-sref="app.annotations.details({annotationID: image.id})">
+                            <img ng-click="switchToAsset(image.id)" ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
                         </a>
                     </li>
                     <li class="next icon-arrow-right">

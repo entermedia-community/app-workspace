@@ -1,5 +1,13 @@
 Workspace.factory 'annotationService', 
 () ->
+
+  ###
+  Eventually this should probably be something like:
+  Workspace.factory 'annotationService, ['annotationSocket', (annotationSocket) ->
+    get data from sockets
+    data: data
+  ]
+  ###
   data = [
     project:
       id: 1
@@ -13,7 +21,7 @@ Workspace.factory 'annotationService',
       createTime: '05/04/2014 14:33:56'
       lastUpdateTime: '05/06/2014 06:30:23'
       owner: 'Bob Dole'
-      path: 'img/ForMom.jpg'
+      sourcepath: 'img/ForMom.jpg'
   ,
     project:
       id: 2
@@ -55,7 +63,7 @@ Workspace.factory 'annotationService',
       createTime: '01/04/2011 14:33:56'
       lastUpdateTime: '05/14/2014 15:31:23'
       owner: 'Fred Dole'
-      path: 'img/BlueBus.jpg'
+      sourcepath: 'img/BlueBus.jpg'
   ]
    
   mockData: data

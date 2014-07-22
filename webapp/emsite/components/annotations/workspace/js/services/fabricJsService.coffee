@@ -32,21 +32,6 @@ Workspace.factory 'fabricJsService', () ->
                 canvas.setBackgroundImage realImage, canvas.renderAll.bind canvas
                 em.unit
 
-
-
-
-
-
-            # canvas.setBackgroundImage path, canvas.renderAll.bind(canvas)
-
-            # canvas.on('mouse:down', function(o){
-            #     // select appropriate function based on selected tool
-            #     // we need some var in the scope to keep track of 'active tool selection'
-            #     // the value of this var will point to the function that should be passed to the event handlers
-            #     // should the function be passed in directly or define another function that handles the
-            #     // specialized event handling... if the latter, then the mouse event should control the
-            #     // mouseDown variable exclusively to ensure no weird condition overlap
-
             returnCanvas = canvas
 
             em.unit
