@@ -14,11 +14,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package websocket.drawboard.wsmessages;
+package org.entermedia.websocket;
 
-/**
- * Represents a "close" message that closes the session.
- */
-public class CloseWebsocketMessage extends AbstractWebsocketMessage {
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
+public final class AnnotationServerConextListener implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        // NO-OP
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+//        // Shutdown our room.
+//        Room room = DrawboardEndpoint.getRoom(false);
+//        if (room != null) {
+//            room.shutdown();
+//        }
+    }
 }
