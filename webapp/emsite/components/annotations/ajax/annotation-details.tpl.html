@@ -1,4 +1,5 @@
 <!-- fabric formatting stuff... probably does not belong here -->
+    <script src="$home$apphome/components/annotations/ajax/jAngular.js"></script>
     <script src="$home$apphome/components/annotations/ajax/main.js"></script>
     <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/dashboard.css">
     <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/js/vendor/angular/ng-table/ng-table.min.css">
@@ -71,9 +72,9 @@
                     <li class="previous">
                         <svg class="icon icon-arrow-left" viewBox="0 0 32 32"><use xlink:href="#icon-arrow-left"></use></svg>
                     </li>
-                    <li ng-repeat="image in assets" class="thumb clearfix" ng-class="{'active': currentAnnotation.annotation.id === image.id}">
+                    <li ng-repeat="image in assets" class="thumb clearfix" class="{{if( parentScope.currentAnnotation.annotation.id === image.id) return active }}">
                     	<a ui-sref="app.annotations.details({annotationID: image.id})">
-                            <img ng-click="switchToAsset(image.id)" ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
+                            <img ng-click='switchToAsset("{{image.id}}")' ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
                         </a>
                     </li>
                     <li class="next icon-arrow-right">

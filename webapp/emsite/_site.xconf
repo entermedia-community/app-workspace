@@ -8,4 +8,11 @@
   
   <path-action name="SessionValue.loadSessionVariable" bean="moduleManager" />
   
+    <script id="fabric" src="/${applicationid}/components/javascript/fabric/dist/fabric.js">     </script>
+  <!--
+  <script id="angularjs"  src="/${applicationid}/components/javascript/angular/angular.js">  </script>
+  -->
+ 
+  
+  
 </page>
