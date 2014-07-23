@@ -17,6 +17,8 @@ jQuery(document).ready(function()
 	
 	jAngular.init(scope);
 	
+	//we should have selected set from the model
+	//scope.fabric.showImage(scope.apphome + "/views/modules/asset/downloads/preview/large/" + scope.selectedAsset.sourcepath + "/image.jpg");
 });	
 
 loadSelectors = function(scope)
