@@ -59,10 +59,11 @@ Workspace.factory 'collectionAssetData', () ->
 				assetspec: assetSpec
 		}
 
-	result.getThumbSrc = (id) ->
-		found = _.findWhere result.thumbs, id: id
-		found.src
-	result.getImageSrc = (id) ->
-		found = _.findWhere result.images, id: id
-		found.src
+	result.getSrc = (id, size) ->
+		switch size
+			when 'thumb' or 'thumbs'
+				where = result.thumbs
+			else where = result.images
+		found = _.findWhere where, id: id
+		found
 	result

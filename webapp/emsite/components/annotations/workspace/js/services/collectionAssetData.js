@@ -97,19 +97,19 @@ Workspace.factory('collectionAssetData', function() {
       }
     });
   }
-  result.getThumbSrc = function(id) {
-    var found;
-    found = _.findWhere(result.thumbs, {
+  result.getSrc = function(id, size) {
+    var found, where;
+    switch (size) {
+      case 'thumb' || 'thumbs':
+        where = result.thumbs;
+        break;
+      default:
+        where = result.images;
+    }
+    found = _.findWhere(where, {
       id: id
     });
-    return found.src;
-  };
-  result.getImageSrc = function(id) {
-    var found;
-    found = _.findWhere(result.images, {
-      id: id
-    });
-    return found.src;
+    return found;
   };
   return result;
 });

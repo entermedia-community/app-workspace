@@ -6,26 +6,6 @@ componentroot = apphome + '/components/annotations/workspace';
 collectionid = $("#collectiontoplevel").data("collectionid");
 catalogid = 'emsite/catalog'
 
-
-if window.WebSocket
-	base_destination = "ws://localhost:8080/entermedia/services/websocket/echoProgrammatic"
-	final_destination = "#{base_destination}?catalogid=#{catalogid}&collectionid=#{collectionid}"
-	connection = new WebSocket final_destination
-	# if this works then we should be able to create our own endpoint
-	connection.onopen = (e) ->
-		console.log 'Opened a connection!'
-		console.log e
-		em.unit
-	connection.onclose = (e) ->
-		console.log 'Closed a connection!'
-		console.log e
-		em.unit
-	connection.onerror = (e) ->
-		console.log 'Connection error!'
-		console.log e
-		em.unit
-	# Can we send something???
-
 Workspace = angular.module('Workspace', ['ui.router', 'ngTable', 'colorpicker.module', 'btford.socket-io']);
 
 Workspace.run [
