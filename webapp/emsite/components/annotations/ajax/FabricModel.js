@@ -42,4 +42,4 @@ var $fabric = {
 		};
 	}
 };
-$scope.add('fabric', $fabric)
+$scope.add('fabric', $fabric);
