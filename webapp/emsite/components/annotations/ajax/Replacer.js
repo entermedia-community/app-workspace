@@ -1,4 +1,5 @@
-var Replacer = {
+var Replacer = (function() {
+	var out = {
 
 	replace : function( inCode, scope)
 	{
@@ -33,6 +34,8 @@ var Replacer = {
 		return inCode;
 	}	
 }
+return out;
+})();
 
 replacer = Replacer;
 
