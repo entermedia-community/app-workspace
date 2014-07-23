@@ -3,26 +3,8 @@ em = { //Old Junk
 	unit: {}
 };
 
-var $scope = {};
+var $scope = new Scope();
 
-	var parentScope;
-	add = function(name, model) {
-		$scope[name] = model;
-	}
-	get = function(name) 
-	{
-		var found = eval("this." + name);
-		if( parentScope != null && found == null )
-		{
-			return parentScope.get(name);
-		}
-		return found;
-		//return $scope[name];
-	}
-	createScope = function(parent)
-	{
-		parentScope = parent;
-	}
 	
 
 jQuery(document).ready(function() 
