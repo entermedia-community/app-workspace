@@ -1,29 +1,19 @@
 Workspace.controller 'AnnotationDetailsCtrl',
-['$rootScope', '$scope', '$stateParams', '$timeout', 'toolkitService', 'fabricJsService', 'annotationSocket', 'collectionAssetData'
-($rootScope, $scope, $stateParams, $timeout, toolkitService, fabricJsService, annotationSocket, collectionAssetData) ->
+['$rootScope', '$scope', '$stateParams', '$timeout', 'toolkitService', 'fabricJsService', 'annotationSocket', 'collectionAssetData', 'UserService'
+($rootScope, $scope, $stateParams, $timeout, toolkitService, fabricJsService, annotationSocket, collectionAssetData, UserService) ->
 
 	$rootScope.$broadcast 'navigatedTo', 'Annotations'
-	# annotationSocket.forward 'updateAnnotationResponse', $scope
-	# annotationSocket.forward 'removeAnnotationResponse', $scope
+
 	###
 	USER AUTHENTICATION LOGIC
 	###
-
-	# check validity of user object and do whatever necessary if not authenticated
-
-	# if not metaUser.authenticated
 
 	metaUser =
 		userid: 1
 		name: 'Rob'
 		email: md5 'jrchipman1@gmail.com'
 
-	$scope.currentUser = metaUser
-
-	$.getJSON '/entermedia/services/json/users/status.json', (data) ->
-			$scope.currentUser = data
-			console.log 'from user auth:', data
-			em.unit
+	$scope.currentUser = UserService.startSession() || metaUser
 
 	###
 	/ USER AUTHENTICATION LOGIC
@@ -68,8 +58,8 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	instead of dummy state we must actually check the database
 	for annotations on this asset before proceeding, and update the
 	application state if necessary
-	TODO: turn annotationService into a real anotation service instead of dummy object service
-	TODO: wire up websocket connection code into factory and make connection available to angular
+	DONE: turn annotationService into a real anotation service instead of dummy object service
+	DONE: wire up websocket connection code into factory and make connection available to angular
 	TODO: remove/rewrite sloppy JSON stuff to act more like a sensible API
 
 	###
@@ -102,174 +92,6 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	FABRIC TOOLS SETUP
 	###
 
-	# getSelf = (name) ->
-	# 	_.find(toolkit, name: name)
-
-	# toolkit = [
-	# 	{
-	# 		name: 'disabled'
-	# 		properties: {
-	# 			isDrawingMode: false
-	# 		}
-	# 		annotating: false,
-	# 	},
-	# 	{
-	# 		name: 'draw'
-	# 		properties: {
-	# 			isDrawingMode: true # this may be the only thing necessary
-	# 		}
-	# 		annotating: true
-	# 	},
-	# 	{
-	# 		name: 'move'
-	# 		properties: {
-	# 			isDrawingMode: false
-	# 		}
-	# 		annotating: false
-	# 	},
-	# 	{
-	# 		name: 'shape'
-	# 		properties: {
-	# 			isDrawingMode: false
-	# 		}
-	# 		annotating: true
-	# 		type: 'circle'
-	# 		# index of types is same as blanks, useful or dumb
-	# 		types: [
-	# 			{} =
-	# 				name: 'circle'
-	# 				type: fabric.Circle
-	# 				blank:
-	# 					radius: 1
-	# 					strokeWidth: 5
-	# 					selectable: false
-	# 					fill: ""
-	# 					originX: 'left'
-	# 					originY: 'top'
-	# 				drawparams: (pointer) ->
-	# 					radius: Math.abs $scope.left - pointer.x
-	# 			{} =
-	# 				name: 'rectangle'
-	# 				type: fabric.Rect
-	# 				blank:
-	# 					height: 1
-	# 					width: 1
-	# 					strokeWidth: 5
-	# 					selectable: false
-	# 					fill: ""
-	# 					originX: 'left'
-	# 					originY: 'top'
-	# 				drawparams: (pointer) ->
-	# 					width: -$scope.left + pointer.x
-	# 					height: -$scope.top + pointer.y
-	# 		]
-	# 		events: {
-	# 			mouseup: (e, canvas) ->
-	# 				# not sure if this is best way to do this
-	# 				# do I even need to pass 'canvas' if it will be valid within executing scope?
-	# 				# definitely don't want to put a lot of junk on $scope if I don't have to
-	# 				$scope.mouseDown = false # theses $scope properties are probably a really bad convention, but it works
-	# 			mousedown: (e, canvas) ->
-	# 				$scope.mouseDown = true # gotta be a better way !!!
-	# 				pointer = canvas.getPointer e.e
-	# 				we = getSelf 'shape'
-	# 				type = _.findWhere $scope.currentTool.types, name: $scope.currentTool.type
-	# 				spec = type.blank
-	# 				spec.stroke = $scope.colorpicker.hex	# this is how we avoid the stupid broken color problem
-	# 				spec.left = pointer.x
-	# 				spec.top = pointer.y
-	# 				shape = new type.type spec
-	# 				canvas.add shape
-	# 				em.unit
-	# 			objectadded: null
-	# 			mousemove: (e, canvas) ->
-	# 				if $scope.mouseDown # just awful !!!
-	# 					we = getSelf('shape')
-	# 					pointer = canvas.getPointer e.e
-	# 					# need to find some way to get the shape now
-	# 					shape = canvas.getObjects()[canvas.getObjects().length-1]
-	# 					type = _.findWhere $scope.currentTool.types, name: $scope.currentTool.type
-	# 					shape.set type.drawparams pointer
-	# 					canvas.renderAll()
-	# 				em.unit
-	# 			}
-	# 		},
-	# 			{
-	# 				name: 'comment'
-	# 				properties: {
-	# 					isDrawingMode: false
-	# 				}
-	# 				annotating: true # this is possibly broken because currently the pin is placed at last object
-	# 				events: {
-	# 					mouseup: null # will want to put something here !!!
-	# 					mousedown: null
-	# 					objectadded: null # then we should fully integrate the
-	# 				}
-	# 			},
-	# 			{
-	# 				name: 'arrow' # see below $$$
-	# 				properties: {
-	# 					isDrawingMode: false
-	# 				}
-	# 				annotating: true
-	# 			},
-	# 			{
-	# 				name: 'text' # fabric has an existing text tool, need to find out how to use $$$
-	# 				properties: {
-	# 					isDrawingMode: false
-	# 				}
-	# 				annotating: true
-	# 			},
-	# 			{
-	# 				name: 'zoom' # this implementation sucks !!! $$$
-	# 				properties: {
-	# 					isDrawingMode :false
-	# 				}
-	# 				annotating: false
-	# 				events: {
-	# 					mouseup: null
-	# 					mousemove: (o, canvas) ->
-	# 						if $scope.mouseDown
-	# 							# this just doesn't work very well !!!
-	# 							SCALE_FACTOR = 0.01
-	# 							pointer = canvas.getPointer o.e
-	# 							delta = $scope.left - pointer.x
-	# 							objects = canvas.getObjects()
-	# 							# needs changes !!!
-	# 							delta = delta * SCALE_FACTOR
-	# 							transform = [1+delta,0,0,1+delta,0,0]
-	# 							console.log transform
-	# 							for klass in objects
-	# 								klass.transformMatrix = transform
-	# 								klass.setCoords()
-	# 							# can we also transform the canvas background?
-	# 							canvas.backgroundImage.transformMatrix = transform  # works
-	# 							canvas.setWidth canvas.backgroundImage.width * canvas.backgroundImage.transformMatrix[0]
-	# 							canvas.setHeight canvas.backgroundImage.height * canvas.backgroundImage.transformMatrix[3]
-	# 							# apparently, yes!
-	# 							# works great but doesn't affect pins yet
-	# 					mousedown: (o, canvas) ->
-	# 						$scope.left = canvas.getPointer(o.e).x
-	# 				}
-	# 			},
-	# 			{
-	# 				name: 'colorpicker' # no implementation $$$
-	# 				properties: {}
-	# 				annotating: false
-	# 			},
-	# 			{
-	# 				name: 'load' # temporary?
-	# 				properties: {}
-	# 				annotating: false
-	# 			},
-	# 			{
-	# 				name: 'export'
-	# 				properties: {}
-	# 				annotating: false
-	# 			}
-	# ]
-
-	# $scope.fabric.toolkit = toolkit # in case it needs to be accessible from other controllers
 	$scope.fabric.toolkit = toolkitService.init $scope
 
 	###
@@ -281,51 +103,6 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	###
 
 	# Moved stuff to collectionAssetData service
-
-	# $scope.loadImages = () ->
-	# 	# markers = {
-	# 	# 	"query": [
-	# 	# 		{
-	# 	# 			"field": ""
-	# 	# 			"operator": "matches"
-	# 	# 			"values": ["*"]
-	# 	# 		}
-	# 	# 	]
-	# 	# }
-	# 	imageArray = []
-
-	# 	# applicationid = /emsite/workspace -- this is already added by the ajax request
-	# 	# #{applicationid}/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
-	# 	# the above should be the actual location of the thumbnail image
-	# 	# this worked once:
-	# 	# "/entermedia/services/json/search/data/asset?catalogid=media/catalogs/public"
-
-	# 	# this is what emshare's asset thumb is:
-	# 	# localhost:8080/emshare/views/modules/asset/downloads/preview/thumbsmall/#{obj.sourcepath}/thumb.jpg
-	# 	# this all temporarily works, but it isn't the way it should be in the end
-
-	# 	debugVar = $.ajax {
-	# 		type: "GET"
-	# 		url: "#{apphome}/components/annotations/json/viewassets.json?id=#{collectionid}"
-	# 		# contentType: "application/json; charset=utf-8"
-	# 		# dataType: "json"
-	# 		async: false
-	# 		error: (data, status, err) ->
-	# 			console.log 'from error:', data
-	# 			em.unit
-	# 		,	
-	# 		success: (data) ->
-	# 			console.log 'from success:', data
-	# 			imageArray = data
-	# 			em.unit
-	# 		,
-	# 		failure: (errMsg) ->
-	# 			alert errMsg
-	# 			em.unit
-	# 		}
-	# 	console.log 'from finish:', imageArray	
-	# 	imageArray
-
 
 	$scope.exportCanvas = () ->
 		data = JSON.stringify $scope.fabric.canvas.toJSON()
@@ -352,38 +129,18 @@ Workspace.controller 'AnnotationDetailsCtrl',
 	WEBSOCKET FUNCTIONS
 	###
 
-	# so to get/send information about the whole session, we'll need
-	# to wrap the current list of annotations ($scope.annotations)
-	# in an object that is aware of the collectionid and the catalogid
-
-	# perhaps this is in a structure of:
-	###
-	{
-	collectionid: n
-	catalogid: n
-	sessions: [
-			{
-			assetid: 1
-			annotations: [obj, obj, ...]
-			}
-		]
-	}
-
-	###
-
 	$scope.switchToAsset = (id) ->
 		# we need to save current state and load new state
 		console.log "Trying to switch to asset #{id}"
-		# out = {
-		# 	assetid: $scope.currentAssetId
-		# 	command: 'saveall'
-		# 	annotations: $scope.annotations
-		# }
+		out = {
+			assetid: $scope.currentAssetId
+			command: 'saveall'
+			annotations: $scope.annotations
+		}
 		# let's send a baby object instead... to deal with chunking
-		out = {assetid: $scope.currentAssetId, command: 'debug'}
+		# out = {assetid: $scope.currentAssetId, command: 'debug'}
 		console.log $scope.currentAnnotation
 		payload = JSON.stringify out
-		# console.log 'Trying to send saveall payload: ', payload		
 		annotationSocket.send payload
 
 
@@ -524,7 +281,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 				command: 'save'
 				annotation: annotationSpec
 			}
-		console.log 'Trying to send add payload: ', payload
+		# console.log 'Trying to send add payload: ', payload
 		annotationSocket.send payload
 		em.unit
 
@@ -537,7 +294,6 @@ Workspace.controller 'AnnotationDetailsCtrl',
 				command: 'delete'
 				annotationid: annotationid
 			}
-		console.log 'Trying to send remove payload: ', payload
 		annotationSocket.send payload
 
 		# remove all local objects from canvas
@@ -589,11 +345,6 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		$scope.annotations = _.without $scope.annotations, clientCopy
 		em.unit
 
-	# $scope.$on 'saveall', (e, data) ->
-	# 	console.log '$scope got some data'
-	# 	console.log e, data
-	# 	em.unit
-
 	$scope.$on 'debug', (e, data) ->
 		console.log 'Scope debug listener: ', e, data
 		em.unit
@@ -607,10 +358,6 @@ Workspace.controller 'AnnotationDetailsCtrl',
 			if $scope.annotationAction isnt null
 				console.log 'canceling annotationAction'
 				$timeout.cancel $scope.annotationAction
-				# $scope.annotationAction = null
-			# if $scope.currentTool.name is 'comment'
-			# 	$scope.left = pointer.x
-			# 	$scope.top = pointer.y
 			console.log 'DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations'
 			$scope.currentTool.events?.mousedown? e, $scope.fabric.canvas
 		em.unit
@@ -628,6 +375,7 @@ Workspace.controller 'AnnotationDetailsCtrl',
 		em.unit
 
 	$scope.fabric.canvas.on 'mouse:move', (e) ->
+		console.log 'MOUSEMOVE EVENT: ', e if e.e.which
 		$scope.fabric.canvas.calcOffset()
 		$scope.currentTool.events?.mousemove? e, $scope.fabric.canvas
 		em.unit
