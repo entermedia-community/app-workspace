@@ -5,17 +5,29 @@ em = { //Old Junk
 
 var $scope = {};
 
-jQuery(document).ready(function() 
-{ 
-	$scope.add = function(name, model) {
+	var parentScope;
+	add = function(name, model) {
 		$scope[name] = model;
 	}
-	$scope.get = function(name) 
+	get = function(name) 
 	{
-		return eval("this." + name);
+		var found = eval("this." + name);
+		if( parentScope != null && found == null )
+		{
+			return parentScope.get(name);
+		}
+		return found;
 		//return $scope[name];
 	}
+	createScope = function(parent)
+	{
+		parentScope = parent;
+	}
 	
+
+jQuery(document).ready(function() 
+{ 
+
 	$scope.add("app", jQuery("#application") );
 	$scope.add("home" ,$scope.app.data("home") );
 	$scope.add("apphome" , $scope.app.data("apphome") );
@@ -88,6 +100,8 @@ jQuery(document).ready(function()
 
 	$.getScript($scope.apphome + "/components/annotations/ajax/FabricModel.js");
 	$.getScript($scope.apphome + "/components/annotations/ajax/Replacer.js");
+	
+	var replacer = new Replacer();
 	
 	$( 'li[ng-repeat]' ).each(function( index ) 
 	{
