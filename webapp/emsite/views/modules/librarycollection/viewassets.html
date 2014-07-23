@@ -9,14 +9,15 @@
 	<div class="col-md-8">
 	<ul class="nav nav-tabs pull-right" role="tablist">
 	  <li class="active"><a href="#media" role="tab" data-toggle="tab">Media</a></li>
-	  <li><a href="#annotation" role="tab" data-toggle="tab">Annotations</a></li>
+	  #set( $link = "#annotations" )
+	  <li><a href="$link" role="tab" data-toggle="tab">Annotations</a></li>
 	</ul>
 	</div>
 </div>
 <!-- Tab panes -->
 <div class="tab-content">
   <div class="tab-pane active" id="media">$pages.include("$apphome/views/search/index.html")</div>
-  <div class="tab-pane" id="annotation">$pages.include("$apphome/components/annotations/workspace/index.html?collectionid=$data.getId()")</div>
+  <div class="tab-pane em-workspace" id="annotations">$pages.include("$apphome/components/annotations/ajax/annotation-details.tpl.html?collectionid=$data.getId()")</div>
 </div>
 
 
