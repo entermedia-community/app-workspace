@@ -45,7 +45,22 @@ var $fabric = {
 		});
 		return em.unit;
 	},
-	selectTool: function(){}
+	selectTool: function(toolname) {
+      var prop;
+      if (scope.readyToComment != null) {
+        $scope.currentTool = _.findWhere($scope.fabric.toolkit, {
+          name: toolname
+        });
+        for (prop in $scope.currentTool.properties) {
+          $scope.fabric.canvas[prop] = $scope.currentTool.properties[prop];
+        }
+        if ($scope.currentTool.name === 'draw') {
+          $scope.fabric.canvas.freeDrawingBrush.color = $scope.colorpicker.hex;
+          $scope.fabric.canvas.freeDrawingBrush.width = $scope.brushWidth;
+        }
+      }
+      return em.unit;
+    }
 };
 scope.add('fabric', $fabric.init());
 
