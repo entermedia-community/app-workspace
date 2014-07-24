@@ -72,7 +72,7 @@
                     <li class="previous">
                         <svg class="icon icon-arrow-left" viewBox="0 0 32 32"><use xlink:href="#icon-arrow-left"></use></svg>
                     </li>
-                    <li ng-repeat="image in assets" class="thumb clearfix" class="{{if( parentScope.currentAnnotation.annotation.id === image.id) return active }}">
+                    <li ng-repeat="image in assets" class="thumb clearfix" class="{{if( parentScope.currentAnnotation.annotation.id === image.id) return 'active' }}">
                     	<a ui-sref="app.annotations.details({annotationID: image.id})">
                             <img ng-click='switchToAsset("{{image.id}}")' ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
                         </a>

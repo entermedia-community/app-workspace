@@ -104,5 +104,4 @@ jAngular.init = function(scope)
 	     }
 		
 	});
-	
 };

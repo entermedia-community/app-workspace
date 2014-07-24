@@ -10,31 +10,28 @@ jQuery(document).ready(function()
 	scope.add("collectionid", $("#collectiontoplevel").data("collectionid") );
 	scope.add("catalogid" ,'emsite/catalog');
 	
-	//$.getScript(scope.apphome + "/components/annotations/ajax/AnnotationModels.js");	
-	loadModels(scope);
-	
-	loadSelectors(scope);
-	
-	jAngular.init(scope);
-	
-	//we should have selected set from the model
-	//scope.fabric.showImage(scope.apphome + "/views/modules/asset/downloads/preview/large/" + scope.selectedAsset.sourcepath + "/image.jpg");
-});	
 
 loadSelectors = function(scope)
 {
 	//TODO: Search for all ng-click?
-	$("div.annotations-carousel a img").livequery('click', function() 
+	$("div.annotations-carousel a img, ul.annotations-toolbar > li [ng-click]").livequery('click', function() 
 	{
 		var theimg = jQuery(this);
 		var code = theimg.attr("ng-click");
 		eval(code);
 	});
-
 }
+
+
 
 loadModels = function(scope)
 {
+
+	var currentAnnotation = function(assetid) {
+		return {
+			annotation: some_function_to_get_annotation_by_assetid()
+		}
+	}
 
 	// load asset data
 	jQuery.ajax({
@@ -54,6 +51,8 @@ loadModels = function(scope)
 	});
 
 
+}
+
 	//socket initialization
 	if (window.WebSocket) {
 		socket = WebSocket;
@@ -63,7 +62,7 @@ loadModels = function(scope)
 		"We're screwed";
 		socket = null;
 	}
-	/*
+
 	if (socket)
 	{
 		base_destination = "ws://localhost:8080/entermedia/services/websocket/echoProgrammatic";
@@ -83,7 +82,7 @@ loadModels = function(scope)
 		};
 		scope.add('connection', connection);
 	}
-	*/
+
 	
 	//load user data
 	/*
@@ -93,47 +92,19 @@ loadModels = function(scope)
 		data);
 	});
 	*/
-	
-var $fabric = {
-	init: function(path) {
-		var returnCanvas;
-		returnCanvas = {};
-		(function() {
-			var canvas, docGet;
-			docGet = function(id) {
-				return document.getElementById(id);
-			};
-			canvas = this.__canvas = new fabric.Canvas('annotation_canvas');
-			canvas.on("after:render", function() {
-			});
-			fabric.util.loadImage(path, function(src) {
-				var center, realImage;
-				realImage = new fabric.Image(src);
-				canvas.setWidth(realImage.width);
-				canvas.setHeight(realImage.height);
-				center = canvas.getCenter();
-				canvas.setBackgroundImage(realImage, canvas.renderAll.bind(canvas));
-			});
-			returnCanvas = canvas;
-		})();
-		(function() {
-			return fabric.util.addListener(fabric.window, 'load', function() {
-				var canvas, canvases, _i, _ref;
-				canvas = this.__canvas || this.canvas;
-				canvases = this.__canvases || this.canvases;
-				canvas && canvas.calcOffset && canvas.calcOffset();
-				if (canvases && canvases.length) {
-					for (_i = 0, _ref = canvases.length; 0 <= _ref ? _i <= _ref : _i >= _ref; 0 <= _ref ? _i++ : _i--) {
-						canvases[i].calcOffset();
-					}
-				}
-			});
-		})();
-		return {
-			canvas: returnCanvas
-		};
-	}
-};
-scope.add('fabric', $fabric);
 
-}
+	$.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js");
+
+
+
+	loadModels(scope);
+	
+	loadSelectors(scope);
+	
+	jAngular.init(scope);
+	
+	//we should have selected set from the model
+	//scope.fabric.showImage(scope.apphome + "/views/modules/asset/downloads/preview/large/" + scope.selectedAsset.sourcepath + "/image.jpg");
+
+
+});
