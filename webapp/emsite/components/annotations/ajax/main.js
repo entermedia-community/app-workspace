@@ -9,10 +9,10 @@ jQuery(document).ready(function()
 	scope.add("componentroot" ,scope.app.data("home") );
 	scope.add("collectionid", $("#collectiontoplevel").data("collectionid") );
 	scope.add("catalogid" ,'emsite/catalog');
-	
+
 	var editor = new AnnotationEditor();
 	editor.scope = scope;
-	scope.add("annotationeditor",editor);	
+	scope.add("annotationEditor",editor);	
 	
 	editor.loadModels();
 	editor.loadSelectors();
@@ -20,5 +20,8 @@ jQuery(document).ready(function()
 	jAngular.init(scope);
 	
 	editor.connect();
+	var command = SocketCommand("list");
+	command.assetid = editor.currentAnnotatedAsset.assetData.id;
+	connection.sendCommand(command);	
 
 });

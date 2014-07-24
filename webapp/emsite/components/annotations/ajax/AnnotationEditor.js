@@ -8,12 +8,14 @@ var AnnotationEditor = function() {
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
+			//TODO this should be part of jAnQular and loaded by $.getScript ?
 			$("div.annotations-carousel a img, ul.annotations-toolbar > li [ng-click]").livequery('click', function() 
 			{
 				var theimg = jQuery(this);
 				var code = theimg.attr("ng-click");
 				eval(code);
 			});
+			//then what is really in here?
 		},
 		loadModels : function()
 		{
@@ -35,7 +37,7 @@ var AnnotationEditor = function() {
 					scope.add('assets', data);
 					if( data.length > 0 )
 					{
-						scope.annotationEditor.currentAnnotatedAsset = createAnnotatedAsset(data[0]);
+						scope.annotationEditor.currentAnnotatedAsset = scope.annotationEditor.createAnnotatedAsset(data[0]);
 					}
 				},
 				failure: function(errMsg) {
@@ -43,7 +45,7 @@ var AnnotationEditor = function() {
 				}
 			});
 		},
-		createAnnotatedAsset = function(assetData)
+		createAnnotatedAsset: function(assetData)
 		{
 			var aa = new AnnotatedAsset();
 			aa.assetData = assetData;
@@ -52,7 +54,7 @@ var AnnotationEditor = function() {
 			
 			return aa;
 		},
-		findAssetData = function(inAssetId)
+		findAssetData: function(inAssetId)
 		{
 			$.each(this.scope.assets,function(index,asset)
 			{
@@ -60,7 +62,7 @@ var AnnotationEditor = function() {
 				{
 					return asset;
 				}
-			}
+			});
 			return null;
 		}
 		,
@@ -78,6 +80,7 @@ var AnnotationEditor = function() {
 		
 			if (socket)
 			{
+				var scope = this.scope;
 				base_destination = "ws://localhost:8080/entermedia/services/websocket/echoProgrammatic";
 				final_destination = "" + base_destination + "?catalogid=" + scope.catalogid + "&collectionid=" + scope.collectionid;
 				connection = new socket(final_destination);
@@ -93,15 +96,12 @@ var AnnotationEditor = function() {
 					console.log('Connection error!');
 					console.log(e);
 				};
-				connection.sendCommand = function(command)
+			connection.sendCommand = function(command)
 				{
-					connection.send( JSSON.stringify(command));
+					this.send( JSON.stringify(command));
 				};
-				scope.add('connection', connection);
+			scope.add('connection', connection);
 			}
-			var command = SocketCommand("list");
-			command.assetid( currentAnnotatedAsset.assetData.id );
-			connection.sendCommand(command);
 			
 			//load user data
 			/*
@@ -112,8 +112,8 @@ var AnnotationEditor = function() {
 			});
 			*/
 		}
-		return out;
 	}
+	return out;
 }	
 
 var SocketCommand = function(inCommand) {
