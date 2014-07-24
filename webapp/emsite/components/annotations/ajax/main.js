@@ -9,15 +9,15 @@ jQuery(document).ready(function()
 	scope.add("componentroot" ,scope.app.data("home") );
 	scope.add("collectionid", $("#collectiontoplevel").data("collectionid") );
 	scope.add("catalogid" ,'emsite/catalog');
-
-	var editor = new AnnotationEditor();
-	editor.scope = scope;
+	
+	jAngular.init(scope);
+	var editor = new AnnotationEditor(scope);
 	scope.add("annotationEditor",editor);	
 	
 	editor.loadModels();
 	editor.loadSelectors();
 	
-	jAngular.init(scope);
+
 	editor.connect();
 
 });

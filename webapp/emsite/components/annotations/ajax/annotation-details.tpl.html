@@ -12,10 +12,10 @@
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
 
     <ul class="annotations-toolbar">
-        <li on-click="selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
+        <li ng-click="fabric.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
         </li>
-        <li ng-click="selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
+        <li ng-click="fabric.selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
             <svg class="icon icon-draw" viewBox="0 0 32 32"><use xlink:href="#icon-draw"></use></svg>
         </li>
         <li ng-show="shapeToolType == 'rectangle'" ng-click="setShapeTypeFromUi('rectangle')" ng-class="{ 'active': currentTool.name == 'shape' }">
@@ -34,16 +34,16 @@
                 </li>
             </ul>
         </li>
-        <li ng-click="selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
+        <li ng-click="fabric.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
             <svg class="icon icon-arrow" viewBox="0 0 32 32"><use xlink:href="#icon-arrow"></use></svg>
         </li>
-        <li ng-click="selectTool('text')" ng-class="{ 'active': currentTool.name == 'text' }">
+        <li ng-click="fabric.selectTool('text')" ng-class="{ 'active': currentTool.name == 'text' }">
             <svg class="icon icon-text" viewBox="0 0 32 32"><use xlink:href="#icon-text"></use></svg>
         </li>
-        <li ng-click="selectTool('zoom')" ng-class="{ 'active': currentTool.name == 'zoom' }">
+        <li ng-click="fabric.selectTool('zoom')" ng-class="{ 'active': currentTool.name == 'zoom' }">
             <svg class="icon icon-zoom-in" viewBox="0 0 32 32"><use xlink:href="#icon-zoom-in"></use></svg>
         </li>
-        <li ng-click="selectTool('comment')" ng-class="{ 'active': currentTool.name == 'comment' }">
+        <li ng-click="fabric.selectTool('comment')" ng-class="{ 'active': currentTool.name == 'comment' }">
             <svg class="icon icon-comment" viewBox="0 0 32 32"><use xlink:href="#icon-comment"></use></svg>
         </li>
         <li ng-click="exportCanvas()">
@@ -56,8 +56,8 @@
         </li>
 
         <!--
-        <li class="comment" ng-click="selectTool('comment')"><span class="icon glyphicon glyphicon-pushpin"></span></li>
-        <li class="colorpicker" ng-click="selectTool('colorpicker')"><span class="icon glyphicon glyphicon-tint colorpicker"></span></li>
+        <li class="comment" ng-click="fabric.selectTool('comment')"><span class="icon glyphicon glyphicon-pushpin"></span></li>
+        <li class="colorpicker" ng-click="fabric.selectTool('colorpicker')"><span class="icon glyphicon glyphicon-tint colorpicker"></span></li>
         <li class="comments"><span class="icon glyphicon glyphicon-comment"></span><span class="additional-info">{{comments.length}}</span></li>
         <li class="approved"><span class="icon glyphicon glyphicon-thumbs-up"></span><span class="additional-info">{{getApprovals().length}}</span></li>
         <li class="rejected"><span class="icon glyphicon glyphicon-thumbs-down"></span><span class="additional-info">{{getRejections().length}}</span></li>

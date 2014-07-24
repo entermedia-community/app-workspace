@@ -1,18 +1,20 @@
 
-var AnnotationEditor = function() {
+var AnnotationEditor = function(scope) {
 	
 	var out = {
 		currentAnnotatedAsset : null,
 		fabric: null,
-		scope : null,
+		scope : scope,
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
 			//TODO this should be part of jAnQular and loaded by $.getScript ?
-			$("div.annotations-carousel a img, ul.annotations-toolbar > li [ng-click]").livequery('click', function() 
+			$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click]").livequery('click', function() 
 			{
 				var theimg = jQuery(this);
 				var code = theimg.attr("ng-click");
+				console.log('Doing ng-click replacement:', code);
+				fabric = scope.fabric;	
 				eval(code);
 			});
 			//then what is really in here?

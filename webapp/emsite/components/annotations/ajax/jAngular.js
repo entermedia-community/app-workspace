@@ -19,7 +19,6 @@ var Scope = function() {
 				return parentScope.get(name);
 			}
 			return found;
-			//return $scope[name];
 		},
 		createScope: function()
 		{
