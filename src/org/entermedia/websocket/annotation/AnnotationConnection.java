@@ -62,6 +62,7 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 			else if ("save".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set
+				json.get("annotation");
 				JSONObject obj = new JSONObject();
 				obj.put("stuff", "array of annotations");
 				remoteEndpointBasic.sendText(obj.toJSONString());
