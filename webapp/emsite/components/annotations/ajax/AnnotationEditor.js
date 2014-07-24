@@ -81,12 +81,17 @@ var AnnotationEditor = function() {
 			if (socket)
 			{
 				var scope = this.scope;
+				var editor = this;
 				base_destination = "ws://localhost:8080/entermedia/services/websocket/echoProgrammatic";
 				final_destination = "" + base_destination + "?catalogid=" + scope.catalogid + "&collectionid=" + scope.collectionid;
 				connection = new socket(final_destination);
 				connection.onopen = function(e) {
 					console.log('Opened a connection!');
 					console.log(e);
+					
+					var command = SocketCommand("list");
+					command.assetid = editor.currentAnnotatedAsset.assetData.id;
+					connection.sendCommand(command);	
 				};
 				connection.onclose = function(e) {
 					console.log('Closed a connection!');

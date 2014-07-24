@@ -18,10 +18,6 @@ jQuery(document).ready(function()
 	editor.loadSelectors();
 	
 	jAngular.init(scope);
-	
 	editor.connect();
-	var command = SocketCommand("list");
-	command.assetid = editor.currentAnnotatedAsset.assetData.id;
-	connection.sendCommand(command);	
 
 });
