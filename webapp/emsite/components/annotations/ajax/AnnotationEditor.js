@@ -22,13 +22,14 @@ var AnnotationEditor = function(scope) {
 		loadModels : function()
 		{
 			var scope = this.scope;
-			
-			loadFabricModel(scope);
-			// this may not be working
+
 			$.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js", function()
 			{
 				console.log("Loaded" + scope.fabric );
 			});
+						
+			loadFabricModel(scope);
+			// this may not be working
 			
 			fabric = scope.fabric;
 
