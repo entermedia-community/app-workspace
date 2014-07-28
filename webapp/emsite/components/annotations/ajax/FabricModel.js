@@ -240,6 +240,9 @@ var FabricModel = function (scope) {
 			}
 		})
 	})();
+
+
+
 	out.canvas.on('mouse:down', function(e) {
 		var pointer, _ref;
 		pointer = _this.canvas.getPointer(e.e);
@@ -249,7 +252,7 @@ var FabricModel = function (scope) {
 		if (!scope.readyToComment) {
 			if (scope.annotationAction !== null) {
 				console.log('canceling annotationAction');
-				$timeout.cancel(scope.annotationAction);
+				setTimeout.cancel(scope.annotationAction);
 			}
 			console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
 			if ((_ref = scope.currentTool.events) != null) {
@@ -263,14 +266,15 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('mouse:up', function(e) {
 		var _ref;
-		scope.mouseDown = false;
+		// mouse down: e.e.which == 1
+		// mouse not down: e.e.which == 0
 		if (scope.currentTool.annotating && !scope.readyToComment) {
 			if (scope.currentTool.name === 'comment') {
 				console.log('Calling readyToComment() now');
 				readyToComment();
 			} else {
 				console.log('Calling delayed readyToComment()');
-				scope.annotationAction = $timeout(readyToComment, 1000);
+				scope.annotationAction = setTimeout(readyToComment, 1000);
 			}
 		}
 		if ((_ref = scope.currentTool.events) != null) {
