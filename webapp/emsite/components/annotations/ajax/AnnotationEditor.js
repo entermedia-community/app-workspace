@@ -1,4 +1,5 @@
 
+//Controller
 var AnnotationEditor = function(scope) {
 	
 	var out = {
@@ -54,6 +55,9 @@ var AnnotationEditor = function(scope) {
 			
 					var colorpicker = {hex:colors[2]};
 					scope.colorpicker = colorpicker;
+					
+					scope.annotationEditor.fabricModel.selectTool("draw");
+					
 				},
 				failure: function(errMsg) {
 					alert(errMsg);
@@ -65,7 +69,7 @@ var AnnotationEditor = function(scope) {
 			var aa = new AnnotatedAsset();
 			aa.assetData = assetData;
 			aa.scope = scope;
-			
+			aa.annotations = [];
 			//TODO: Get Annotations
 			
 			return aa;
@@ -77,6 +81,31 @@ var AnnotationEditor = function(scope) {
 			
 			this.fabricModel.setBackgroundImage(url);
 		},
+		createNewAnnotation: function()
+		{
+			var annot = new Annotation();
+			annot.user = "admin";
+			annot.id = 123;
+			annot.date = new Date();
+			return annot;
+		},
+		fabricObjectAdded: function(fabricObject)
+		{
+			if( this.currentAnnotatedAsset.currentAnnotation == null )
+			{
+				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(); //TODO: Init this with username
+				
+				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
+			}
+			this.currentAnnotatedAsset.currentAnnotation.pushFabricObject(fabricObject);
+			
+			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
+			
+			jAngular.render(this.scope, "#annotationlist");
+			
+			//Update network?
+		}
+		,
 		findAssetData: function(inAssetId)
 		{
 			$.each(this.scope.assets,function(index,asset)
@@ -156,11 +185,35 @@ var SocketCommand = function(inCommand) {
 var AnnotatedAsset = function() {	
 	var out = {
 		assetData: null,
-		scope: null,
-		annotations : null
+		annotations : [],
+		currentAnnotation: null,
+		pushAnnotation: function( inAnnotation)
+		{
+			this.annotations.push( inAnnotation );
+		}
 	};
 	return out;	
 }
+
+var Annotation = function() {	
+	var out = {
+		id: null,
+		user: null,
+		comment: "",
+		date : [],
+		fabricObjects: [],	
+		getUserName: function()
+		{
+			return "demouser";
+		},
+		pushFabricObject: function( inObject )
+		{
+			this.fabricObjects.push( inObject );
+		}
+	};
+	return out;	
+}
+
 
 
 var loadFabricModel = function(scope)

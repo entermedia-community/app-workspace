@@ -211,7 +211,7 @@ var FabricModel = function (scope) {
 		    }
 		    if (scope.currentTool.name === 'draw') {
 		      _this.canvas.freeDrawingBrush.color = scope.colorpicker.hex;
-		      _this.canvas.freeDrawingBrush.width = scope.brushWidth;
+		      _this.canvas.freeDrawingBrush.width = 5;
 		    }
 		  }
 		  
@@ -241,7 +241,22 @@ var FabricModel = function (scope) {
 		})
 	})();
 
-
+   readyToComment = function() {
+      scope.fabricModel.selectTool('disabled');
+      //scope.fabricModel.readyToComment = true;
+      scope.fabricModel.canvas.isDrawingMode = false;
+     /*
+      $timeout((function() {
+        $('#user-comment-input').focus();
+        return em.unit;
+      }), 100);
+      $('.upper-canvas').css({
+        'background': 'rgba(255,255,255,0.7)'
+      });
+      return em.unit;
+    */  
+    };
+ 
 
 	out.canvas.on('mouse:down', function(e) {
 		var pointer, _ref;
@@ -252,7 +267,7 @@ var FabricModel = function (scope) {
 		if (!scope.readyToComment) {
 			if (scope.annotationAction !== null) {
 				console.log('canceling annotationAction');
-				setTimeout.cancel(scope.annotationAction);
+				clearTimeout(scope.annotationAction);
 			}
 			console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
 			if ((_ref = scope.currentTool.events) != null) {
@@ -287,9 +302,9 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('mouse:move', function(e) {
 		var _ref;
-		if (e.e.which) {
-			console.log('MOUSEMOVE EVENT: ', e);
-		}
+//		if (e.e.which) {
+//			console.log('MOUSEMOVE EVENT: ', e);
+//		}
 		_this.canvas.calcOffset();
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.mousemove === "function") {
@@ -302,8 +317,8 @@ var FabricModel = function (scope) {
 	out.canvas.on('object:added', function(obj) {
 		var _ref;
 		if (scope.currentTool.annotating) {
-			obj.target.selectable = scope.canSelect();
-			scope.currentAnnotationGroup.push(obj.target);
+			//obj.target.selectable = scope.canSelect();
+			scope.annotationEditor.fabricObjectAdded(obj.target);
 		}
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.objectadded === "function") {

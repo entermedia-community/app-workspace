@@ -49,13 +49,21 @@ var Replacer = function() {
 				}
 				
 				var key = inCode.substring(start+2,end);
-				var variable = scope.get(key); //check for property
+				var value = null;
+				try
+				{
+					value = scope.get(key); //check for property
+				} 
+				catch ( err )
+				{
+					value = err.message;
+				}	
 				
-				if( typeof variable != 'undefined')
+				if( typeof value !== 'undefined')
 				{
 					//sub = replace(sub,inValues);  //recursive
-					inCode = inCode.substring(0,start) + variable + inCode.substring(end+2);
-					start = start + variable.length + 1;
+					inCode = inCode.substring(0,start) + value + inCode.substring(end+2);
+					start = start + key.length + 1;
 				}				
 				else
 				{
@@ -70,12 +78,18 @@ var Replacer = function() {
 
 var jAngular =  {};
 
-jAngular.render = function(scope)
+jAngular.render = function(scope, div)
 { 
 	var replacer = new Replacer();
 	
+	var selector = 'li[ng-repeat]';
+	if( div )
+	{
+		selector = div + " " + selector;
+	} 
+	
 	//Live query this?
-	$( 'li[ng-repeat]' ).each(function( index ) 
+	$( selector ).each(function( index ) 
 	{
 		var li = $(this);
 		var vars = li.attr("ng-repeat");
@@ -87,15 +101,21 @@ jAngular.render = function(scope)
 		var rows = scope.get(loopname);  //TODO: Find the name
 		
 		//set a local scope of asset = rows[i];
-		var content = li.html();
-		li.html("");
+		var origContent = this.origContent;
+		if( typeof( origContent ) === 'undefined' )
+		{
+			origContent = li.html();
+			li.html("");
+			this.origContent =origContent; 
+		}
+		
 		if( rows )
 		{
 			$.each(rows, function(index, value) {
 				//TODO: replace scope variables
 				var localscope = scope.createScope();
 				localscope.add(rowname,value);
-				var evalcontent = replacer.replace(content,localscope);
+				var evalcontent = replacer.replace(origContent,localscope);
 				evalcontent = evalcontent.replace("ng-src","src");
 				li.append(evalcontent);
 				

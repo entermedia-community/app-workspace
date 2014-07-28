@@ -93,7 +93,8 @@
             <h3>{{currentAnnotation.annotation.name}}</h3>
         </div>
         <div class="col-md-3">
-            <ul class="comment-list">
+            <ul class="comment-list" id="annotationlist">
+<!--
                 <li class="user-input clearfix" ng-show="readyToComment">
                     <form id="annotation-input">
                         <textarea id="user-comment-input" name="user-input" rows="8" cols="40" ng-model="newCommentText"></textarea>
@@ -104,25 +105,24 @@
                     </form>
                 </li>
                 <li class="separator" ng-show="readyToComment"></li>
-                <li ng-repeat="annotation in annotations" class="comment {{annotation.comment.type}}">
-                    <div ng-switch="annotation.comment.type">
-                        <div ng-when="normal">
-                            <div class="comment-holder">
-                                <div class="user-gravatar">
-                                    <img ng-src="http://www.gravatar.com/avatar/{{annotation.user.email}}" alt="" />
+-->                
+                <li ng-repeat="annotation in annotations" >
+                    <div ng-when="normal" class="comment">
+                        <div class="comment-holder">
+                            <div class="user-gravatar">
+                                <img ng-src="http://www.gravatar.com/avatar/{{annotation.user.email}}" alt="" />
+                            </div>
+                            <div class="comment-content">
+                                <strong>{{annotation.getUserName()}}</strong>
+                                <p>
+                                    {{annotation.comment}}
+                                </p>
                                 </div>
-                                <div class="comment-content">
-                                    <strong>{{annotation.user.name}}</strong>
-                                    <p>
-                                        {{annotation.comment.text}}
-                                    </p>
-                                    </div>
-                                </div>
-                                <div class="comment-meta">
-                                    <span class="comment-id">{{annotation.id}}</span>
-                                    <button ng-click="removeComment(annotation.id)">remove</button>
-                                    <span class="comment-timestamp pull-right">{{annotation.comment.timestamp}}</span>
-                                </div>
+                            </div>
+                            <div class="comment-meta">
+                                <span class="comment-id">{{annotation.id}}</span>
+                                <button ng-click="removeComment(annotation.id)">remove</button>
+                                <span class="comment-timestamp pull-right">{{annotation.date}}</span>
                             </div>
                         </div>
                     </div>
