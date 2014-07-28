@@ -47,7 +47,7 @@ var FabricModel = function (scope) {
 				types: [
 					{
 						name: 'circle',
-						type: _this.fabric.Circle,
+						type: fabric.Circle,
 						blank: {
 							radius: 1,
 							strokeWidth: 5,
@@ -64,7 +64,7 @@ var FabricModel = function (scope) {
 						}
 					}, {
 						name: 'rectangle',
-						type: _this.fabric.Rect,
+						type: fabric.Rect,
 						blank: {
 							height: 1,
 							width: 1,
@@ -188,7 +188,7 @@ var FabricModel = function (scope) {
 			}
 		],
 		setBackgroundImage: function(path) {
-			_this.fabric.util.loadImage(path, function(src) {
+			fabric.util.loadImage(path, function(src) {
 				var center, realImage;
 				realImage = new fabric.Image(src);
 				canvas.setWidth(realImage.width);
@@ -222,7 +222,7 @@ var FabricModel = function (scope) {
 		var canvas = _this.__canvas = new fabric.Canvas('annotation_canvas');
 		canvas.on("after:render", function() {
 		});
-		_this.setBackgroundImage(path);
+		// _this.setBackgroundImage(path);
 		out.canvas = canvas;
 	})();
 	(function() {

@@ -14,10 +14,11 @@ jQuery(document).ready(function()
 	
 	jAngular.init(scope);
 	var editor = new AnnotationEditor(scope);
-	scope.add("annotationEditor",editor);	
+	scope.add("annotationEditor",editor);
 	
 	editor.loadModels();
 	editor.loadSelectors();
+	editor.fabric.setBackgroundImage(editor.currentAnnotatedAsset.sourcepath)
 	
 
 	editor.connect();
