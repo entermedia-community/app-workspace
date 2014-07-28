@@ -24,7 +24,7 @@ var AnnotationEditor = function(scope) {
 			var scope = this.scope;
 
 			// $.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js", function()
-			// {
+			// {setCurrentAnnotatedAsset
 			// 	console.log("Loaded" + scope.fabric );
 			// });
 
@@ -66,7 +66,10 @@ var AnnotationEditor = function(scope) {
 		},
 		setCurrentAnnotatedAsset: function(annotatedAsset) {
 			this.currentAnnotatedAsset = annotatedAsset;
-			this.fabricModel.setBackgroundImage(apphome+"/"+annotatedAsset.assetData.sourcepath);
+			//  appname    prefixmedium   sourcepath appendix
+			var url = this.scope.apphome + "/views/modules/asset/downloads/preview/large/" + annotatedAsset.assetData.sourcepath + "/image.jpg";
+			
+			this.fabricModel.setBackgroundImage(url);
 		},
 		findAssetData: function(inAssetId)
 		{

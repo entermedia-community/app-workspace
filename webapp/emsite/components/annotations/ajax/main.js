@@ -12,7 +12,6 @@ jQuery(document).ready(function()
 	scope.add("collectionid", $("#collectiontoplevel").data("collectionid") );
 	scope.add("catalogid" ,'emsite/catalog');
 	
-	jAngular.init(scope);
 	var editor = new AnnotationEditor(scope);
 	scope.add("annotationEditor",editor);
 	
@@ -20,5 +19,7 @@ jQuery(document).ready(function()
 	editor.loadSelectors();	
 
 	editor.connect();
+	
+	jAngular.render(scope);
 
 });

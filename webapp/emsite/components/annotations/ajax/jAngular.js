@@ -70,7 +70,7 @@ var Replacer = function() {
 
 var jAngular =  {};
 
-jAngular.init = function(scope)
+jAngular.render = function(scope)
 { 
 	var replacer = new Replacer();
 	
