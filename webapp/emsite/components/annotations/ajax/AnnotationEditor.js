@@ -32,6 +32,8 @@ var AnnotationEditor = function(scope) {
 			// this may not be working
 			
 			// fabric = scope.fabric;
+			
+
 
 			// load asset data
 			jQuery.ajax({
@@ -48,6 +50,10 @@ var AnnotationEditor = function(scope) {
 					{
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.createAnnotatedAsset(data[0]));
 					}
+					var colors = ["#723421","#523421","#323421","#123421"];
+			
+					var colorpicker = {hex:colors[2]};
+					scope.colorpicker = colorpicker;
 				},
 				failure: function(errMsg) {
 					alert(errMsg);
