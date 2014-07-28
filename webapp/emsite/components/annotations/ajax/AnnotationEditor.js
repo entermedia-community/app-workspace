@@ -159,6 +159,8 @@ var AnnotatedAsset = function() {
 
 var loadFabricModel = function(scope)
 {
-	scope.annotationEditor.fabricModel = new FabricModel(scope);
+	var fabricModel = new FabricModel(scope);
+	scope.annotationEditor.fabricModel = fabricModel;
+	scope.add("fabricModel",fabricModel);
 
 }

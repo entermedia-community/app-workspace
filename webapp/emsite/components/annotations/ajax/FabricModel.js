@@ -201,7 +201,8 @@ var FabricModel = function (scope) {
 		},
 		selectTool: function(toolname) {
 		  var prop;
-		  if (scope.readyToComment != null) {
+		  // if (scope.readyToComment != null) {
+		  if (true) {
 		    scope.currentTool = _.findWhere(scope.fabricModel.toolkit, {
 		      name: toolname
 		    });
@@ -317,5 +318,5 @@ var FabricModel = function (scope) {
 	});
 
 	return out;
-	
+
 }
