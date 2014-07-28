@@ -17,9 +17,7 @@ jQuery(document).ready(function()
 	scope.add("annotationEditor",editor);
 	
 	editor.loadModels();
-	editor.loadSelectors();
-	editor.fabric.setBackgroundImage(editor.currentAnnotatedAsset.sourcepath)
-	
+	editor.loadSelectors();	
 
 	editor.connect();
 

@@ -1,7 +1,7 @@
 var FabricModel = function (scope) {
 	var _this = null;
 	var out = {
-		fabric: null,
+		// fabricModel: null,
 		canvas: null,
 		scope: scope,
 		lastClick: {
@@ -100,7 +100,7 @@ var FabricModel = function (scope) {
 						spec.top = pointer.y;
 						shape = new type.type(spec);
 						canvas.add(shape);
-						return em.unit;
+						
 					},
 					objectadded: null,
 					mousemove: function(e, canvas) {
@@ -115,7 +115,7 @@ var FabricModel = function (scope) {
 							shape.set(type.drawparams(pointer));
 							canvas.renderAll();
 						}
-						return em.unit;
+						
 					}
 				}
 			}, {
@@ -187,21 +187,22 @@ var FabricModel = function (scope) {
 				annotating: false
 			}
 		],
-		setBackgroundImage: function(path) {
-			fabric.util.loadImage(path, function(src) {
-				var center, realImage;
+		setBackgroundImage: function(inPath) {
+			fabric.util.loadImage(inPath, function(src) {
+				var center, realImage, canvas;
+				canvas = _this.canvas;
 				realImage = new fabric.Image(src);
 				canvas.setWidth(realImage.width);
 				canvas.setHeight(realImage.height);
 				// center = canvas.getCenter();
 				canvas.setBackgroundImage(realImage, canvas.renderAll.bind(canvas));
 			});
-			return em.unit;
+			
 		},
 		selectTool: function(toolname) {
 		  var prop;
 		  if (scope.readyToComment != null) {
-		    scope.currentTool = _.findWhere(scope.fabric.toolkit, {
+		    scope.currentTool = _.findWhere(scope.fabricModel.toolkit, {
 		      name: toolname
 		    });
 		    for (prop in scope.currentTool.properties) {
@@ -212,7 +213,7 @@ var FabricModel = function (scope) {
 		      _this.canvas.freeDrawingBrush.width = scope.brushWidth;
 		    }
 		  }
-		  return em.unit;
+		  
 		}
 	} // end of out definition
 
@@ -222,7 +223,7 @@ var FabricModel = function (scope) {
 		var canvas = _this.__canvas = new fabric.Canvas('annotation_canvas');
 		canvas.on("after:render", function() {
 		});
-		// _this.setBackgroundImage(path);
+		// _this.setBackgroundImage(inPath);
 		out.canvas = canvas;
 	})();
 	(function() {
@@ -238,79 +239,83 @@ var FabricModel = function (scope) {
 			}
 		})
 	})();
-		out.canvas.on('mouse:down', function(e) {
-			var pointer, _ref;
-			pointer = _this.canvas.getPointer(e.e);
-			scope.mouseDown = true;
-			scope.left = pointer.x;
-			scope.top = pointer.y;
-			if (!scope.readyToComment) {
-				if (scope.annotationAction !== null) {
-					console.log('canceling annotationAction');
-					$timeout.cancel(scope.annotationAction);
-				}
-				console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
-				if ((_ref = scope.currentTool.events) != null) {
-					if (typeof _ref.mousedown === "function") {
-						_ref.mousedown(e, _this.canvas);
-					}
+	out.canvas.on('mouse:down', function(e) {
+		var pointer, _ref;
+		pointer = _this.canvas.getPointer(e.e);
+		scope.mouseDown = true;
+		scope.left = pointer.x;
+		scope.top = pointer.y;
+		if (!scope.readyToComment) {
+			if (scope.annotationAction !== null) {
+				console.log('canceling annotationAction');
+				$timeout.cancel(scope.annotationAction);
+			}
+			console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
+			if ((_ref = scope.currentTool.events) != null) {
+				if (typeof _ref.mousedown === "function") {
+					_ref.mousedown(e, _this.canvas);
 				}
 			}
-			return em.unit;
-		});
+		}
+		
+	});
 
-		out.canvas.on('mouse:up', function(e) {
-			var _ref;
-			scope.mouseDown = false;
-			if (scope.currentTool.annotating && !scope.readyToComment) {
-				if (scope.currentTool.name === 'comment') {
-					console.log('Calling readyToComment() now');
-					readyToComment();
-				} else {
-					console.log('Calling delayed readyToComment()');
-					scope.annotationAction = $timeout(readyToComment, 1000);
-				}
+	out.canvas.on('mouse:up', function(e) {
+		var _ref;
+		scope.mouseDown = false;
+		if (scope.currentTool.annotating && !scope.readyToComment) {
+			if (scope.currentTool.name === 'comment') {
+				console.log('Calling readyToComment() now');
+				readyToComment();
+			} else {
+				console.log('Calling delayed readyToComment()');
+				scope.annotationAction = $timeout(readyToComment, 1000);
 			}
-			if ((_ref = scope.currentTool.events) != null) {
-				if (typeof _ref.mouseup === "function") {
-					_ref.mouseup(e, _this.canvas);
-				}
+		}
+		if ((_ref = scope.currentTool.events) != null) {
+			if (typeof _ref.mouseup === "function") {
+				_ref.mouseup(e, _this.canvas);
 			}
-			return em.unit;
-		});
-		out.canvas.on('mouse:move', function(e) {
-			var _ref;
-			if (e.e.which) {
-				console.log('MOUSEMOVE EVENT: ', e);
+		}
+		
+	});
+
+	out.canvas.on('mouse:move', function(e) {
+		var _ref;
+		if (e.e.which) {
+			console.log('MOUSEMOVE EVENT: ', e);
+		}
+		_this.canvas.calcOffset();
+		if ((_ref = scope.currentTool.events) != null) {
+			if (typeof _ref.mousemove === "function") {
+				_ref.mousemove(e, _this.canvas);
 			}
-			_this.canvas.calcOffset();
-			if ((_ref = scope.currentTool.events) != null) {
-				if (typeof _ref.mousemove === "function") {
-					_ref.mousemove(e, _this.canvas);
-				}
+		}
+		
+	});
+
+	out.canvas.on('object:added', function(obj) {
+		var _ref;
+		if (scope.currentTool.annotating) {
+			obj.target.selectable = scope.canSelect();
+			scope.currentAnnotationGroup.push(obj.target);
+		}
+		if ((_ref = scope.currentTool.events) != null) {
+			if (typeof _ref.objectadded === "function") {
+				_ref.objectadded(obj, _this.canvas);
 			}
-			return em.unit;
-		});
-		out.canvas.on('object:added', function(obj) {
-			var _ref;
-			if (scope.currentTool.annotating) {
-				obj.target.selectable = scope.canSelect();
-				scope.currentAnnotationGroup.push(obj.target);
-			}
-			if ((_ref = scope.currentTool.events) != null) {
-				if (typeof _ref.objectadded === "function") {
-					_ref.objectadded(obj, _this.canvas);
-				}
-			}
-			_this.canvas.calcOffset();
-			_this.canvas.renderAll();
-			if (!scope.left) {
-				scope.left = obj.target.left;
-			}
-			if (!scope.top) {
-				scope.top = obj.target.top;
-			}
-			return em.unit;
-		});
+		}
+		_this.canvas.calcOffset();
+		_this.canvas.renderAll();
+		if (!scope.left) {
+			scope.left = obj.target.left;
+		}
+		if (!scope.top) {
+			scope.top = obj.target.top;
+		}
+		
+	});
+
 	return out;
+	
 }

@@ -3,7 +3,7 @@ var AnnotationEditor = function(scope) {
 	
 	var out = {
 		currentAnnotatedAsset : null,
-		fabric: null,
+		fabricModel: null,
 		scope : scope,
 		loadSelectors : function()
 		{
@@ -14,7 +14,7 @@ var AnnotationEditor = function(scope) {
 				var theimg = jQuery(this);
 				var code = theimg.attr("ng-click");
 				console.log('Doing ng-click replacement:', code);
-				fabric = scope.fabric;	
+				// fabric = scope.fabric;	
 				eval(code);
 			});
 			//then what is really in here?
@@ -23,15 +23,15 @@ var AnnotationEditor = function(scope) {
 		{
 			var scope = this.scope;
 
-			$.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js", function()
-			{
-				console.log("Loaded" + scope.fabric );
-			});
-						
+			// $.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js", function()
+			// {
+			// 	console.log("Loaded" + scope.fabric );
+			// });
+
 			loadFabricModel(scope);
 			// this may not be working
 			
-			fabric = scope.fabric;
+			// fabric = scope.fabric;
 
 			// load asset data
 			jQuery.ajax({
@@ -46,7 +46,7 @@ var AnnotationEditor = function(scope) {
 					scope.add('assets', data);
 					if( data.length > 0 )
 					{
-						scope.annotationEditor.currentAnnotatedAsset = scope.annotationEditor.createAnnotatedAsset(data[0]);
+						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.createAnnotatedAsset(data[0]));
 					}
 				},
 				failure: function(errMsg) {
@@ -63,6 +63,10 @@ var AnnotationEditor = function(scope) {
 			//TODO: Get Annotations
 			
 			return aa;
+		},
+		setCurrentAnnotatedAsset: function(annotatedAsset) {
+			this.currentAnnotatedAsset = annotatedAsset;
+			this.fabricModel.setBackgroundImage(apphome+"/"+annotatedAsset.assetData.sourcepath);
 		},
 		findAssetData: function(inAssetId)
 		{
@@ -152,6 +156,6 @@ var AnnotatedAsset = function() {
 
 var loadFabricModel = function(scope)
 {
-	scope.annotationEditor.fabric = new FabricModel(scope);
+	scope.annotationEditor.fabricModel = new FabricModel(scope);
 
 }

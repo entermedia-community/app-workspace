@@ -17,10 +17,10 @@
 
     <ul class="annotations-toolbar">
         <!-- try to reference the right object -->
-        <li ng-click="annotationEditor.fabric.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
         </li>
-        <li ng-click="fabric.selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
             <svg class="icon icon-draw" viewBox="0 0 32 32"><use xlink:href="#icon-draw"></use></svg>
         </li>
         <li ng-show="shapeToolType == 'rectangle'" ng-click="setShapeTypeFromUi('rectangle')" ng-class="{ 'active': currentTool.name == 'shape' }">
@@ -39,16 +39,16 @@
                 </li>
             </ul>
         </li>
-        <li ng-click="fabric.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
             <svg class="icon icon-arrow" viewBox="0 0 32 32"><use xlink:href="#icon-arrow"></use></svg>
         </li>
-        <li ng-click="fabric.selectTool('text')" ng-class="{ 'active': currentTool.name == 'text' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('text')" ng-class="{ 'active': currentTool.name == 'text' }">
             <svg class="icon icon-text" viewBox="0 0 32 32"><use xlink:href="#icon-text"></use></svg>
         </li>
-        <li ng-click="fabric.selectTool('zoom')" ng-class="{ 'active': currentTool.name == 'zoom' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('zoom')" ng-class="{ 'active': currentTool.name == 'zoom' }">
             <svg class="icon icon-zoom-in" viewBox="0 0 32 32"><use xlink:href="#icon-zoom-in"></use></svg>
         </li>
-        <li ng-click="fabric.selectTool('comment')" ng-class="{ 'active': currentTool.name == 'comment' }">
+        <li ng-click="annotationEditor.fabricModel.selectTool('comment')" ng-class="{ 'active': currentTool.name == 'comment' }">
             <svg class="icon icon-comment" viewBox="0 0 32 32"><use xlink:href="#icon-comment"></use></svg>
         </li>
         <li ng-click="exportCanvas()">
