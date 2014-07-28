@@ -1,4 +1,5 @@
 <!-- fabric formatting stuff... probably does not belong here -->
+    <script src="$home$apphome/components/annotations/ajax/FabricModel.js"></script>
     <script src="$home$apphome/components/annotations/ajax/AnnotationEditor.js"></script>
     <script src="$home$apphome/components/annotations/ajax/jAngular.js"></script>
     <script src="$home$apphome/components/annotations/ajax/main.js"></script>
@@ -12,7 +13,8 @@
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
 
     <ul class="annotations-toolbar">
-        <li ng-click="fabric.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
+        <!-- try to reference the right object -->
+        <li ng-click="annotationEditor.fabric.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
         </li>
         <li ng-click="fabric.selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
