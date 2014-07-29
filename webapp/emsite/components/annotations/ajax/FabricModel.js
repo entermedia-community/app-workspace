@@ -228,6 +228,7 @@ var FabricModel = function (scope) {
 	(function() {
 		var canvas = _this.__canvas = new fabric.Canvas('annotation_canvas');
 		canvas.on("after:render", function() {
+			canvas.calcOffset();
 		});
 		// _this.setBackgroundImage(inPath);
 		out.canvas = canvas;
@@ -271,10 +272,10 @@ var FabricModel = function (scope) {
 		_this.lastClick.top = pointer.y;
 		if (!scope.readyToComment) {
 			if (scope.annotationAction !== null) {
-				console.log('canceling annotationAction');
+				// console.log('canceling annotationAction');
 				clearTimeout(scope.annotationAction);
 			}
-			console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
+			// console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
 			if ((_ref = scope.currentTool.events) != null) {
 				if (typeof _ref.mousedown === "function") {
 					_ref.mousedown(e, _this.canvas);
@@ -290,10 +291,10 @@ var FabricModel = function (scope) {
 		// mouse not down: e.e.which == 0
 		if (scope.currentTool.annotating && !scope.readyToComment) {
 			if (scope.currentTool.name === 'comment') {
-				console.log('Calling readyToComment() now');
+				// console.log('Calling readyToComment() now');
 				readyToComment();
 			} else {
-				console.log('Calling delayed readyToComment()');
+				// console.log('Calling delayed readyToComment()');
 				scope.annotationAction = setTimeout(readyToComment, 1000);
 			}
 		}
@@ -307,7 +308,7 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('mouse:move', function(e) {
 		var _ref;
-		_this.canvas.calcOffset();
+		// _this.canvas.calcOffset();
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.mousemove === "function") {
 				_ref.mousemove(e, _this.canvas);
@@ -321,13 +322,14 @@ var FabricModel = function (scope) {
 		if (scope.currentTool.annotating) {
 			//obj.target.selectable = scope.canSelect();
 			scope.annotationEditor.fabricObjectAdded(obj.target);
+			console.log("We called object:added event");
 		}
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.objectadded === "function") {
 				_ref.objectadded(obj, _this.canvas);
 			}
 		}
-		_this.canvas.calcOffset();
+		// _this.canvas.calcOffset();
 		_this.canvas.renderAll();
 		if (!_this.lastClick.left) {
 			_this.lastClick.left = obj.target.left;

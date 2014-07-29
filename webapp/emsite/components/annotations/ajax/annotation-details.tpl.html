@@ -82,7 +82,7 @@
                     </li>
                     <li ng-repeat="image in assets" class="thumb clearfix" class="{{if( parentScope.currentAnnotation.annotation.id === image.id) return 'active' }}">
                     	<a ui-sref="app.annotations.details({annotationID: image.id})">
-                            <img ng-click='switchToAsset("{{image.id}}")' ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
+                            <img ng-click='scope.annotationEditor.switchToAsset("{{image.id}}")' ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
                         </a>
                     </li>
                     <li class="next icon-arrow-right">

@@ -102,20 +102,35 @@ var AnnotationEditor = function(scope) {
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
 			jAngular.render(this.scope, "#annotationlist");
+
+			// need to reset currentAnnotation ? When would we not want to make a new annotation?
+			// the object:added event gets called seemingly more than it should
+
+			this.currentAnnotatedAsset.currentAnnotation = null;
 			
 			//Update network?
 		}
 		,
 		findAssetData: function(inAssetId)
 		{
+			var outAsset = null;
 			$.each(this.scope.assets,function(index,asset)
 			{
 				if( asset.id == inAssetId )
 				{
-					return asset;
+					outAsset = asset;
 				}
 			});
-			return null;
+			return outAsset;
+		}
+		,
+		switchToAsset: function(assetid) {
+			// if we have an annotatedAsset object already, we should use that
+			// otherwise we have to make a new one.
+			// make a new one for now since no data persists currently
+			var assetInScope = this.findAssetData(assetid);
+			var toAsset = this.createAnnotatedAsset(assetInScope);
+			this.setCurrentAnnotatedAsset(toAsset);
 		}
 		,
 		connect : function()
