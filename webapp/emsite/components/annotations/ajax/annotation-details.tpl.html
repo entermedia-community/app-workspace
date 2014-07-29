@@ -39,7 +39,7 @@
                 </li>
             </ul> -->
         </li>
-        <li ng-click="scope.annotationEditor.fabricModel.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
+        <!--<li ng-click="scope.annotationEditor.fabricModel.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
             <svg class="icon icon-arrow" viewBox="0 0 32 32"><use xlink:href="#icon-arrow"></use></svg>
         </li>
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('text')" ng-class="{ 'active': currentTool.name == 'text' }">
@@ -55,14 +55,12 @@
             <svg class="icon icon-load-images" viewBox="0 0 32 32"><use xlink:href="#icon-load-images"></use></svg>
         </li>
        
-        <!--<li class="last colorpicker-li">
+        <li class="last colorpicker-li">
             <div colorpicker colorpicker-position="bottom" ng-model="colorpicker.hex" colorpicker class="clearfix">
             <svg fill="{{colorpicker.hex}}" class="icon icon-colorpicker" viewBox="0 0 32 32"><use xlink:href="#icon-colorpicker"></use></svg>
             </div>
         </li>
-		-->
 		
-        <!--
         <li class="comment" ng-click="fabric.selectTool('comment')"><span class="icon glyphicon glyphicon-pushpin"></span></li>
         <li class="colorpicker" ng-click="fabric.selectTool('colorpicker')"><span class="icon glyphicon glyphicon-tint colorpicker"></span></li>
         <li class="comments"><span class="icon glyphicon glyphicon-comment"></span><span class="additional-info">{{comments.length}}</span></li>
@@ -90,7 +88,7 @@
                     </li>
                 </ul>
             </div>
-            <h3>{{currentAnnotation.annotation.name}}</h3>
+            <h3>{{scope.annotationEditor.currentAnnotatedAsset.assetData.name}}</h3>
         </div>
         <div class="col-md-3">
             <ul class="comment-list" id="annotationlist">
@@ -120,10 +118,10 @@
                                 </div>
                             </div>
                             <div class="comment-meta">
-                                <span class="comment-id">{{annotation.id}}</span>
-                                <button ng-click="removeComment(annotation.id)">remove</button>
+                                <span class="comment-id">{{annotation.indexCount}}</span>
+                                <button ng-click='scope.annotationEditor.removeAnnotation("{{annotation.id}}")'>remove</button>
                                 <span class="comment-timestamp pull-right">{{annotation.date}}</span>
-                            </div>
+                            </div
                         </div>
                     </div>
                 </li>

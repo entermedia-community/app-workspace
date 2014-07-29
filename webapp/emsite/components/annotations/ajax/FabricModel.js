@@ -158,7 +158,7 @@ var FabricModel = function (scope) {
 							objects = canvas.getObjects();
 							delta = delta * SCALE_FACTOR;
 							transform = [1 + delta, 0, 0, 1 + delta, 0, 0];
-							console.log(transform);
+							// console.log(transform);
 							for (_i = 0, _len = objects.length; _i < _len; _i++) {
 								klass = objects[_i];
 								klass.transformMatrix = transform;
@@ -166,7 +166,7 @@ var FabricModel = function (scope) {
 							}
 							canvas.backgroundImage.transformMatrix = transform;
 							canvas.setWidth(canvas.backgroundImage.width * canvas.backgroundImage.transformMatrix[0]);
-							return canvas.setHeight(canvas.backgroundImage.height * canvas.backgroundImage.transformMatrix[3]);
+							canvas.setHeight(canvas.backgroundImage.height * canvas.backgroundImage.transformMatrix[3]);
 						}
 					},
 					mousedown: function(e, canvas) {
@@ -220,6 +220,10 @@ var FabricModel = function (scope) {
 		setShapeTypeFromUi: function(shapename) {
 			_this.selectTool('shape');
 			_this.scope.currentTool.type = shapename;
+		},
+		clearCanvas: function() {
+			_this.canvas.clear();
+			// _this.scope
 		}
 	} // end of out definition
 

@@ -6,11 +6,12 @@ var AnnotationEditor = function(scope) {
 		currentAnnotatedAsset : null,
 		fabricModel: null,
 		scope : scope,
+		annotatedAssets: [],
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
 			//TODO this should be part of jAnQular and loaded by $.getScript ?
-			$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click]").livequery('click', function() 
+			$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 			{
 				var theimg = jQuery(this);
 				var code = theimg.attr("ng-click");
@@ -49,7 +50,12 @@ var AnnotationEditor = function(scope) {
 					scope.add('assets', data);
 					if( data.length > 0 )
 					{
-						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.createAnnotatedAsset(data[0]));
+						$.each(data, function(index, annotation)
+						{
+							var annotationToAdd = scope.annotationEditor.createAnnotatedAsset(annotation);
+							scope.annotationEditor.annotatedAssets.push(annotationToAdd);
+						});
+						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
 					}
 					var colors = ["#723421","#523421","#323421","#123421", "#fff000"];
 			
@@ -63,7 +69,33 @@ var AnnotationEditor = function(scope) {
 					alert(errMsg);
 				}
 			});
-		},
+		}
+		,
+		getAnnotationById: function(inAnnotationId) {
+			var outAnnotation = null;
+			$.each(scope.annotations, function(index, annotation)
+			{
+				if (annotation.id === inAnnotationId)
+				{
+					outAnnotation = annotation;
+				}
+			});
+			return outAnnotation;
+		}
+		,
+		removeAnnotation: function(annotationid) {
+			console.log("Calling removeAnnotation with id", annotationid);
+			var annotationToRemove = this.getAnnotationById(annotationid);
+			var editor = this;
+			$.each(annotationToRemove.fabricObjects, function(index, item)
+			{
+				editor.fabricModel.canvas.remove(item);
+			});
+			scope.annotations = editor.currentAnnotatedAsset.annotations = _.without(scope.annotations, annotationToRemove);
+			jAngular.render(this.scope, "#annotationlist");
+			
+		}
+		,
 		createAnnotatedAsset: function(assetData)
 		{
 			var aa = new AnnotatedAsset();
@@ -79,13 +111,43 @@ var AnnotationEditor = function(scope) {
 			//  appname    prefixmedium   sourcepath appendix
 			var url = this.scope.apphome + "/views/modules/asset/downloads/preview/large/" + annotatedAsset.assetData.sourcepath + "/image.jpg";
 			
+			this.fabricModel.clearCanvas();
+
 			this.fabricModel.setBackgroundImage(url);
+
+			var editor = this;
+
+			this.scope.annotations = annotatedAsset.annotations;
+			$.each(editor.scope.annotations, function(index, annotation)
+			{
+				$.each(annotation.fabricObjects, function(index, item)
+				{
+					editor.fabricModel.canvas.add(item);
+				});
+				// fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
+				// {
+				// 	origRenderOnAddRemove = this.scope.fabricModel.canvas.renderOnAddRemove
+				// 	this.scope.fabricModel.canvas.renderOnAddRemove = false
+				// 	$.each(group, function(index, item) {
+				// 		this.scope.fabricModel.canvas.add(item);
+				// 	});
+				// 	this.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+				// });
+			});
+			this.scope.fabricModel.canvas.renderAll();
+			jAngular.render(this.scope, "#annotationlist");
+			// this method also needs to clear the canvas and comments and update from the persisted data
+			// TODO: Clear canvas state, refresh with AnnotatedAsset data
+			// TODO: Clear comments, refresh with AnnotatedAsset data
+
+
 		},
-		createNewAnnotation: function()
+		createNewAnnotation: function(annotatedAsset)
 		{
 			var annot = new Annotation();
 			annot.user = "admin";
-			annot.id = 123;
+			annot.id = Math.floor(Math.random() * 100000000).toString();
+			annot.indexCount = annotatedAsset.nextIndex();
 			annot.date = new Date();
 			return annot;
 		},
@@ -93,7 +155,7 @@ var AnnotationEditor = function(scope) {
 		{
 			if( this.currentAnnotatedAsset.currentAnnotation == null )
 			{
-				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(); //TODO: Init this with username
+				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset); //TODO: Init this with username
 				
 				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
 			}
@@ -124,12 +186,24 @@ var AnnotationEditor = function(scope) {
 			return outAsset;
 		}
 		,
-		switchToAsset: function(assetid) {
+		getAnnotatedAsset: function(inAssetId) 
+		{
+			var outAsset = null;
+			$.each(this.scope.annotationEditor.annotatedAssets,function(index,asset)
+			{
+				if( asset.assetData.id == inAssetId )
+				{
+					outAsset = asset;
+				}
+			});
+			return outAsset;
+		}
+		,
+		switchToAsset: function(inAssetId) {
 			// if we have an annotatedAsset object already, we should use that
 			// otherwise we have to make a new one.
 			// make a new one for now since no data persists currently
-			var assetInScope = this.findAssetData(assetid);
-			var toAsset = this.createAnnotatedAsset(assetInScope);
+			var toAsset = this.getAnnotatedAsset(inAssetId);
 			this.setCurrentAnnotatedAsset(toAsset);
 		}
 		,
@@ -202,9 +276,13 @@ var AnnotatedAsset = function() {
 		assetData: null,
 		annotations : [],
 		currentAnnotation: null,
+		annotationIndex: 1,
 		pushAnnotation: function( inAnnotation)
 		{
 			this.annotations.push( inAnnotation );
+		},
+		nextIndex: function() {
+			return this.annotationIndex++;
 		}
 	};
 	return out;	
@@ -213,6 +291,7 @@ var AnnotatedAsset = function() {
 var Annotation = function() {	
 	var out = {
 		id: null,
+		indexCount: null,
 		user: null,
 		comment: "",
 		date : [],
