@@ -51,9 +51,9 @@ var AnnotationEditor = function(scope) {
 					{
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.createAnnotatedAsset(data[0]));
 					}
-					var colors = ["#723421","#523421","#323421","#123421"];
+					var colors = ["#723421","#523421","#323421","#123421", "#fff000"];
 			
-					var colorpicker = {hex:colors[2]};
+					var colorpicker = {hex:colors[4]};
 					scope.colorpicker = colorpicker;
 					
 					scope.annotationEditor.fabricModel.selectTool("draw");

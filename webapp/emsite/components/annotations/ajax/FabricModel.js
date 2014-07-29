@@ -75,20 +75,18 @@ var FabricModel = function (scope) {
 							originY: 'top'
 						},
 						drawparams: function(pointer) {
+							var lastClick = _this.lastClick;
 							return {
-								width: -scope.left + pointer.x,
-								height: -scope.top + pointer.y
+								width: -lastClick.left + pointer.x,
+								height: -lastClick.top + pointer.y
 							};
 						}
 					}
 				],
 				events: {
-					mouseup: function(e, canvas) {
-						return scope.mouseDown = false;
-					},
+					mouseup: null,
 					mousedown: function(e, canvas) {
 						var pointer, shape, spec, type, we;
-						scope.mouseDown = true;
 						pointer = canvas.getPointer(e.e);
 						we = _this.findType('shape');
 						type = _.findWhere(scope.currentTool.types, {
@@ -105,9 +103,10 @@ var FabricModel = function (scope) {
 					objectadded: null,
 					mousemove: function(e, canvas) {
 						var pointer, shape, type, we;
-						if (scope.mouseDown) {
+						pointer = canvas.getPointer(e.e);
+						var mouseDown = e.e.which === 1;
+						if (mouseDown) {
 							we = _this.findType('shape');
-							pointer = canvas.getPointer(e.e);
 							shape = canvas.getObjects()[canvas.getObjects().length - 1];
 							type = _.findWhere(scope.currentTool.types, {
 								name: scope.currentTool.type
@@ -149,11 +148,12 @@ var FabricModel = function (scope) {
 				annotating: false,
 				events: {
 					mouseup: null,
-					mousemove: function(o, canvas) {
-						var SCALE_FACTOR, delta, klass, objects, pointer, transform, _i, _len;
-						if (scope.mouseDown) {
+					mousemove: function(e, canvas) {
+						var SCALE_FACTOR, delta, klass, objects, pointer, transform, _i, _len, mouseDown;
+						mouseDown = e.e.which === 1;
+						if (mouseDown) {
 							SCALE_FACTOR = 0.01;
-							pointer = canvas.getPointer(o.e);
+							pointer = canvas.getPointer(e.e);
 							delta = scope.left - pointer.x;
 							objects = canvas.getObjects();
 							delta = delta * SCALE_FACTOR;
@@ -169,8 +169,9 @@ var FabricModel = function (scope) {
 							return canvas.setHeight(canvas.backgroundImage.height * canvas.backgroundImage.transformMatrix[3]);
 						}
 					},
-					mousedown: function(o, canvas) {
-						return scope.left = canvas.getPointer(o.e).x;
+					mousedown: function(e, canvas) {
+						_this.lastClick.left = e.e.x;
+						_this.lastClick.top = e.e.y;
 					}
 				}
 			}, {
@@ -215,6 +216,10 @@ var FabricModel = function (scope) {
 		    }
 		  }
 		  
+		},
+		setShapeTypeFromUi: function(shapename) {
+			_this.selectTool('shape');
+			_this.scope.currentTool.type = shapename;
 		}
 	} // end of out definition
 
@@ -261,9 +266,9 @@ var FabricModel = function (scope) {
 	out.canvas.on('mouse:down', function(e) {
 		var pointer, _ref;
 		pointer = _this.canvas.getPointer(e.e);
-		scope.mouseDown = true;
-		scope.left = pointer.x;
-		scope.top = pointer.y;
+		// scope.mouseDown = true;
+		_this.lastClick.left = pointer.x;
+		_this.lastClick.top = pointer.y;
 		if (!scope.readyToComment) {
 			if (scope.annotationAction !== null) {
 				console.log('canceling annotationAction');
@@ -302,9 +307,6 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('mouse:move', function(e) {
 		var _ref;
-//		if (e.e.which) {
-//			console.log('MOUSEMOVE EVENT: ', e);
-//		}
 		_this.canvas.calcOffset();
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.mousemove === "function") {
@@ -327,11 +329,11 @@ var FabricModel = function (scope) {
 		}
 		_this.canvas.calcOffset();
 		_this.canvas.renderAll();
-		if (!scope.left) {
-			scope.left = obj.target.left;
+		if (!_this.lastClick.left) {
+			_this.lastClick.left = obj.target.left;
 		}
-		if (!scope.top) {
-			scope.top = obj.target.top;
+		if (!_this.lastClick.top) {
+			_this.lastClick.top = obj.target.top;
 		}
 		
 	});

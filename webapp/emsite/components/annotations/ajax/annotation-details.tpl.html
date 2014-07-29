@@ -23,21 +23,21 @@
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('draw')" ng-class="{ 'active': currentTool.name == 'draw' }">
             <svg class="icon icon-draw" viewBox="0 0 32 32"><use xlink:href="#icon-draw"></use></svg>
         </li>
-        <li ng-show="shapeToolType == 'rectangle'" ng-click="setShapeTypeFromUi('rectangle')" ng-class="{ 'active': currentTool.name == 'shape' }">
+        <li ng-show="shapeToolType == 'rectangle'" ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('rectangle')" ng-class="{ 'active': currentTool.name == 'shape' }">
             <svg class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle"></use></svg>
-            <ul class="tool-options">
-                <li ng-click="setShapeTypeFromUi('circle')">
+<!--             <ul class="tool-options">
+                <li ng-click="scope.fabricModel.setShapeTypeFromUi('circle')">
                     <svg  class="icon icon-circle" viewBox="0 0 32 32"><use xlink:href="#icon-circle"></use></svg>
                 </li>
-            </ul>
+            </ul> -->
         </li>
-        <li ng-show="shapeToolType == 'circle'" ng-click="setShapeTypeFromUi('circle')" ng-class="{ 'active': currentTool.name == 'shape' }">
+        <li ng-show="shapeToolType == 'circle'" ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('circle')" ng-class="{ 'active': currentTool.name == 'shape' }">
             <svg class="icon icon-circle" viewBox="0 0 32 32"><use xlink:href="#icon-circle"></use></svg>
-            <ul class="tool-options">
-                <li ng-click="setShapeTypeFromUi('rectangle')">
+<!--             <ul class="tool-options">
+                <li ng-click="scope.fabricModel.setShapeTypeFromUi('rectangle')">
                     <svg  class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle"></use></svg>
                 </li>
-            </ul>
+            </ul> -->
         </li>
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
             <svg class="icon icon-arrow" viewBox="0 0 32 32"><use xlink:href="#icon-arrow"></use></svg>
