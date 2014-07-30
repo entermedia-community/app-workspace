@@ -205,6 +205,7 @@ var AnnotationEditor = function(scope) {
 			// make a new one for now since no data persists currently
 			var toAsset = this.getAnnotatedAsset(inAssetId);
 			this.setCurrentAnnotatedAsset(toAsset);
+			jAngular.render(this.scope);
 		}
 		,
 		connect : function()

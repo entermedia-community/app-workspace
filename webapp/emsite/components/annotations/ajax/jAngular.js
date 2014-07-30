@@ -123,41 +123,33 @@ jAngular.render = function(scope, div)
 	     }
 		
 	});
-	$.each($("body *").contents().filter(function(){return this.nodeType === 3 && $(this).text().indexOf("{{") != -1}), function(index, element)
+	// $.each($("body *")
+	// 	.contents()
+	// 	.filter(function(index, item)
+	// 		{
+	// 			return item.nodeType === 3 && $(item).text().indexOf("{{") != -1}), function(index, element)
+	// 			{
+	$.each($(".jq-replace"), function(index, element)
 	{
-		var text = $(element).text();
-		var regex = /{{([^{]+)}}/g;
-        var m;
-		while ((m = regex.exec(text)) !== null)
-		{
-			text = text.replace(m[0], eval(m[1]));
-		}
-		$(element)[0].data = text; // this is awful but I can't figure out the right way to do it with the element I have
-		// text() method does not work and html() method is not available
-    });
-	// {
-	// 	text = element.textContent;
-	// 	regex = /{{([^{]+)}}/g;
-	// 	while ((var m = regex.exec()) !== null)
-	// 	{
-	// 		text = text.replace(m[0], eval(m[1]));
-	// 	}
-	// 	// now text should be properly replaced
-	// 	element.html(text); // will this work
-	// });
-	// test from JSFiddle below
-	// var scope = {annotation: "some text"};
-	// var tags = $("div *").filter(function(index, element){return element.nodeType === 3 && $(element).text().indexOf("{{") != -1});
-	// console.log("tags ", tags);
-	// $.each(tags.prevObject, function(index, tag)
-    //     {
-    //         $(tag).html("christ");
-    //     });
+			// possible fix to having to add class:
+			// check in each filter function for .text() OR defined origContent with brackets
 
-		// var origContent;
-		// if( typeof( origContent ) === 'undefined' )
-		// {
-		// 	origContent = element.html();
-		// }
-		// element.html("");
+			element = $(element); // cast to jQuery object
+			var origContent = this.origContent;
+			if( typeof( origContent ) === 'undefined' )
+			{
+				origContent = element.text();
+				this.origContent = origContent;
+			}
+			var text = origContent;
+			var regex = /{{([^{]+)}}/g;
+			var m;
+			while ((m = regex.exec(text)) !== null)
+			{
+				text = text.replace(m[0], eval(m[1]));
+			}
+			element.text(text);
+
+	});
+
 };
