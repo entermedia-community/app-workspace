@@ -1,7 +1,6 @@
 var FabricModel = function (scope) {
 	var _this = null;
 	var out = {
-		// fabricModel: null,
 		canvas: null,
 		scope: scope,
 		lastClick: {

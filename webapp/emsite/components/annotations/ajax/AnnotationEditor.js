@@ -7,6 +7,7 @@ var AnnotationEditor = function(scope) {
 		fabricModel: null,
 		scope : scope,
 		annotatedAssets: [],
+		userData: null,
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
@@ -58,6 +59,13 @@ var AnnotationEditor = function(scope) {
 				failure: function(errMsg) {
 					alert(errMsg);
 				}
+			});
+
+			// get user data, should this be in connect?
+			$.getJSON('/entermedia/services/json/users/status.json', function(data) {
+				console.log('from user get :', this);
+				this.userData = data;
+				console.log('from user auth:', data);
 			});
 		}
 		,
@@ -138,12 +146,12 @@ var AnnotationEditor = function(scope) {
 
 				// fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
 				// {
-				// 	origRenderOnAddRemove = this.scope.fabricModel.canvas.renderOnAddRemove
-				// 	this.scope.fabricModel.canvas.renderOnAddRemove = false
-				// 	$.each(group, function(index, item) {
-				// 		this.scope.fabricModel.canvas.add(item);
-				// 	});
-				// 	this.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+				//  origRenderOnAddRemove = this.scope.fabricModel.canvas.renderOnAddRemove
+				//  this.scope.fabricModel.canvas.renderOnAddRemove = false
+				//  $.each(group, function(index, item) {
+				//      this.scope.fabricModel.canvas.add(item);
+				//  });
+				//  this.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
 				// });
 			});
 			this.scope.fabricModel.canvas.renderAll();
@@ -246,7 +254,7 @@ var AnnotationEditor = function(scope) {
 					
 					var command = SocketCommand("list");
 					command.assetid = editor.currentAnnotatedAsset.assetData.id;
-					connection.sendCommand(command);	
+					connection.sendCommand(command);    
 				};
 				connection.onclose = function(e) {
 					console.log('Closed a connection!');
@@ -267,14 +275,14 @@ var AnnotationEditor = function(scope) {
 			/*
 			$.getJSON( '/entermedia/services/json/users/status.json', function(data) {
 				console.log('from user auth:', data);
-				scope.add('currentUser', 	jAngular.init(scope);
+				scope.add('currentUser',    jAngular.init(scope);
 				data);
 			});
 			*/
 		}
 	}
 	return out;
-}	
+}   
 
 var SocketCommand = function(inCommand) {
 	var out = {
@@ -282,10 +290,10 @@ var SocketCommand = function(inCommand) {
 		assetid: null,
 		data: null
 	};
-	return out;	
+	return out; 
 }
 
-var AnnotatedAsset = function() {	
+var AnnotatedAsset = function() {   
 	var out = {
 		assetData: null,
 		annotations : [],
@@ -299,17 +307,17 @@ var AnnotatedAsset = function() {
 			return this.annotationIndex++;
 		}
 	};
-	return out;	
+	return out; 
 }
 
-var Annotation = function() {	
+var Annotation = function() {   
 	var out = {
 		id: null,
 		indexCount: null,
 		user: null,
 		comment: "",
 		date : [],
-		fabricObjects: [],	
+		fabricObjects: [],  
 		getUserName: function()
 		{
 			return "demouser";
@@ -319,7 +327,7 @@ var Annotation = function() {
 			this.fabricObjects.push( inObject );
 		}
 	};
-	return out;	
+	return out; 
 }
 
 
