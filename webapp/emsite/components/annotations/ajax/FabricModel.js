@@ -325,7 +325,7 @@ var FabricModel = function (scope) {
 		if (scope.currentTool.annotating) {
 			//obj.target.selectable = scope.canSelect();
 			scope.annotationEditor.fabricObjectAdded(obj.target);
-			console.log("We called object:added event");
+			// console.log("We called object:added event");
 		}
 		if ((_ref = scope.currentTool.events) != null) {
 			if (typeof _ref.objectadded === "function") {

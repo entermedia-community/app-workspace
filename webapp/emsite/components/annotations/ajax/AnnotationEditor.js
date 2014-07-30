@@ -16,11 +16,12 @@ var AnnotationEditor = function(scope) {
 			{
 				var theel = jQuery(this);
 				var code = theel.attr("ng-click");
-				console.log('Doing ng-click replacement:', code);
+				// console.log('Doing ng-click replacement:', code);
 				eval(code);
 			});
 			//then what is really in here?
-		},
+		}
+		,
 		loadModels : function()
 		{
 			var scope = this.scope;
@@ -37,7 +38,7 @@ var AnnotationEditor = function(scope) {
 					console.log('from error:', data);
 				},
 				success: function(data) {
-					console.log('from success:', data);
+					// console.log('from success:', data);
 					scope.add('assets', data);
 					if( data.length > 0 )
 					{
@@ -63,9 +64,7 @@ var AnnotationEditor = function(scope) {
 
 			// get user data, should this be in connect?
 			$.getJSON('/entermedia/services/json/users/status.json', function(data) {
-				console.log('from user get :', this);
-				this.userData = data;
-				console.log('from user auth:', data);
+				scope.annotationEditor.userData = data;
 			});
 		}
 		,
@@ -110,7 +109,8 @@ var AnnotationEditor = function(scope) {
 
 				}
 			);
-		},
+		}
+		,
 		createAnnotatedAsset: function(assetData)
 		{
 			var aa = new AnnotatedAsset();
@@ -120,7 +120,8 @@ var AnnotationEditor = function(scope) {
 			//TODO: Get Annotations from server on session instantiation
 			
 			return aa;
-		},
+		}
+		,
 		setCurrentAnnotatedAsset: function(annotatedAsset)
 		{
 			this.currentAnnotatedAsset = annotatedAsset;
@@ -162,21 +163,23 @@ var AnnotationEditor = function(scope) {
 			// TODO: above two things with server persisted data instead of client for when page is refreshed
 
 
-		},
+		}
+		,
 		createNewAnnotation: function(annotatedAsset)
 		{
 			var annot = new Annotation();
-			annot.user = "admin";
+			annot.user = this.userData.userid;
 			annot.id = Math.floor(Math.random() * 100000000).toString();
 			annot.indexCount = annotatedAsset.nextIndex();
 			annot.date = new Date();
 			return annot;
-		},
+		}
+		,
 		fabricObjectAdded: function(fabricObject)
 		{
 			if( this.currentAnnotatedAsset.currentAnnotation == null )
 			{
-				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset); //TODO: Init this with username
+				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);
 				
 				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
 			}
@@ -320,7 +323,12 @@ var Annotation = function() {
 		fabricObjects: [],  
 		getUserName: function()
 		{
-			return "demouser";
+			var userOut = "demouser";
+			if (this.user !== null)
+			{
+				userOut = this.user;
+			}
+			return userOut;
 		},
 		pushFabricObject: function( inObject )
 		{
