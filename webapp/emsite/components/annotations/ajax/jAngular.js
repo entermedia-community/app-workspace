@@ -79,7 +79,13 @@ var Replacer = function() {
 var jAngular =  {};
 
 jAngular.render = function(scope, div)
-{ 
+{
+	/*
+	when rendering ng-repeat for the image carousel
+	we will need to only loop maximum editor.imageCarouselPageAssetCount times
+
+	begin asset rendering at Asset# editor.imageCarouselPageIndex*editor.imageCarouselPageAssetCount+1
+	*/
 	var replacer = new Replacer();
 	
 	var selector = 'li[ng-repeat]';

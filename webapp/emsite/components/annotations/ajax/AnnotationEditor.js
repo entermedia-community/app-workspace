@@ -8,6 +8,8 @@ var AnnotationEditor = function(scope) {
 		scope : scope,
 		annotatedAssets: [],
 		userData: null,
+		imageCarouselPageAssetCount: 8,
+		imageCarouselPageIndex: 1,
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
