@@ -115,13 +115,17 @@
                                 <p>
                                     {{annotation.comment}}
                                 </p>
+                                <!-- text input that isn't smart... will have to update its data from a persistent source -->
+                                <!-- also needs to have scaling size -->
+                                <input id="user-comment-input" type="text" value="" size="40" readonly="readonly" />
                                 </div>
                             </div>
                             <div class="comment-meta">
                                 <span class="comment-id">{{annotation.indexCount}}</span>
                                 <button ng-click='scope.annotationEditor.removeAnnotation("{{annotation.id}}")'>remove</button>
+                                <button class="user-comment" ng-click='scope.annotationEditor.toggleCommentEdit("{{annotation.id}}")'>edit</button>
                                 <span class="comment-timestamp pull-right">{{annotation.date}}</span>
-                            </div
+                            </div>
                         </div>
                     </div>
                 </li>

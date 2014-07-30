@@ -13,10 +13,9 @@ var AnnotationEditor = function(scope) {
 			//TODO this should be part of jAnQular and loaded by $.getScript ?
 			$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 			{
-				var theimg = jQuery(this);
-				var code = theimg.attr("ng-click");
+				var theel = jQuery(this);
+				var code = theel.attr("ng-click");
 				console.log('Doing ng-click replacement:', code);
-				// fabric = scope.fabric;	
 				eval(code);
 			});
 			//then what is really in here?
@@ -25,19 +24,10 @@ var AnnotationEditor = function(scope) {
 		{
 			var scope = this.scope;
 
-			// $.getScript(scope.apphome + "/components/annotations/ajax/FabricModel.js", function()
-			// {setCurrentAnnotatedAsset
-			// 	console.log("Loaded" + scope.fabric );
-			// });
-
 			loadFabricModel(scope);
-			// this may not be working
-			
-			// fabric = scope.fabric;
-			
-
 
 			// load asset data
+
 			jQuery.ajax({
 				type: "GET",
 				url: "" + scope.apphome + "/components/annotations/json/viewassets.json?id=" + scope.collectionid,
@@ -83,8 +73,8 @@ var AnnotationEditor = function(scope) {
 			return outAnnotation;
 		}
 		,
-		removeAnnotation: function(annotationid) {
-			console.log("Calling removeAnnotation with id", annotationid);
+		removeAnnotation: function(annotationid)
+		{
 			var annotationToRemove = this.getAnnotationById(annotationid);
 			var editor = this;
 			$.each(annotationToRemove.fabricObjects, function(index, item)
@@ -96,17 +86,35 @@ var AnnotationEditor = function(scope) {
 			
 		}
 		,
+		toggleCommentEdit: function(annotationid)
+		{
+			$(".user-comment").click(
+				function()
+				{
+					textinput = $('#user-comment-input');
+					if (textinput.attr('readonly') === 'readonly')
+					{
+						textinput.removeAttr('readonly');
+						textinput.focus();
+					} else {
+						textinput.attr('readonly', 'readonly');
+					}
+
+				}
+			);
+		},
 		createAnnotatedAsset: function(assetData)
 		{
 			var aa = new AnnotatedAsset();
 			aa.assetData = assetData;
 			aa.scope = scope;
 			aa.annotations = [];
-			//TODO: Get Annotations
+			//TODO: Get Annotations from server on session instantiation
 			
 			return aa;
 		},
-		setCurrentAnnotatedAsset: function(annotatedAsset) {
+		setCurrentAnnotatedAsset: function(annotatedAsset)
+		{
 			this.currentAnnotatedAsset = annotatedAsset;
 			//  appname    prefixmedium   sourcepath appendix
 			var url = this.scope.apphome + "/views/modules/asset/downloads/preview/large/" + annotatedAsset.assetData.sourcepath + "/image.jpg";
@@ -124,6 +132,10 @@ var AnnotationEditor = function(scope) {
 				{
 					editor.fabricModel.canvas.add(item);
 				});
+
+				// below code might be needed for recreating objects from JSON data
+				// currently the whole objects are saved rather than parsed
+
 				// fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
 				// {
 				// 	origRenderOnAddRemove = this.scope.fabricModel.canvas.renderOnAddRemove
@@ -137,8 +149,9 @@ var AnnotationEditor = function(scope) {
 			this.scope.fabricModel.canvas.renderAll();
 			jAngular.render(this.scope, "#annotationlist");
 			// this method also needs to clear the canvas and comments and update from the persisted data
-			// TODO: Clear canvas state, refresh with AnnotatedAsset data
-			// TODO: Clear comments, refresh with AnnotatedAsset data
+			// DONE: Clear canvas state, refresh with AnnotatedAsset data
+			// DONE: Clear comments, refresh with AnnotatedAsset data
+			// TODO: above two things with server persisted data instead of client for when page is refreshed
 
 
 		},
