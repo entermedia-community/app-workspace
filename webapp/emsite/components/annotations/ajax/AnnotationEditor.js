@@ -10,6 +10,7 @@ var AnnotationEditor = function(scope) {
 		userData: null,
 		imageCarouselPageAssetCount: 8,
 		imageCarouselPageIndex: 1,
+		currentTool: null,
 		loadSelectors : function()
 		{
 			//TODO: Search for all ng-click?
@@ -185,6 +186,13 @@ var AnnotationEditor = function(scope) {
 				
 				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
 			}
+			// need to make sure the object is not selectable by default
+			// we have mouse:move events which may be the best bet for toggling
+			// can also toggle it off on selection:cleared? maybe that is too expensive
+			// looks like easiest way to implement move tool is a loop through the existing objects on selectTool
+			fabricObject.selectable = false;
+			// make object immobile
+			fabricObject.evented = false;
 			this.currentAnnotatedAsset.currentAnnotation.pushFabricObject(fabricObject);
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);

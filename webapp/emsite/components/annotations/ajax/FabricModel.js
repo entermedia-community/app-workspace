@@ -29,13 +29,44 @@ var FabricModel = function (scope) {
 				properties: {
 					isDrawingMode: true
 				},
-				annotating: true
+				annotating: true,
+				whenSelected: function() {
+			      _this.canvas.freeDrawingBrush.color = scope.colorpicker.hex;
+			      _this.canvas.freeDrawingBrush.width = 5;
+				}
 			}, {
 				name: 'move',
 				properties: {
 					isDrawingMode: false
 				},
-				annotating: false
+				annotating: false,
+				whenSelected: function() {
+					$.each(scope.annotationEditor.currentAnnotatedAsset.annotations, function(index, annotation)
+					{
+						$.each(annotation.fabricObjects, function(index, object)
+						{
+							// this makes object selectable
+							object.selectable = true;
+							// this makes object mobile
+							object.evented = true;
+							object.lockMovementX = object.lockMovementY = false;
+
+						});
+					});
+				},
+				whenDeselected: function() {
+					$.each(scope.annotationEditor.currentAnnotatedAsset.annotations, function(index, annotation)
+					{
+						$.each(annotation.fabricObjects, function(index, object)
+						{
+							// this makes object unselectable
+							object.selectable = false;
+							//this makes object immobile
+							object.evented = false;
+							object.lockMovementX = object.lockMovementY = true;
+						});
+					});
+				}
 			}, {
 				name: 'shape',
 				properties: {
@@ -53,7 +84,11 @@ var FabricModel = function (scope) {
 							selectable: false,
 							fill: "",
 							originX: 'left',
-							originY: 'top'
+							originY: 'top',
+							lockScalingX: true,
+							lockScalingY: true,
+							lockMovementX: true,
+							lockMovementY: true
 						},
 						drawparams: function(pointer) {
 							var lastClick = _this.lastClick;
@@ -71,7 +106,11 @@ var FabricModel = function (scope) {
 							selectable: false,
 							fill: "",
 							originX: 'left',
-							originY: 'top'
+							originY: 'top',
+							lockScalingX: true,
+							lockScalingY: true,
+							lockMovementX: true,
+							lockMovementY: true
 						},
 						drawparams: function(pointer) {
 							var lastClick = _this.lastClick;
@@ -88,8 +127,8 @@ var FabricModel = function (scope) {
 						var pointer, shape, spec, type, we;
 						pointer = canvas.getPointer(e.e);
 						we = _this.findType('shape');
-						type = _.findWhere(scope.currentTool.types, {
-							name: scope.currentTool.type
+						type = _.findWhere(scope.annotationEditor.currentTool.types, {
+							name: scope.annotationEditor.currentTool.type
 						});
 						spec = type.blank;
 						spec.stroke = scope.colorpicker.hex;
@@ -107,8 +146,8 @@ var FabricModel = function (scope) {
 						if (mouseDown) {
 							we = _this.findType('shape');
 							shape = canvas.getObjects()[canvas.getObjects().length - 1];
-							type = _.findWhere(scope.currentTool.types, {
-								name: scope.currentTool.type
+							type = _.findWhere(scope.annotationEditor.currentTool.types, {
+								name: scope.annotationEditor.currentTool.type
 							});
 							shape.set(type.drawparams(pointer));
 							canvas.renderAll();
@@ -203,22 +242,24 @@ var FabricModel = function (scope) {
 		  var prop;
 		  // if (scope.readyToComment != null) {
 		  if (true) {
-		    scope.currentTool = _.findWhere(scope.fabricModel.toolkit, {
+		    if (scope.annotationEditor.currentTool !== null && typeof(scope.annotationEditor.currentTool.whenDeselected) !== "undefined") {
+		    	scope.annotationEditor.currentTool.whenDeselected();
+		    }
+		    scope.annotationEditor.currentTool = _.findWhere(scope.fabricModel.toolkit, {
 		      name: toolname
 		    });
-		    for (prop in scope.currentTool.properties) {
-		      _this.canvas[prop] = scope.currentTool.properties[prop];
+		    for (prop in scope.annotationEditor.currentTool.properties) {
+		      _this.canvas[prop] = scope.annotationEditor.currentTool.properties[prop];
 		    }
-		    if (scope.currentTool.name === 'draw') {
-		      _this.canvas.freeDrawingBrush.color = scope.colorpicker.hex;
-		      _this.canvas.freeDrawingBrush.width = 5;
+		    if (typeof(scope.annotationEditor.currentTool.whenSelected) !== "undefined") {
+		    	scope.annotationEditor.currentTool.whenSelected();
 		    }
 		  }
 		  
 		},
 		setShapeTypeFromUi: function(shapename) {
 			_this.selectTool('shape');
-			_this.scope.currentTool.type = shapename;
+			_this.scope.annotationEditor.currentTool.type = shapename;
 		},
 		clearCanvas: function() {
 			_this.canvas.clear();
@@ -279,7 +320,7 @@ var FabricModel = function (scope) {
 				clearTimeout(scope.annotationAction);
 			}
 			// console.log('DOING SOMETHING!!! Something is wrong with disabled tool/ offset calculations');
-			if ((_ref = scope.currentTool.events) != null) {
+			if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 				if (typeof _ref.mousedown === "function") {
 					_ref.mousedown(e, _this.canvas);
 				}
@@ -292,8 +333,8 @@ var FabricModel = function (scope) {
 		var _ref;
 		// mouse down: e.e.which == 1
 		// mouse not down: e.e.which == 0
-		if (scope.currentTool.annotating && !scope.readyToComment) {
-			if (scope.currentTool.name === 'comment') {
+		if (scope.annotationEditor.currentTool.annotating && !scope.readyToComment) {
+			if (scope.annotationEditor.currentTool.name === 'comment') {
 				// console.log('Calling readyToComment() now');
 				readyToComment();
 			} else {
@@ -301,7 +342,7 @@ var FabricModel = function (scope) {
 				scope.annotationAction = setTimeout(readyToComment, 1000);
 			}
 		}
-		if ((_ref = scope.currentTool.events) != null) {
+		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 			if (typeof _ref.mouseup === "function") {
 				_ref.mouseup(e, _this.canvas);
 			}
@@ -311,8 +352,7 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('mouse:move', function(e) {
 		var _ref;
-		// _this.canvas.calcOffset();
-		if ((_ref = scope.currentTool.events) != null) {
+		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 			if (typeof _ref.mousemove === "function") {
 				_ref.mousemove(e, _this.canvas);
 			}
@@ -322,12 +362,10 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('object:added', function(obj) {
 		var _ref;
-		if (scope.currentTool.annotating) {
-			//obj.target.selectable = scope.canSelect();
+		if (scope.annotationEditor.currentTool.annotating) {
 			scope.annotationEditor.fabricObjectAdded(obj.target);
-			// console.log("We called object:added event");
 		}
-		if ((_ref = scope.currentTool.events) != null) {
+		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 			if (typeof _ref.objectadded === "function") {
 				_ref.objectadded(obj, _this.canvas);
 			}
