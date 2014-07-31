@@ -4,7 +4,6 @@
 <!-- one of the FabricModel imports is not working, taking the following line out causes an inability to locate despite getScript call in the AnnotationEditor, probably a timing issue, TODO breakpoint it if it keeps acting up -->
     <script src="$home$apphome/components/annotations/ajax/FabricModel.js"></script>
     <script src="$home$apphome/components/annotations/ajax/AnnotationEditor.js"></script>
-    <script src="$home$apphome/components/annotations/ajax/jAngular.js"></script>
     <script src="$home$apphome/components/annotations/ajax/main.js"></script>
     <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/dashboard.css">
     <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/js/vendor/angular/ng-table/ng-table.min.css">
@@ -15,7 +14,7 @@
 
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
 
-    <ul class="annotations-toolbar">
+    <ul class="annotations-toolbar" ng-scope="annoscope" >
         <!-- try to reference the right object -->
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
@@ -68,7 +67,7 @@
         <li class="rejected"><span class="icon glyphicon glyphicon-thumbs-down"></span><span class="additional-info">{{getRejections().length}}</span></li>
         -->
     </ul>
-    <div class="row">
+    <div class="row" ng-scope="annoscope">
         <div class="col-md-9">
             <div class="canvas-holder">
                 <canvas id="annotation_canvas" class="annotations-canvas" width="800" height="600"></canvas>
@@ -78,7 +77,7 @@
                     <li class="previous">
                         <svg class="icon icon-arrow-left" viewBox="0 0 32 32"><use xlink:href="#icon-arrow-left"></use></svg>
                     </li>
-                    <li ng-repeat="image in assets" class="thumb clearfix" class="{{if( parentScope.currentAnnotation.annotation.id === image.id) return 'active' }}">
+                    <li ng-repeat="image in assets" class="thumb clearfix" ng-class="if( scope.currentAnnotation.annotation.id === image.id) return 'active';">
                     	<a ui-sref="app.annotations.details({annotationID: image.id})">
                             <img ng-click='scope.annotationEditor.switchToAsset("{{image.id}}")' ng-src="$home$apphome/views/modules/asset/downloads/preview/thumbsmall/{{image.sourcepath}}/thumb.jpg"></img>
                         </a>

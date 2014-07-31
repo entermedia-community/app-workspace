@@ -1,26 +1,41 @@
-<!-- Nav tabs -->
-<div class="row">
-	<div class="col-md-4">
-	<div class="tableheaderactions">
-	<a href="$home$apphome/views/modules/librarycollection/edit/index.html?id=${data.getId()}&viewid=librarycollectiongeneral&viewpath=librarycollection/librarycollectiongeneral&searchtype=librarycollection" class="librarylabel"  data-targetdiv="left-col-libraries" title="$!{data.notes}"><span> $data.getName() ($hits.size())</span></a>
-</div>
-
+<div id="collectiontoplevel" data-collectionid='$data.getId()'>
+	<!-- Nav tabs -->
+	<div class="row">
+		<div class="col-md-4">
+		<div class="tableheaderactions">
+		<a href="$home$apphome/views/modules/librarycollection/edit/index.html?id=${data.getId()}&viewid=librarycollectiongeneral&viewpath=librarycollection/librarycollectiongeneral&searchtype=librarycollection" class="librarylabel"  data-targetdiv="left-col-libraries" title="$!{data.notes}"><span> $data.getName() ($hits.size())</span></a>
 	</div>
-	<div class="col-md-8">
-	<ul class="nav nav-tabs pull-right" role="tablist">
-	  <li class="active"><a href="#media" role="tab" data-toggle="tab">Media</a></li>
-	  #set( $link = "#annotations" )
-	  <li><a href="$link" role="tab" data-toggle="tab">Annotations</a></li>
-	</ul>
+	
+		</div>
+		<div class="col-md-8">
+		<ul class="nav nav-tabs pull-right" role="tablist">
+		  <li class="active"><a href="#mediatab" role="tab" data-toggle="tab">Media</a></li>
+		  #set( $link = "#annotationtab" )
+		  <li><a href="$link" role="tab" data-toggle="tab">Annotations</a></li>
+		</ul>
+		</div>
 	</div>
-</div>
-<!-- Tab panes -->
-<div class="tab-content">
-  <div class="tab-pane active" id="media">$pages.include("$apphome/views/search/index.html")</div>
-  <div class="tab-pane em-workspace" id="annotations">
-  	<div id="collectiontoplevel" ui-view="mainContentArea" data-collectionid='$data.getId()'></div>
-	 	 $pages.include("$apphome/components/annotations/ajax/annotation-details.tpl.html")</div>
-	</div>	
-</div>
+	<!-- Tab panes -->
+	<div class="tab-content emajaxtabs" id="assettab" ng-scope="tabscope" >
+	  <div class="tab-pane active" data-tabloaded="true" id="mediatab" data-tabpath="$apphome/views/search/index.html" >$pages.include("$apphome/views/search/index.html")</div>
+	  <div class="tab-pane em-workspace" id="annotationtab" data-tabpath="$apphome/components/annotations/ajax/annotation-details.tpl.html?oemaxlevel=1">
+	  
+	  </div>
+	</div>
 
+	<style>
+	
+<!--	
+	jQuery(document).ready(function() 
+	{
+		var scope = new Scope();
+		scope.add("selectedtab" , "mediatab");
+		jAngular.addScope("tabscope",scope);
+		
+		jAngular.render("assettab");
+		
+	});
+-->
+	</style>	 
 
+</div>

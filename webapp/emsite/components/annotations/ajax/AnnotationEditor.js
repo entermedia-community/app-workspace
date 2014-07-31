@@ -13,15 +13,6 @@ var AnnotationEditor = function(scope) {
 		currentTool: null,
 		loadSelectors : function()
 		{
-			//TODO: Search for all ng-click?
-			//TODO this should be part of jAnQular and loaded by $.getScript ?
-			$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-			{
-				var theel = jQuery(this);
-				var code = theel.attr("ng-click");
-				// console.log('Doing ng-click replacement:', code);
-				eval(code);
-			});
 			//then what is really in here?
 		}
 		,

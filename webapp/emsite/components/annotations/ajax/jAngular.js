@@ -78,7 +78,52 @@ var Replacer = function() {
 
 var jAngular =  {};
 
-jAngular.render = function(scope, div)
+var jAngularScopes = {};
+
+jAngular.livequery = function()
+{
+	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+	
+	$( "[ng-click]").livequery('click', function()
+	{
+		var theel = jQuery(this);
+		var code = theel.attr("ng-click");
+		var scope = jAngular.findScopeFor(theel);
+		eval(code);
+	});
+}
+
+jAngular.findScopeFor = function(inElement)
+{
+		var theel = inElement;
+		var scopename = theel.attr("ng-scope");
+		while( scopename !== null )
+		{
+			theel = theel.parentNode;
+			if(theel)
+			{ 
+				scopename = theel.attr("ng-scope");
+			}
+			else
+			{
+				brea;
+			}
+		}
+		return findScope(scopename);
+}		
+
+jAngular.findScope = function(scopename)
+{
+	var foundscope = jAngularScopes[scopename];
+	//todo: Default scope?
+	return 	foundscope;
+}
+jAngular.addScope = function(scopename, inScope)
+{
+	jAngularScopes[scopename] = inScope; 
+}
+
+jAngular.render = function(div)
 {
 	/*
 	when rendering ng-repeat for the image carousel
@@ -88,11 +133,23 @@ jAngular.render = function(scope, div)
 	*/
 	var replacer = new Replacer();
 	
-	var selector = 'li[ng-repeat]';
 	if( div )
 	{
-		selector = div + " " + selector;
+		div = div + " ";
 	} 
+	else
+	{
+		div = "";
+	}
+	
+	var toplevel = $(div);
+	
+	var scope = jAngular.findScopeFor(toplevel); 
+	if( !scope) 
+	{
+		alert( "No ng-scope= defined for " + div);
+	}
+	var selector = div + 'li[ng-repeat]';
 	
 	//Live query this?
 	$( selector ).each(function( index ) 
@@ -121,7 +178,9 @@ jAngular.render = function(scope, div)
 				//TODO: replace scope variables
 				var localscope = scope.createScope();
 				localscope.add(rowname,value);
-				var evalcontent = replacer.replace(origContent,localscope);
+				var 	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+	
+				evalcontent = replacer.replace(origContent,localscope);
 				evalcontent = evalcontent.replace("ng-src","src");
 				li.append(evalcontent);
 				
@@ -135,17 +194,20 @@ jAngular.render = function(scope, div)
 	// 		{
 	// 			return item.nodeType === 3 && $(item).text().indexOf("{{") != -1}), function(index, element)
 	// 			{
-	$.each($(".jq-replace"), function(index, element)
+	//$.each($(".jq-replace"), function(index, element)
+
+	$(".jq-replace").each(function()
 	{
 			// possible fix to having to add class:
 			// check in each filter function for .text() OR defined origContent with brackets
-
-			element = $(element); // cast to jQuery object
+			var element = $(this); // cast to jQuery object
 			var origContent = this.origContent;
 			if( typeof( origContent ) === 'undefined' )
 			{
 				origContent = element.text();
-				this.origContent = origContent;
+				thi	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+	
+				s.origContent = origContent;
 			}
 			var text = origContent;
 			var regex = /{{([^{]+)}}/g;
@@ -157,5 +219,10 @@ jAngular.render = function(scope, div)
 			element.text(text);
 
 	});
-
 };
+
+
+jQuery(document).ready(function() 
+{ 		
+	jAngular.livequery();
+});

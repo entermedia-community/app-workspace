@@ -1,7 +1,4 @@
 //jAnqular controller
-
-
-
 jQuery(document).ready(function() 
 { 
 	var scope = new Scope();
@@ -16,10 +13,10 @@ jQuery(document).ready(function()
 	scope.add("annotationEditor",editor);
 	
 	editor.loadModels();
-	editor.loadSelectors();	
+	//editor.loadSelectors();	
 
 	editor.connect();
-	
-	jAngular.render(scope);
+	jAngular.addScope("annoscope",scope);
+	jAngular.render("annotationtab");
 
 });
