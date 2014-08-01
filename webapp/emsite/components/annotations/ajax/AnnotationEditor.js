@@ -356,4 +356,46 @@ var loadFabricModel = function(scope)
 	scope.annotationEditor.fabricModel = fabricModel;
 	scope.add("fabricModel",fabricModel);
 
+var drawEditor = function($el) {
+    $el.unbind();
+    var t = $("<span class='inline-editor'><input type='text' /></span>");
+    $el.html(t);
+    
+    var input = $el.find('input');
+    input
+        .val($el.data('text'))
+        .focus()
+        .select()
+        .blur(function(){
+            $el.data('text', input.val());
+            drawText($el);
+        })
+        .keyup(function(e) {
+            if (e.keyCode === 13) {
+                input.blur();
+            }
+            if (e.keyCode === 27) {
+                input.val($el.data('text'));
+                input.blur();
+            }
+        });
 }
+
+var drawText = function($el) {
+    if (! $el.data('text')) {
+        $el.data('text', $el.text());
+    }
+        
+    $el.unbind();
+    $el
+        .text($el.data('text'))
+        .dblclick(function(evt) {
+            evt.preventDefault();
+            drawEditor($el);
+        });
+}
+$('[id^=inline-comment]')
+.each(function(index, element)
+      {
+          drawText($(element));
+      });
