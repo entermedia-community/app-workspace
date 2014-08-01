@@ -7,16 +7,12 @@ jQuery(document).ready(function()
 	scope.add("apphome" , scope.app.data("apphome") );
 	scope.add("componentroot" ,scope.app.data("home") );
 	scope.add("collectionid", $("#collectiontoplevel").data("collectionid") );
-	scope.add("catalogid" ,'emsite/catalog');
-	
+	scope.add("catalogid" ,'emsite/catalog');	
 	var editor = new AnnotationEditor(scope);
 	scope.add("annotationEditor",editor);
+	jAngular.addScope("annoscope",scope);
 	
 	editor.loadModels();
-	//editor.loadSelectors();	
-
 	editor.connect();
-	jAngular.addScope("annoscope",scope);
-	jAngular.render("annotationtab");
 
 });

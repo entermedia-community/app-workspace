@@ -93,8 +93,19 @@ jAngular.livequery = function()
 	});
 }
 
+jAngular.findScope = function(scopename)
+{
+	var foundscope = jAngularScopes[scopename];
+	//todo: Default scope?
+	return 	foundscope;
+}
+
+
 jAngular.findScopeFor = function(inElement)
 {
+		var theel = $(inElement);
+
+	/*
 		var theel = inElement;
 		var scopename = theel.attr("ng-scope");
 		while( scopename !== null )
@@ -106,18 +117,16 @@ jAngular.findScopeFor = function(inElement)
 			}
 			else
 			{
-				brea;
+				break;
 			}
 		}
-		return findScope(scopename);
+	*/
+	
+		var found = theel.closest("[ng-scope]");
+		var scopename = found.attr("ng-scope");
+		return jAngular.findScope(scopename);
 }		
 
-jAngular.findScope = function(scopename)
-{
-	var foundscope = jAngularScopes[scopename];
-	//todo: Default scope?
-	return 	foundscope;
-}
 jAngular.addScope = function(scopename, inScope)
 {
 	jAngularScopes[scopename] = inScope; 
@@ -196,7 +205,7 @@ jAngular.render = function(div)
 	// 			{
 	//$.each($(".jq-replace"), function(index, element)
 
-	$(".jq-replace").each(function()
+	$(div + ".jq-replace").each(function()
 	{
 			// possible fix to having to add class:
 			// check in each filter function for .text() OR defined origContent with brackets
@@ -205,9 +214,8 @@ jAngular.render = function(div)
 			if( typeof( origContent ) === 'undefined' )
 			{
 				origContent = element.text();
-				thi	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-	
-				s.origContent = origContent;
+				//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+				this.origContent = origContent;
 			}
 			var text = origContent;
 			var regex = /{{([^{]+)}}/g;

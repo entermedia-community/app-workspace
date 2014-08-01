@@ -84,7 +84,7 @@ var AnnotationEditor = function(scope) {
 				editor.fabricModel.canvas.remove(item);
 			});
 			scope.annotations = editor.currentAnnotatedAsset.annotations = _.without(scope.annotations, annotationToRemove);
-			jAngular.render(this.scope, "#annotationlist");
+			jAngular.render("#annotationlist");
 			
 		}
 		,
@@ -151,7 +151,7 @@ var AnnotationEditor = function(scope) {
 				// });
 			});
 			this.scope.fabricModel.canvas.renderAll();
-			jAngular.render(this.scope, "#annotationlist");
+			jAngular.render("#annotationtab");
 			// this method also needs to clear the canvas and comments and update from the persisted data
 			// DONE: Clear canvas state, refresh with AnnotatedAsset data
 			// DONE: Clear comments, refresh with AnnotatedAsset data
@@ -189,7 +189,7 @@ var AnnotationEditor = function(scope) {
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
-			jAngular.render(this.scope, "#annotationlist");
+			jAngular.render("#annotationlist");
 
 			// need to reset currentAnnotation ? When would we not want to make a new annotation?
 			// the object:added event gets called seemingly more than it should
@@ -231,7 +231,7 @@ var AnnotationEditor = function(scope) {
 			// make a new one for now since no data persists currently
 			var toAsset = this.getAnnotatedAsset(inAssetId);
 			this.setCurrentAnnotatedAsset(toAsset);
-			jAngular.render(this.scope); // Do we still need to do this?
+			jAngular.render("#annotationtab");
 		}
 		,
 		connect : function()

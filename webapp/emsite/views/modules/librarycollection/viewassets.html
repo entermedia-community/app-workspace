@@ -1,3 +1,15 @@
+  <script id="fabricmodel" src="/${applicationid}/components/annotations/ajax/FabricModel.js"></script>
+  <script id="annotationeditor" src="/${applicationid}/components/annotations/ajax/AnnotationEditor.js"></script>
+  
+      <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/dashboard.css">
+    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/js/vendor/angular/ng-table/ng-table.min.css">
+    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/colorpicker.css">
+    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/main.css">
+    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/fabric.css">
+    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/highlights.css">
+
+  
+
 <div id="collectiontoplevel" data-collectionid='$data.getId()'>
 	<!-- Nav tabs -->
 	<div class="row">
@@ -18,8 +30,8 @@
 	<!-- Tab panes -->
 	<div class="tab-content emajaxtabs" id="assettab" ng-scope="tabscope" >
 	  <div class="tab-pane active" data-tabloaded="true" id="mediatab" data-tabpath="$apphome/views/search/index.html" >$pages.include("$apphome/views/search/index.html")</div>
-	  <div class="tab-pane em-workspace" id="annotationtab" data-tabpath="$apphome/components/annotations/ajax/annotation-details.tpl.html?oemaxlevel=1">
-	  
+	  <div class="tab-pane em-workspace" data-tabloaded="true"  id="annotationtab"  ng-scope="annoscope" data-tabpath="$apphome/components/annotations/ajax/annotation-details.tpl.html?oemaxlevel=1">
+	  $pages.include("$apphome/components/annotations/ajax/annotation-details.tpl.html")
 	  </div>
 	</div>
 

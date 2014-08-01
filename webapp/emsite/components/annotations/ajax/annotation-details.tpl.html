@@ -2,19 +2,11 @@
     <script src="$home$apphome/components/annotations/vendor/lodash/lodash.js"></script>
 <!-- fabric formatting stuff... probably does not belong here -->
 <!-- one of the FabricModel imports is not working, taking the following line out causes an inability to locate despite getScript call in the AnnotationEditor, probably a timing issue, TODO breakpoint it if it keeps acting up -->
-    <script src="$home$apphome/components/annotations/ajax/FabricModel.js"></script>
-    <script src="$home$apphome/components/annotations/ajax/AnnotationEditor.js"></script>
     <script src="$home$apphome/components/annotations/ajax/main.js"></script>
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/dashboard.css">
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/js/vendor/angular/ng-table/ng-table.min.css">
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/colorpicker.css">
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/main.css">
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/fabric.css">
-    <link rel="stylesheet" href="$home$apphome/components/annotations/workspace/css/highlights.css">
 
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
 
-    <ul class="annotations-toolbar" ng-scope="annoscope" >
+    <ul class="annotations-toolbar" >
         <!-- try to reference the right object -->
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('move')" ng-class="{ 'active': currentTool.name == 'move' }">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
@@ -67,7 +59,7 @@
         <li class="rejected"><span class="icon glyphicon glyphicon-thumbs-down"></span><span class="additional-info">{{getRejections().length}}</span></li>
         -->
     </ul>
-    <div class="row" ng-scope="annoscope">
+    <div class="row">
         <div class="col-md-9">
             <div class="canvas-holder">
                 <canvas id="annotation_canvas" class="annotations-canvas" width="800" height="600"></canvas>
