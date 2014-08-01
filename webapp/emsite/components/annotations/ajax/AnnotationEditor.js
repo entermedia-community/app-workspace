@@ -11,6 +11,7 @@ var AnnotationEditor = function(scope) {
 		imageCarouselPageAssetCount: 8,
 		imageCarouselPageIndex: 1,
 		currentTool: null,
+		connection: null,
 		loadSelectors : function()
 		{
 			//then what is really in here?
@@ -230,7 +231,7 @@ var AnnotationEditor = function(scope) {
 			// make a new one for now since no data persists currently
 			var toAsset = this.getAnnotatedAsset(inAssetId);
 			this.setCurrentAnnotatedAsset(toAsset);
-			jAngular.render(this.scope);
+			jAngular.render(this.scope); // Do we still need to do this?
 		}
 		,
 		connect : function()
@@ -272,7 +273,8 @@ var AnnotationEditor = function(scope) {
 				{
 					this.send( JSON.stringify(command));
 				};
-			scope.add('connection', connection);
+			// scope.add('connection', connection);
+			this.connection = connection; // should connection live on the editor instead? more explicit perhaps
 			}
 			
 			//load user data
@@ -283,6 +285,13 @@ var AnnotationEditor = function(scope) {
 				data);
 			});
 			*/
+		}
+		,
+		sendSocketCommand: function( inSocketCommand )
+		{
+			// send out info here
+			// too many layers?
+			this.connection.sendCommand( inSocketCommand );
 		}
 	}
 	return out;
@@ -303,7 +312,7 @@ var AnnotatedAsset = function() {
 		annotations : [],
 		currentAnnotation: null,
 		annotationIndex: 1,
-		pushAnnotation: function( inAnnotation)
+		pushAnnotation: function( inAnnotation )
 		{
 			this.annotations.push( inAnnotation );
 		},
