@@ -356,6 +356,7 @@ var loadFabricModel = function(scope)
 	scope.annotationEditor.fabricModel = fabricModel;
 	scope.add("fabricModel",fabricModel);
 
+}
 var drawEditor = function($el) {
     $el.unbind();
     var t = $("<span class='inline-editor'><input type='text' /></span>");
@@ -394,7 +395,7 @@ var drawText = function($el) {
             drawEditor($el);
         });
 }
-$('[id^=inline-comment]')
+$('[dynamic-id^=editable-comment]')
 .each(function(index, element)
       {
           drawText($(element));

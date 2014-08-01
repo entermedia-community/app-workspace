@@ -166,6 +166,8 @@ jAngular.render = function(div)
 		var li = $(this);
 		var vars = li.attr("ng-repeat");
 		var split = vars.indexOf(" in ");
+		var lid = li.contents().attr("id");
+		console.log("from selector each: ", lid);
 		
 		var rowname = vars.substring(0,split);
 		var loopname = vars.substring(split + 4,vars.length );
@@ -187,15 +189,27 @@ jAngular.render = function(div)
 				//TODO: replace scope variables
 				var localscope = scope.createScope();
 				localscope.add(rowname,value);
-				var 	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+				//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 	
-				evalcontent = replacer.replace(origContent,localscope);
+				var evalcontent = replacer.replace(origContent,localscope);
 				evalcontent = evalcontent.replace("ng-src","src");
 				li.append(evalcontent);
+				var lidr = li.contents().attr("id");
+				console.log("from rows each: ", lidr);
+				console.log("value: ", value);
 				
 	        });
 	     }
 		
+	});
+	
+	// my possibly crappy dynamic-id replacement code
+	$("[dynamic-id]").each(function(index)
+	{
+		var theel = $(this);
+		var oldid = theel.attr("dynamic-id");
+		var newid = oldid + index;
+		theel.attr("dynamic-id", newid);
 	});
 	// $.each($("body *")
 	// 	.contents()
