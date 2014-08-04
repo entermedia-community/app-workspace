@@ -208,8 +208,9 @@ jAngular.render = function(div)
 	{
 		var theel = $(this);
 		var oldid = theel.attr("dynamic-id");
-		var newid = oldid + index;
+		var newid = oldid + "-" + index;
 		theel.attr("dynamic-id", newid);
+		theel.attr("data-id", index);
 	});
 	// $.each($("body *")
 	// 	.contents()

@@ -357,8 +357,69 @@ var loadFabricModel = function(scope)
 	scope.add("fabricModel",fabricModel);
 
 }
-var drawEditor = function($el) {
+// var drawEditor = function($el) {
+//     $el.unbind();
+//     var t = $("<span class='inline-editor'><input type='text' /></span>");
+//     $el.html(t);
+    
+//     var input = $el.find('input');
+//     input
+//         .val($el.data('text'))
+//         .focus()
+//         .select()
+//         .blur(function(){
+//             $el.data('text', input.val());
+//             drawText($el);
+//         })
+//         .keyup(function(e) {
+//             if (e.keyCode === 13) {
+//                 input.blur();
+//             }
+//             if (e.keyCode === 27) {
+//                 input.val($el.data('text'));
+//                 input.blur();
+//             }
+//         });
+// }
+
+// var drawText = function($el) {
+//     if (! $el.data('text')) {
+//         $el.data('text', $el.text());
+//     }
+        
+//     $el.unbind();
+//     $el
+//         .text($el.data('text'))
+//         .dblclick(function(evt) {
+//             evt.preventDefault();
+//             drawEditor($el);
+//         });
+// }
+// $('[dynamic-id^=editable-comment]')
+// .each(function(index, element)
+//       {
+//           drawText($(element));
+//       });
+$("button.user-comment").click(function()
+                  {
+                      var butt = $(this);
+                      var lookup = butt.data("id");
+                      $("[dynamic-id]")
+                      .contents()
+                      .filter(".editable")
+                      .filter(function()
+                              {
+                                  var me = $(this);
+                                  return me.data("id") === lookup;
+                              })
+                      .each(function()
+                            {
+                              drawEditor($(this));
+                            });
+                  });
+function drawEditor($el) {
     $el.unbind();
+    var temp = $el.text();
     var t = $("<span class='inline-editor'><input type='text' /></span>");
     $el.html(t);
     
@@ -376,13 +437,13 @@ var drawEditor = function($el) {
                 input.blur();
             }
             if (e.keyCode === 27) {
-                input.val($el.data('text'));
+                input.val(temp);
                 input.blur();
             }
         });
 }
 
-var drawText = function($el) {
+function drawText($el) {
     if (! $el.data('text')) {
         $el.data('text', $el.text());
     }
@@ -390,13 +451,8 @@ var drawText = function($el) {
     $el.unbind();
     $el
         .text($el.data('text'))
-        .dblclick(function(evt) {
+        .click(function(evt) {
             evt.preventDefault();
             drawEditor($el);
         });
 }
-$('[dynamic-id^=editable-comment]')
-.each(function(index, element)
-      {
-          drawText($(element));
-      });

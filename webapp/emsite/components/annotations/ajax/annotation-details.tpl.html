@@ -97,13 +97,13 @@
 -->                
                 <li ng-repeat="annotation in annotations" >
                     <div ng-when="normal" class="comment">
-                        <div class="comment-holder">
+                        <div dynamic-id="comment-data" class="comment-holder">
                             <div class="user-gravatar">
                                 <img ng-src="http://www.gravatar.com/avatar/{{annotation.user.email}}" alt="" />
                             </div>
                             <div class="comment-content">
                                 <strong>{{annotation.getUserName()}}</strong>
-                                <p class="editable" dynamic-id="editable-comment">
+                                <p class="editable">
                                     empty comment
                                 </p>
                                 <!-- text input that isn't smart... will have to update its data from a persistent source -->
