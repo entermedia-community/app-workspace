@@ -67,7 +67,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
     
-	public void annotationSaved(AnnotationConnection annotationConnection, JSONObject json, String message)
+	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message)
 	{
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{

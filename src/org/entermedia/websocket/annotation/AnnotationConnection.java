@@ -59,7 +59,7 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 //		}
 		try
 		{
-			JSONObject json = (JSONObject) getJSOSlurper().parse(new StringReader(message));
+			Map<String, String> json = (Map<String, String>)getJSOSlurper().parse(new StringReader(message));
 			String command = (String)json.get("command");
 			if ("list".equals(command)) //Return all the annotation on this asset
 			{
@@ -70,11 +70,12 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set
-				//JSONObject obj = new JSONObject();
+				JSONObject obj = new JSONObject();
+				obj.putAll(json);
 				//command.annotationdata
 				//obj.put("stuff", "array of annotations");
 				//remoteEndpointBasic.sendText(message);
-				getAnnotationCommandListener().annotationSaved(this, json, message);
+				getAnnotationCommandListener().annotationAdded(this, json, message);
 			}
 		}
 		catch (IOException e)

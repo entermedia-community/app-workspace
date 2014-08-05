@@ -167,7 +167,6 @@ jAngular.render = function(div)
 		var vars = li.attr("ng-repeat");
 		var split = vars.indexOf(" in ");
 		var lid = li.contents().attr("id");
-		console.log("from selector each: ", lid);
 		
 		var rowname = vars.substring(0,split);
 		var loopname = vars.substring(split + 4,vars.length );
@@ -195,8 +194,6 @@ jAngular.render = function(div)
 				evalcontent = evalcontent.replace("ng-src","src");
 				li.append(evalcontent);
 				var lidr = li.contents().attr("id");
-				console.log("from rows each: ", lidr);
-				console.log("value: ", value);
 				
 	        });
 	     }
@@ -204,21 +201,34 @@ jAngular.render = function(div)
 	});
 	
 	// my possibly crappy dynamic-id replacement code
-	$("[dynamic-id]").each(function(index)
-	{
-		var theel = $(this);
-		var oldid = theel.attr("dynamic-id");
-		var newid = oldid + "-" + index;
-		theel.attr("dynamic-id", newid);
-		theel.attr("data-id", index);
-	});
-	// $.each($("body *")
-	// 	.contents()
-	// 	.filter(function(index, item)
-	// 		{
-	// 			return item.nodeType === 3 && $(item).text().indexOf("{{") != -1}), function(index, element)
-	// 			{
-	//$.each($(".jq-replace"), function(index, element)
+
+	$("[dynamic-id]")
+    .each(function(index)
+          {
+            var theel = $(this);
+            $.each(theel.children(), function(child_index)
+                   {
+                    var child = $(this);
+                    child.data("id", index);
+                   });
+          });
+	// $("[dynamic-id]").each(function(index)
+	// {
+	// 	var theel = $(this);
+	// 	var oldid = theel.attr("dynamic-id");
+	// 	var newid = oldid + "-" + index;
+	// 	theel.attr("dynamic-id", newid);
+	// 	theel.attr("data-id", index);
+	// });
+	// // $.each($("body *")
+	// // 	.contents()
+	// // 	.filter(function(index, item)
+	// // 		{
+	// // 			return item.nodeType === 3 && $(item).text().indexOf("{{") != -1}), function(index, element)
+	// // 			{
+	// //$.each($(".jq-replace"), function(index, element)
+
+
 
 	$(div + ".jq-replace").each(function()
 	{
