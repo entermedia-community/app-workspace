@@ -53,6 +53,8 @@ var FabricModel = function (scope) {
 
 						});
 					});
+					scope.fabricModel.canvas.calcOffset();
+					scope.fabricModel.canvas.renderAll();
 				},
 				whenDeselected: function() {
 					$.each(scope.annotationEditor.currentAnnotatedAsset.annotations, function(index, annotation)
@@ -66,6 +68,8 @@ var FabricModel = function (scope) {
 							object.lockMovementX = object.lockMovementY = true;
 						});
 					});
+					scope.fabricModel.canvas.calcOffset();
+					scope.fabricModel.canvas.renderAll();
 				}
 			}, {
 				name: 'shape',
@@ -85,8 +89,8 @@ var FabricModel = function (scope) {
 							fill: "",
 							originX: 'left',
 							originY: 'top',
-							lockScalingX: true,
-							lockScalingY: true,
+							// lockScalingX: true,
+							// lockScalingY: true,
 							lockMovementX: true,
 							lockMovementY: true
 						},
