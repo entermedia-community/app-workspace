@@ -10,14 +10,17 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.MessageHandler;
 import javax.websocket.RemoteEndpoint;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.openedit.data.SearcherManager;
+import org.openedit.entermedia.modules.AdminModule;
 
 import com.openedit.OpenEditException;
 
 public class AnnotationConnection implements MessageHandler.Whole<String>
 {
-
+	private static final Log log = LogFactory.getLog(AnnotationConnection.class);
 	private final RemoteEndpoint.Basic remoteEndpointBasic;
 	protected SearcherManager fieldSearcherManager;
 	protected String fieldCollectionId;
@@ -81,6 +84,7 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
+			log.error(e);
 			e.printStackTrace();
 		}
 	}
