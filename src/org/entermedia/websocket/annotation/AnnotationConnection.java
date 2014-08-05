@@ -59,8 +59,8 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 //		}
 		try
 		{
-			Map<String, String> json = (Map<String, String>)getJSOSlurper().parse(new StringReader(message));
-			String command = (String)json.get("command");
+			Map<String, String> map = (Map<String, String>)getJSOSlurper().parse(new StringReader(message));
+			String command = (String)map.get("command");
 			if ("list".equals(command)) //Return all the annotation on this asset
 			{
 				JSONObject obj = new JSONObject();
@@ -70,8 +70,8 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set
-				JSONObject obj = new JSONObject();
-				obj.putAll(json);
+				JSONObject json = new JSONObject();
+				json.putAll(map);
 				//command.annotationdata
 				//obj.put("stuff", "array of annotations");
 				//remoteEndpointBasic.sendText(message);
