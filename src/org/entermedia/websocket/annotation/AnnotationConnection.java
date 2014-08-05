@@ -13,6 +13,8 @@ import javax.websocket.RemoteEndpoint;
 import org.json.simple.JSONObject;
 import org.openedit.data.SearcherManager;
 
+import com.openedit.OpenEditException;
+
 public class AnnotationConnection implements MessageHandler.Whole<String>
 {
 
@@ -22,7 +24,12 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 	protected String fieldCatalogId;
 	protected HttpSession fieldSession;
 	protected JsonSlurper fieldJSOSlurper;
-
+	protected AnnotationCommandListener fieldAnnotationCommandListener;
+	public AnnotationCommandListener getAnnotationCommandListener()
+	{
+		return fieldAnnotationCommandListener;
+	}
+	
 	public JsonSlurper getJSOSlurper()
 	{
 		return fieldJSOSlurper;
@@ -33,39 +40,41 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 		this.fieldJSOSlurper = fieldJSOSlurper;
 	}
 
-	protected AnnotationConnection(SearcherManager searchers, String inCatalogId, String collectionid, HttpSession http, RemoteEndpoint.Basic remoteEndpointBasic)
+	protected AnnotationConnection(SearcherManager searchers, String inCatalogId, String collectionid, HttpSession http, RemoteEndpoint.Basic remoteEndpointBasic, AnnotationCommandListener inListener )
 	{
 		this.remoteEndpointBasic = remoteEndpointBasic;
 		fieldSearcherManager = searchers;
 		fieldCatalogId = inCatalogId;
 		fieldCollectionId = collectionid;
 		fieldSession = http;
+		fieldAnnotationCommandListener = inListener;
 	}
 
 	@Override
 	public void onMessage(String message)
 	{
-		if (remoteEndpointBasic != null)
-		{
-			return;
-		}
+//		if (remoteEndpointBasic != null)
+//		{
+//			return;
+//		}
 		try
 		{
-			Map<String, String> json = (Map<String, String>) getJSOSlurper().parse(new StringReader(message));
-			String command = json.get("command");
+			JSONObject json = (JSONObject) getJSOSlurper().parse(new StringReader(message));
+			String command = (String)json.get("command");
 			if ("list".equals(command)) //Return all the annotation on this asset
 			{
 				JSONObject obj = new JSONObject();
 				obj.put("stuff", "array of annotations");
 				remoteEndpointBasic.sendText(obj.toJSONString());
 			}
-			else if ("save".equals(command)) //Return all the annotation on this asset
+			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set
-				json.get("annotation");
-				JSONObject obj = new JSONObject();
-				obj.put("stuff", "array of annotations");
-				remoteEndpointBasic.sendText(obj.toJSONString());
+				//JSONObject obj = new JSONObject();
+				//command.annotationdata
+				//obj.put("stuff", "array of annotations");
+				//remoteEndpointBasic.sendText(message);
+				getAnnotationCommandListener().annotationSaved(this, json, message);
 			}
 		}
 		catch (IOException e)
@@ -83,4 +92,16 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 	 * (IOException e1) { // Ignore } String message = String.format("* %s %s",
 	 * client.nickname, "has been disconnected."); broadcast(message); } }
 	 */
+
+	public void sendMessage(JSONObject json)
+	{
+		try
+		{
+			remoteEndpointBasic.sendText(json.toJSONString());
+		}
+		catch (IOException e)
+		{
+			throw new OpenEditException(e);
+		}
+	}
 }

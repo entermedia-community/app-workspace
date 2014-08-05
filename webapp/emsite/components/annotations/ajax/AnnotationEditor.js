@@ -197,6 +197,9 @@ var AnnotationEditor = function(scope) {
 			this.currentAnnotatedAsset.currentAnnotation = null;
 			
 			//Update network?
+			var command = SocketCommand("annotation.added");
+			command.annotationdata = this.currentAnnotatedAsset.currentAnnotation;
+			this.sendSocketCommand( command );
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -254,8 +257,8 @@ var AnnotationEditor = function(scope) {
 				final_destination = "" + base_destination + "?catalogid=" + scope.catalogid + "&collectionid=" + scope.collectionid;
 				connection = new socket(final_destination);
 				connection.onopen = function(e) {
-					console.log('Opened a connection!');
-					console.log(e);
+					//console.log('Opened a connection!');
+					//console.log(e);
 					
 					var command = SocketCommand("list");
 					command.assetid = editor.currentAnnotatedAsset.assetData.id;
@@ -272,6 +275,27 @@ var AnnotationEditor = function(scope) {
 			connection.sendCommand = function(command)
 				{
 					this.send( JSON.stringify(command));
+				};
+				connection.onmessage = function(e) {
+				 	var received_msg = e.data;
+					var command = JSON.parse(received_msg);
+					
+					if( command.command == "annotation.added" )
+					{
+						//Show it on the screen
+						var data = command.annotationdata;
+						
+						var anonasset = editor.getAnnotatedAsset( data.assetid );
+						
+						var newannotation = new Annotation();
+						newannotation.annotationdata = data;
+						
+						anonasset.pushAnnotatoin( newannotation );
+						
+						this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
+						jAngular.render("#annotationlist");
+
+					} 
 				};
 			// scope.add('connection', connection);
 			this.connection = connection; // should connection live on the editor instead? more explicit perhaps

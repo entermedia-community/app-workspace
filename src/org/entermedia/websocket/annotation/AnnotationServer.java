@@ -20,6 +20,7 @@ import groovy.json.JsonSlurper;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -36,7 +37,7 @@ import org.openedit.data.SearcherManager;
 
 import com.openedit.ModuleManager;
 
-public class AnnotationServer extends Endpoint {
+public class AnnotationServer extends Endpoint implements AnnotationCommandListener  {
 
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
@@ -62,9 +63,20 @@ public class AnnotationServer extends Endpoint {
         //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
         
         //TODO: Load from spring
-        session.addMessageHandler(new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic) );
+        session.addMessageHandler(new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic, this) );
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
+    
+	public void annotationSaved(AnnotationConnection annotationConnection, JSONObject json, String message)
+	{
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			annotationConnection2.sendMessage(json);
+		}
+	}
+
+    
 }    
 //    private static class EchoMessageHandlerBinary
 //            implements MessageHandler.Partial<ByteBuffer> {
