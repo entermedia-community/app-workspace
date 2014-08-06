@@ -123,3 +123,4 @@
 <event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 17:04:25 -0400" indexed="false"/>
 <event operation="authentication" user="admin" details="logout" catalogid="system" date="2014-07-21 17:07:02 -0400" indexed="false"/>
 <event operation="authentication" user="admin" details="login" catalogid="system" date="2014-07-21 17:07:06 -0400" indexed="false"/>
+<event operation="authentication" user="admin" details="login" catalogid="system" date="2014-08-05 16:34:30 -0400" indexed="false"/>

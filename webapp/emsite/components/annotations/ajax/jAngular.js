@@ -1,79 +1,79 @@
 // jAngular.js
 
 var Scope = function() {
-	var parentScope;
-	var out = {
-		add: function(name, model) {
-			this[name] = model;
-		},
-		get: function(name) 
-		{
-			var command = name;
-			if( !name.indexOf("if") == 0 )  //starts with
-			{
-				command = "this." + name;
-			}
-			var found = eval(command);
-			if( parentScope != null && found == null )
-			{
-				return parentScope.get(name);
-			}
-			return found;
-		},
-		createScope: function()
-		{
-			var newscope = new Scope();
-			newscope.parentScope  = this;
-			return newscope
+		var parentScope;
+		var out = {
+				add: function(name, model) {
+						this[name] = model;
+				},
+				get: function(name) 
+				{
+						var command = name;
+						if( !name.indexOf("if") == 0 )  //starts with
+						{
+								command = "this." + name;
+						}
+						var found = eval(command);
+						if( parentScope != null && found == null )
+						{
+								return parentScope.get(name);
+						}
+						return found;
+				},
+				createScope: function()
+				{
+						var newscope = new Scope();
+						newscope.parentScope  = this;
+						return newscope
+				}
+				}
+				return out;
 		}
-		}
-		return out;
-	}
 
 
 var Replacer = function() {
-	var out = {
-		replace : function( inCode, scope)
-		{
-			if( inCode == null)
-			{
-				return inCode;
-			}
-			var start = 0;
-			while( (start = inCode.indexOf("{{",start)) != -1)
-			{
-				var end = inCode.indexOf("}}",start);			
-				if( end == -1)
+		var out = {
+				replace : function( inCode, scope)
 				{
-					break;
-				}
-				
-				var key = inCode.substring(start+2,end);
-				var value = null;
-				try
-				{
-					value = scope.get(key); //check for property
-				} 
-				catch ( err )
-				{
-					value = err.message;
-				}	
-				
-				if( typeof value !== 'undefined')
-				{
-					//sub = replace(sub,inValues);  //recursive
-					inCode = inCode.substring(0,start) + value + inCode.substring(end+2);
-					start = start + key.length + 1;
-				}				
-				else
-				{
-					start = end; //could not find a hit, go to the next one
-				}
-			}
-			return inCode;
-		}	
-	};
-	return out;
+						if( inCode == null)
+						{
+								return inCode;
+						}
+						var start = 0;
+						while( (start = inCode.indexOf("{{",start)) != -1)
+						{
+								var end = inCode.indexOf("}}",start);           
+								if( end == -1)
+								{
+										break;
+								}
+								
+								var key = inCode.substring(start+2,end);
+								var value = null;
+								try
+								{
+										value = scope.get(key); //check for property
+								} 
+								catch ( err )
+								{
+										value = err.message;
+								}   
+								
+								if( typeof value !== 'undefined')
+								{
+										//sub = replace(sub,inValues);  //recursive
+										inCode = inCode.substring(0,start) + value + inCode.substring(end+2);
+										start = start + key.length + 1;
+								}               
+								else
+								{
+										start = end; //could not find a hit, go to the next one
+								}
+						}
+						return inCode;
+				}   
+		};
+		return out;
 };
 
 var jAngular =  {};
@@ -82,180 +82,230 @@ var jAngularScopes = {};
 
 jAngular.livequery = function()
 {
-	//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-	
-	$( "[ng-click]").livequery('click', function()
-	{
-		var theel = jQuery(this);
-		var code = theel.attr("ng-click");
-		var scope = jAngular.findScopeFor(theel);
-		eval(code);
-	});
+		//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+		
+		$( "[ng-click]").livequery('click', function()
+		{
+				var theel = jQuery(this);
+				var code = theel.attr("ng-click");
+				var scope = jAngular.findScopeFor(theel);
+				eval(code);
+		});
 }
 
 jAngular.findScope = function(scopename)
 {
-	var foundscope = jAngularScopes[scopename];
-	//todo: Default scope?
-	return 	foundscope;
+		var foundscope = jAngularScopes[scopename];
+		//todo: Default scope?
+		return  foundscope;
 }
 
 
 jAngular.findScopeFor = function(inElement)
 {
-		var theel = $(inElement);
+				var theel = $(inElement);
 
-	/*
-		var theel = inElement;
-		var scopename = theel.attr("ng-scope");
-		while( scopename !== null )
-		{
-			theel = theel.parentNode;
-			if(theel)
-			{ 
-				scopename = theel.attr("ng-scope");
-			}
-			else
-			{
-				break;
-			}
-		}
-	*/
-	
-		var found = theel.closest("[ng-scope]");
-		var scopename = found.attr("ng-scope");
-		return jAngular.findScope(scopename);
-}		
+		/*
+				var theel = inElement;
+				var scopename = theel.attr("ng-scope");
+				while( scopename !== null )
+				{
+						theel = theel.parentNode;
+						if(theel)
+						{ 
+								scopename = theel.attr("ng-scope");
+						}
+						else
+						{
+								break;
+						}
+				}
+		*/
+		
+				var found = theel.closest("[ng-scope]");
+				var scopename = found.attr("ng-scope");
+				return jAngular.findScope(scopename);
+}       
 
 jAngular.addScope = function(scopename, inScope)
 {
-	jAngularScopes[scopename] = inScope; 
+		jAngularScopes[scopename] = inScope; 
 }
 
 jAngular.render = function(div)
 {
-	/*
-	when rendering ng-repeat for the image carousel
-	we will need to only loop maximum editor.imageCarouselPageAssetCount times
+		/*
+		when rendering ng-repeat for the image carousel
+		we will need to only loop maximum editor.imageCarouselPageAssetCount times
 
-	begin asset rendering at Asset# editor.imageCarouselPageIndex*editor.imageCarouselPageAssetCount+1
-	*/
-	var replacer = new Replacer();
-	
-	if( div )
-	{
-		div = div + " ";
-	} 
-	else
-	{
-		div = "";
-	}
-	
-	var toplevel = $(div);
-	
-	var scope = jAngular.findScopeFor(toplevel); 
-	if( !scope) 
-	{
-		alert( "No ng-scope= defined for " + div);
-	}
-	var selector = div + 'li[ng-repeat]';
-	
-	//Live query this?
-	$( selector ).each(function( index ) 
-	{
-		var li = $(this);
-		var vars = li.attr("ng-repeat");
-		var split = vars.indexOf(" in ");
-		var lid = li.contents().attr("id");
+		begin asset rendering at Asset# editor.imageCarouselPageIndex*editor.imageCarouselPageAssetCount+1
+		*/
+		var replacer = new Replacer();
 		
-		var rowname = vars.substring(0,split);
-		var loopname = vars.substring(split + 4,vars.length );
-		
-		var rows = scope.get(loopname);  //TODO: Find the name
-		
-		//set a local scope of asset = rows[i];
-		var origContent = this.origContent;
-		if( typeof( origContent ) === 'undefined' )
+		if( div )
 		{
-			origContent = li.html();
-
-			this.origContent =origContent; 
+				div = div + " ";
+		} 
+		else
+		{
+				div = "";
 		}
-		li.html("");
-		if( rows )
-		{
-			$.each(rows, function(index, value) {
-				//TODO: replace scope variables
-				var localscope = scope.createScope();
-				localscope.add(rowname,value);
-				//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-	
-				var evalcontent = replacer.replace(origContent,localscope);
-				evalcontent = evalcontent.replace("ng-src","src");
-				li.append(evalcontent);
-				var lidr = li.contents().attr("id");
-				
-	        });
-	     }
 		
-	});
-	
-	// my possibly crappy dynamic-id replacement code
+		var toplevel = $(div);
+		
+		var scope = jAngular.findScopeFor(toplevel); 
+		if( !scope) 
+		{
+				alert( "No ng-scope= defined for " + div);
+		}
+		var selector = div + 'li[ng-repeat]';
+		
+		//Live query this?
+		$( selector ).each(function( index ) 
+		{
+				var li = $(this);
+				var vars = li.attr("ng-repeat");
+				var split = vars.indexOf(" in ");
+				var lid = li.contents().attr("id");
+				
+				var rowname = vars.substring(0,split);
+				var loopname = vars.substring(split + 4,vars.length );
+				
+				var rows = scope.get(loopname);  //TODO: Find the name
+				
+				//set a local scope of asset = rows[i];
+				var origContent = this.origContent;
+				if( typeof( origContent ) === 'undefined' )
+				{
+						origContent = li.html();
 
-	$("[dynamic-id]")
-    .each(function(index)
-          {
-            var theel = $(this);
-            $.each(theel.children(), function(child_index)
-                   {
-                    var child = $(this);
-                    child.data("id", index);
-                   });
-          });
-	// $("[dynamic-id]").each(function(index)
-	// {
-	// 	var theel = $(this);
-	// 	var oldid = theel.attr("dynamic-id");
-	// 	var newid = oldid + "-" + index;
-	// 	theel.attr("dynamic-id", newid);
-	// 	theel.attr("data-id", index);
-	// });
-	// // $.each($("body *")
-	// // 	.contents()
-	// // 	.filter(function(index, item)
-	// // 		{
-	// // 			return item.nodeType === 3 && $(item).text().indexOf("{{") != -1}), function(index, element)
-	// // 			{
-	// //$.each($(".jq-replace"), function(index, element)
+						this.origContent =origContent; 
+				}
+				li.html("");
+				if( rows )
+				{
+						$.each(rows, function(index, value) {
+								//TODO: replace scope variables
+								var localscope = scope.createScope();
+								localscope.add(rowname,value);
+								//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+		
+								var evalcontent = replacer.replace(origContent,localscope);
+								evalcontent = evalcontent.replace("ng-src","src");
+								li.append(evalcontent);
+								var lidr = li.contents().attr("id");
+								
+						});
+				 }
+				
+		});
+		
+		// my possibly crappy dynamic-id replacement code
+
+		$("[dynamic-id]")
+		.each(function(index)
+					{
+						var theel = $(this);
+						$.each(theel.children(), function(child_index)
+									 {
+										var child = $(this);
+										child.data("id", index);
+									 });
+					});
+
+		/* 
+		TODO: move below code to a more appropriate location or genericize it
+		*/
+		$("button.user-comment").click(function()
+				// only problem here is that element.contents() only goes one layer deep
+				// therefore the button.editable is never seen. has to be a btter way of selecting, then
+				{
+					var butt = $(this);
+					var lookup = butt.data("id");
+					console.log("clicked button");
+					$("[dynamic-id]")
+					.contents()
+					.filter(".editable")
+					.filter(function()
+									{
+										var me = $(this);
+										console.log("checkin ", me)
+										return me.data("id") === lookup;
+									})
+					.each(function()
+								{
+									var me = $(this);
+									console.log("button each: ", me)
+									drawEditor(me);
+								});
+				});
+		var drawEditor = function($el) {
+				$el.unbind();
+				var temp = $el.text();
+				var t = $("<span class='inline-editor'><input type='text' /></span>");
+				$el.html(t);
+				
+				var input = $el.find('input');
+				input
+						.val($el.data('text'))
+						.focus()
+						.select()
+						.blur(function(){
+								$el.data('text', input.val());
+								drawText($el);
+						})
+						.keyup(function(e) {
+								if (e.keyCode === 13) {
+										input.blur();
+								}
+								if (e.keyCode === 27) {
+										input.val(temp);
+										input.blur();
+								}
+						});
+		}
+
+		var drawText = function($el) {
+				if (! $el.data('text')) {
+						$el.data('text', $el.text());
+				}
+						
+				$el.unbind();
+				$el
+						.text($el.data('text'))
+						.click(function(evt) {
+								evt.preventDefault();
+								drawEditor($el);
+						});
+		}
 
 
+		$(div + ".jq-replace").each(function()
+		{
+						// possible fix to having to add class:
+						// check in each filter function for .text() OR defined origContent with brackets
+						var element = $(this); // cast to jQuery object
+						var origContent = this.origContent;
+						if( typeof( origContent ) === 'undefined' )
+						{
+								origContent = element.text();
+								//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+								this.origContent = origContent;
+						}
+						var text = origContent;
+						var regex = /{{([^{]+)}}/g;
+						var m;
+						while ((m = regex.exec(text)) !== null)
+						{
+								text = text.replace(m[0], eval(m[1]));
+						}
+						element.text(text);
 
-	$(div + ".jq-replace").each(function()
-	{
-			// possible fix to having to add class:
-			// check in each filter function for .text() OR defined origContent with brackets
-			var element = $(this); // cast to jQuery object
-			var origContent = this.origContent;
-			if( typeof( origContent ) === 'undefined' )
-			{
-				origContent = element.text();
-				//	$("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-				this.origContent = origContent;
-			}
-			var text = origContent;
-			var regex = /{{([^{]+)}}/g;
-			var m;
-			while ((m = regex.exec(text)) !== null)
-			{
-				text = text.replace(m[0], eval(m[1]));
-			}
-			element.text(text);
-
-	});
+		});
 };
 
 
 jQuery(document).ready(function() 
-{ 		
-	jAngular.livequery();
+{       
+		jAngular.livequery();
 });

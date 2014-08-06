@@ -132,23 +132,29 @@ var AnnotationEditor = function(scope) {
 			this.scope.annotations = annotatedAsset.annotations;
 			$.each(editor.scope.annotations, function(index, annotation)
 			{
-				$.each(annotation.fabricObjects, function(index, item)
+				if (annotation.fromSocket)
 				{
-					editor.fabricModel.canvas.add(item);
-				});
+					fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
+					{
+					 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
+					 editor.scope.fabricModel.canvas.renderOnAddRemove = false
+					 $.each(group, function(index, item) {
+					     editor.scope.fabricModel.canvas.add(item);
+					 });
+					 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+					});
+					// annotation.fromSocket = false;
+				} else {
+					$.each(annotation.fabricObjects, function(index, item)
+					{
+						editor.fabricModel.canvas.add(item);
+					});
+				}
 
 				// below code might be needed for recreating objects from JSON data
 				// currently the whole objects are saved rather than parsed
 
-				// fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
-				// {
-				//  origRenderOnAddRemove = this.scope.fabricModel.canvas.renderOnAddRemove
-				//  this.scope.fabricModel.canvas.renderOnAddRemove = false
-				//  $.each(group, function(index, item) {
-				//      this.scope.fabricModel.canvas.add(item);
-				//  });
-				//  this.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
-				// });
+				
 			});
 			this.scope.fabricModel.canvas.renderAll();
 			jAngular.render("#annotationtab");
@@ -164,6 +170,7 @@ var AnnotationEditor = function(scope) {
 		{
 			var annot = new Annotation();
 			annot.user = this.userData.userid;
+			annot.assetid = annotatedAsset.assetData.id;
 			annot.id = Math.floor(Math.random() * 100000000).toString();
 			annot.indexCount = annotatedAsset.nextIndex();
 			annot.date = new Date();
@@ -183,23 +190,26 @@ var AnnotationEditor = function(scope) {
 			// can also toggle it off on selection:cleared? maybe that is too expensive
 			// looks like easiest way to implement move tool is a loop through the existing objects on selectTool
 			fabricObject.selectable = false;
-			// make object immobile
+			// make object immobile ?
 			fabricObject.evented = false;
 			this.currentAnnotatedAsset.currentAnnotation.pushFabricObject(fabricObject);
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
 			jAngular.render("#annotationlist");
-
-			// need to reset currentAnnotation ? When would we not want to make a new annotation?
-			// the object:added event gets called seemingly more than it should
-
-			this.currentAnnotatedAsset.currentAnnotation = null;
 			
 			//Update network?
 			var command = SocketCommand("annotation.added");
 			command.annotationdata = this.currentAnnotatedAsset.currentAnnotation;
-			this.sendSocketCommand( command );
+			if (!this.currentAnnotatedAsset.currentAnnotation.fromSocket)
+			{
+				this.sendSocketCommand( command );
+			}
+
+			// need to reset currentAnnotation ? When would we not want to make a new annotation?
+			// the object:added event gets called seemingly more than it should
+
+			// this.currentAnnotatedAsset.currentAnnotation = null;
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -233,6 +243,8 @@ var AnnotationEditor = function(scope) {
 			// otherwise we have to make a new one.
 			// make a new one for now since no data persists currently
 			var toAsset = this.getAnnotatedAsset(inAssetId);
+			console.log( "trying to get ", inAssetId);
+			console.log( "got ", toAsset);
 			this.setCurrentAnnotatedAsset(toAsset);
 			jAngular.render("#annotationtab");
 		}
@@ -256,7 +268,8 @@ var AnnotationEditor = function(scope) {
 				base_destination = "ws://localhost:8080/entermedia/services/websocket/echoProgrammatic";
 				final_destination = "" + base_destination + "?catalogid=" + scope.catalogid + "&collectionid=" + scope.collectionid;
 				connection = new socket(final_destination);
-				connection.onopen = function(e) {
+				connection.onopen = function(e)
+				{
 					//console.log('Opened a connection!');
 					//console.log(e);
 					
@@ -264,19 +277,22 @@ var AnnotationEditor = function(scope) {
 					command.assetid = editor.currentAnnotatedAsset.assetData.id;
 					connection.sendCommand(command);    
 				};
-				connection.onclose = function(e) {
+				connection.onclose = function(e)
+				{
 					console.log('Closed a connection!');
 					console.log(e);
 				};
-				connection.onerror = function(e) {
+				connection.onerror = function(e)
+				{
 					console.log('Connection error!');
 					console.log(e);
 				};
-			connection.sendCommand = function(command)
+				connection.sendCommand = function(command)
 				{
 					this.send( JSON.stringify(command));
 				};
-				connection.onmessage = function(e) {
+				connection.onmessage = function(e)
+				{
 				 	var received_msg = e.data;
 					var command = JSON.parse(received_msg);
 					
@@ -284,16 +300,25 @@ var AnnotationEditor = function(scope) {
 					{
 						//Show it on the screen
 						var data = command.annotationdata;
-						
+						console.log(data);
 						var anonasset = editor.getAnnotatedAsset( data.assetid );
+
+						// we only want to push the annotation if it doesn't already exist
 						
-						var newannotation = new Annotation();
-						newannotation.annotationdata = data;
+						var newannotation = new Annotation(data);
+						console.log(newannotation);
+						newannotation.fromSocket = true;
+						if (editor.getAnnotationById(newannotation.id) == null)
+						{
+							anonasset.pushAnnotation( newannotation );
+						}
 						
-						anonasset.pushAnnotatoin( newannotation );
-						
-						this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
-						jAngular.render("#annotationlist");
+						console.log("from onmessage currentAnnotatedAsset: ", editor.currentAnnotatedAsset);
+
+						// scope.add("annotations", editor.currentAnnotatedAsset.annotations);
+						// jAngular.render("#annotationlist");
+						editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+
 
 					} 
 				};
@@ -354,7 +379,9 @@ var Annotation = function() {
 		user: null,
 		comment: "",
 		date : [],
-		fabricObjects: [],  
+		fabricObjects: [], 
+		assetid: null,
+		fromSocket: false,
 		getUserName: function()
 		{
 			var userOut = "demouser";
@@ -369,9 +396,16 @@ var Annotation = function() {
 			this.fabricObjects.push( inObject );
 		}
 	};
+	if (arguments[0])
+	{
+		var inAnnotation = arguments[0];
+		$.each(Object.keys(inAnnotation), function(index, key)
+		{
+			out[key] = inAnnotation[key];
+		});
+	}
 	return out; 
 }
-
 
 
 var loadFabricModel = function(scope)
@@ -380,103 +414,4 @@ var loadFabricModel = function(scope)
 	scope.annotationEditor.fabricModel = fabricModel;
 	scope.add("fabricModel",fabricModel);
 
-}
-// var drawEditor = function($el) {
-//     $el.unbind();
-//     var t = $("<span class='inline-editor'><input type='text' /></span>");
-//     $el.html(t);
-    
-//     var input = $el.find('input');
-//     input
-//         .val($el.data('text'))
-//         .focus()
-//         .select()
-//         .blur(function(){
-//             $el.data('text', input.val());
-//             drawText($el);
-//         })
-//         .keyup(function(e) {
-//             if (e.keyCode === 13) {
-//                 input.blur();
-//             }
-//             if (e.keyCode === 27) {
-//                 input.val($el.data('text'));
-//                 input.blur();
-//             }
-//         });
-// }
-
-// var drawText = function($el) {
-//     if (! $el.data('text')) {
-//         $el.data('text', $el.text());
-//     }
-        
-//     $el.unbind();
-//     $el
-//         .text($el.data('text'))
-//         .dblclick(function(evt) {
-//             evt.preventDefault();
-//             drawEditor($el);
-//         });
-// }
-// $('[dynamic-id^=editable-comment]')
-// .each(function(index, element)
-//       {
-//           drawText($(element));
-//       });
-$("button.user-comment").click(function()
-                  {
-                      var butt = $(this);
-                      var lookup = butt.data("id");
-                      $("[dynamic-id]")
-                      .contents()
-                      .filter(".editable")
-                      .filter(function()
-                              {
-                                  var me = $(this);
-                                  return me.data("id") === lookup;
-                              })
-                      .each(function()
-                            {
-                              drawEditor($(this));
-                            });
-                  });
-function drawEditor($el) {
-    $el.unbind();
-    var temp = $el.text();
-    var t = $("<span class='inline-editor'><input type='text' /></span>");
-    $el.html(t);
-    
-    var input = $el.find('input');
-    input
-        .val($el.data('text'))
-        .focus()
-        .select()
-        .blur(function(){
-            $el.data('text', input.val());
-            drawText($el);
-        })
-        .keyup(function(e) {
-            if (e.keyCode === 13) {
-                input.blur();
-            }
-            if (e.keyCode === 27) {
-                input.val(temp);
-                input.blur();
-            }
-        });
-}
-
-function drawText($el) {
-    if (! $el.data('text')) {
-        $el.data('text', $el.text());
-    }
-        
-    $el.unbind();
-    $el
-        .text($el.data('text'))
-        .click(function(evt) {
-            evt.preventDefault();
-            drawEditor($el);
-        });
 }

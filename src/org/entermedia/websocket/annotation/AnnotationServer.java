@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
@@ -41,6 +42,19 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
+	@Override
+	public void onClose(Session session, CloseReason closeReason) {
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			if (session == annotationConnection2.getSession())
+			{
+				connections.remove(annotationConnection2);
+				break;
+			}
+		}
+		super.onClose(session, closeReason);
+	}
     @Override
     public void onOpen(Session session, EndpointConfig endpointConfig) 
     {
@@ -63,7 +77,9 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
         //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
         
         //TODO: Load from spring
-        session.addMessageHandler(new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic, this) );
+        AnnotationConnection connection = new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic, this);
+        connections.add(connection);	
+        session.addMessageHandler(connection);
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
     

@@ -13,6 +13,7 @@ import javax.websocket.RemoteEndpoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.openedit.data.SearcherManager;
 import org.openedit.entermedia.modules.AdminModule;
 
@@ -26,21 +27,24 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 	protected String fieldCollectionId;
 	protected String fieldCatalogId;
 	protected HttpSession fieldSession;
-	protected JsonSlurper fieldJSOSlurper;
+	protected JSONParser fieldJSONParser;
 	protected AnnotationCommandListener fieldAnnotationCommandListener;
 	public AnnotationCommandListener getAnnotationCommandListener()
 	{
 		return fieldAnnotationCommandListener;
 	}
 	
-	public JsonSlurper getJSOSlurper()
+	public JSONParser getJSONParser()
 	{
-		return fieldJSOSlurper;
+		if (fieldJSONParser == null) {
+			fieldJSONParser = new JSONParser();
+		}
+		return fieldJSONParser;
 	}
 
-	public void setJSOSlurper(JsonSlurper fieldJSOSlurper)
+	public void setJSONParser(JSONParser fieldJSONParser)
 	{
-		this.fieldJSOSlurper = fieldJSOSlurper;
+		this.fieldJSONParser = fieldJSONParser;
 	}
 
 	protected AnnotationConnection(SearcherManager searchers, String inCatalogId, String collectionid, HttpSession http, RemoteEndpoint.Basic remoteEndpointBasic, AnnotationCommandListener inListener )
@@ -52,7 +56,9 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 		fieldSession = http;
 		fieldAnnotationCommandListener = inListener;
 	}
-
+	public HttpSession getSession() {
+		return fieldSession;
+	}
 	@Override
 	public void onMessage(String message)
 	{
@@ -62,7 +68,8 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 //		}
 		try
 		{
-			Map<String, String> map = (Map<String, String>)getJSOSlurper().parse(new StringReader(message));
+//			message = message.replaceAll("null", "\"null\"");
+			JSONObject map = (JSONObject)getJSONParser().parse(new StringReader(message));
 			String command = (String)map.get("command");
 			if ("list".equals(command)) //Return all the annotation on this asset
 			{
@@ -73,15 +80,15 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set
-				JSONObject json = new JSONObject();
-				json.putAll(map);
+//				JSONObject json = new JSONObject();
+//				json.putAll(map);
 				//command.annotationdata
 				//obj.put("stuff", "array of annotations");
 				//remoteEndpointBasic.sendText(message);
-				getAnnotationCommandListener().annotationAdded(this, json, message);
+				getAnnotationCommandListener().annotationAdded(this, map, message);
 			}
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			log.error(e);
@@ -100,13 +107,15 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 
 	public void sendMessage(JSONObject json)
 	{
+		log.info("Sending message");
 		try
 		{
 			remoteEndpointBasic.sendText(json.toJSONString());
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			throw new OpenEditException(e);
+			log.error(e);
+//			throw new OpenEditException(e);
 		}
 	}
 }
