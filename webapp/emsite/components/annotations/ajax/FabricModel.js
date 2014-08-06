@@ -296,9 +296,10 @@ var FabricModel = function (scope) {
 	})();
 
    readyToComment = function() {
-      scope.fabricModel.selectTool('disabled');
+      //scope.fabricModel.selectTool('disabled');
       //scope.fabricModel.readyToComment = true;
-      scope.fabricModel.canvas.isDrawingMode = false;
+      //scope.fabricModel.canvas.isDrawingMode = false;
+      
      /*
       $timeout((function() {
         $('#user-comment-input').focus();
@@ -366,6 +367,12 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('object:added', function(obj) {
 		var _ref;
+		
+		if( obj.source != this )
+		{
+			return;
+		}
+		
 		if (scope.annotationEditor.currentTool.annotating) {
 			scope.annotationEditor.fabricObjectAdded(obj.target);
 		}

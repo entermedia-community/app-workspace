@@ -107,10 +107,10 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 
 	public void sendMessage(JSONObject json)
 	{
-		log.info("Sending message");
 		try
 		{
 			remoteEndpointBasic.sendText(json.toJSONString());
+			log.info("sent message");
 		}
 		catch (Exception e)
 		{

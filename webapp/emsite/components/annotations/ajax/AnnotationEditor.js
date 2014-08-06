@@ -140,7 +140,7 @@ var AnnotationEditor = function(scope) {
 					$.each(oldAnnotations, function(index, item)
 					{
 						// annotation.fabricObjects.push(item);
-						editor.fabricModel.canvas.add(item);
+						editor.fabricModel.canvas.addInternal(item);
 					});
 				} 
 				else 
@@ -150,9 +150,9 @@ var AnnotationEditor = function(scope) {
 						 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
 						 editor.scope.fabricModel.canvas.renderOnAddRemove = false
 						 $.each(group, function(index, item) {
-						 	// item.junk = "21412124";
-							// annotation.fabricObjects.push(item);
-						     editor.scope.fabricModel.canvas.add(item);
+						 	 //item.junk = "21412124";
+							 annotation.fabricObjects[index] = item;
+						     editor.scope.fabricModel.canvas.addInternal(item);
 						 });
 						 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
 						});
@@ -188,12 +188,12 @@ var AnnotationEditor = function(scope) {
 		,
 		fabricObjectAdded: function(fabricObject)
 		{
-			if( this.currentAnnotatedAsset.currentAnnotation == null )
-			{
-				this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);
+			//if( this.currentAnnotatedAsset.currentAnnotation == null )
+			//{
+			this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);
 				
-				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
-			}
+			this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
+			
 			var currentAnnotation = this.currentAnnotatedAsset.currentAnnotation;
 			// need to make sure the object is not selectable by default
 			// we have mouse:move events which may be the best bet for toggling
@@ -202,10 +202,6 @@ var AnnotationEditor = function(scope) {
 			fabricObject.selectable = false;
 			// make object immobile ?
 			fabricObject.evented = false;
-			if (currentAnnotation.hasObject(fabricObject))
-			{
-				return;
-			}
 			currentAnnotation.pushFabricObject(fabricObject);
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
@@ -314,7 +310,7 @@ var AnnotationEditor = function(scope) {
 					{
 						//Show it on the screen
 						var data = command.annotationdata;
-						console.log(data);
+						console.log("Got message" + data);
 						var anonasset = editor.getAnnotatedAsset( data.assetid );
 
 						// we only want to push the annotation if it doesn't already exist
@@ -332,6 +328,10 @@ var AnnotationEditor = function(scope) {
 							// scope.add("annotations", editor.currentAnnotatedAsset.annotations);
 							// jAngular.render("#annotationlist");
 							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+						}
+						else
+						{
+							console.log("Already had annotation" + newannotation.id);
 						}
 
 					} 
