@@ -375,7 +375,7 @@ var FabricModel = function (scope) {
 			}
 		}
 		// _this.canvas.calcOffset();
-		_this.canvas.renderAll();
+		// _this.canvas.renderAll();
 		if (!_this.lastClick.left) {
 			_this.lastClick.left = obj.target.left;
 		}

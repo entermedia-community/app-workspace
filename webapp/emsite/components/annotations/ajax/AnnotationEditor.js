@@ -70,6 +70,7 @@ var AnnotationEditor = function(scope) {
 				if (annotation.id === inAnnotationId)
 				{
 					outAnnotation = annotation;
+					return false;
 				}
 			});
 			return outAnnotation;
@@ -132,23 +133,31 @@ var AnnotationEditor = function(scope) {
 			this.scope.annotations = annotatedAsset.annotations;
 			$.each(editor.scope.annotations, function(index, annotation)
 			{
-				if (annotation.fromSocket)
+				var oldAnnotations = annotation.fabricObjects;
+				// annotation.fabricObjects = [];
+				if (annotation.isLive())
 				{
-					fabric.util.enlivenObjects(annotation.fabricObjects, function(group)
+					$.each(oldAnnotations, function(index, item)
 					{
-					 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
-					 editor.scope.fabricModel.canvas.renderOnAddRemove = false
-					 $.each(group, function(index, item) {
-					     editor.scope.fabricModel.canvas.add(item);
-					 });
-					 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
-					});
-					// annotation.fromSocket = false;
-				} else {
-					$.each(annotation.fabricObjects, function(index, item)
-					{
+						// annotation.fabricObjects.push(item);
 						editor.fabricModel.canvas.add(item);
 					});
+				} 
+				else 
+				{
+					fabric.util.enlivenObjects(oldAnnotations, function(group)
+						{
+						 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
+						 editor.scope.fabricModel.canvas.renderOnAddRemove = false
+						 $.each(group, function(index, item) {
+						 	// item.junk = "21412124";
+							// annotation.fabricObjects.push(item);
+						     editor.scope.fabricModel.canvas.add(item);
+						 });
+						 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+						});
+					// annotation.fromSocket = false;
+				
 				}
 
 				// below code might be needed for recreating objects from JSON data
@@ -185,6 +194,7 @@ var AnnotationEditor = function(scope) {
 				
 				this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
 			}
+			var currentAnnotation = this.currentAnnotatedAsset.currentAnnotation;
 			// need to make sure the object is not selectable by default
 			// we have mouse:move events which may be the best bet for toggling
 			// can also toggle it off on selection:cleared? maybe that is too expensive
@@ -192,7 +202,11 @@ var AnnotationEditor = function(scope) {
 			fabricObject.selectable = false;
 			// make object immobile ?
 			fabricObject.evented = false;
-			this.currentAnnotatedAsset.currentAnnotation.pushFabricObject(fabricObject);
+			if (currentAnnotation.hasObject(fabricObject))
+			{
+				return;
+			}
+			currentAnnotation.pushFabricObject(fabricObject);
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
@@ -200,16 +214,16 @@ var AnnotationEditor = function(scope) {
 			
 			//Update network?
 			var command = SocketCommand("annotation.added");
-			command.annotationdata = this.currentAnnotatedAsset.currentAnnotation;
-			if (!this.currentAnnotatedAsset.currentAnnotation.fromSocket)
-			{
+			command.annotationdata = currentAnnotation;
+			// if (!this.currentAnnotatedAsset.currentAnnotation.fromSocket)
+			// {
 				this.sendSocketCommand( command );
-			}
+			// }
 
 			// need to reset currentAnnotation ? When would we not want to make a new annotation?
 			// the object:added event gets called seemingly more than it should
 
-			// this.currentAnnotatedAsset.currentAnnotation = null;
+			this.currentAnnotatedAsset.currentAnnotation = null;
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -307,18 +321,18 @@ var AnnotationEditor = function(scope) {
 						
 						var newannotation = new Annotation(data);
 						console.log(newannotation);
-						newannotation.fromSocket = true;
+						// newannotation.fromSocket = true;
 						if (editor.getAnnotationById(newannotation.id) == null)
 						{
 							anonasset.pushAnnotation( newannotation );
+							
+							
+							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
+
+							// scope.add("annotations", editor.currentAnnotatedAsset.annotations);
+							// jAngular.render("#annotationlist");
+							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
 						}
-						
-						console.log("from onmessage currentAnnotatedAsset: ", editor.currentAnnotatedAsset);
-
-						// scope.add("annotations", editor.currentAnnotatedAsset.annotations);
-						// jAngular.render("#annotationlist");
-						editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
-
 
 					} 
 				};
@@ -372,7 +386,7 @@ var AnnotatedAsset = function() {
 	return out; 
 }
 
-var Annotation = function() {   
+var Annotation = function(inAnnotationData) {   
 	var out = {
 		id: null,
 		indexCount: null,
@@ -381,8 +395,17 @@ var Annotation = function() {
 		date : [],
 		fabricObjects: [], 
 		assetid: null,
-		fromSocket: false,
-		getUserName: function()
+		fromSocket: false
+	};
+	if (inAnnotationData)
+	{
+		var inAnnotation = arguments[0];
+		$.each(Object.keys(out), function(index, key)
+		{
+			out[key] = inAnnotationData[key];
+		});
+	}
+		out.getUserName = function()
 		{
 			var userOut = "demouser";
 			if (this.user !== null)
@@ -390,20 +413,23 @@ var Annotation = function() {
 				userOut = this.user;
 			}
 			return userOut;
-		},
-		pushFabricObject: function( inObject )
+		};
+		out.pushFabricObject = function( inObject )
 		{
 			this.fabricObjects.push( inObject );
-		}
-	};
-	if (arguments[0])
-	{
-		var inAnnotation = arguments[0];
-		$.each(Object.keys(inAnnotation), function(index, key)
+		};
+		out.isLive = function() 
 		{
-			out[key] = inAnnotation[key];
-		});
-	}
+			if (this.fabricObjects.length > 0 && this.fabricObjects[0].canvas)
+			{
+				return true;
+			}
+			return false;
+		};
+		out.hasObject = function(inObj)
+		{
+			return $.inArray(inObj, this.fabricObjects) !== -1;
+		};
 	return out; 
 }
 
