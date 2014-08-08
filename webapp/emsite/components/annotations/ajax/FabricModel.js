@@ -365,6 +365,20 @@ var FabricModel = function (scope) {
 		
 	});
 
+	out.canvas.on('object:modified', function(e)
+	{
+		/* push the object through with a modified command
+		any modified object should replace the existing annotation
+		rather than appending it, and all receiving clients should
+		already have the object in their annotations list */
+		var currentAnnotation = scope.annotationEditor.currentAnnotatedAsset.currentAnnotation;
+		command = new SocketCommand("annotation.modified");
+		command.annotationdata = currentAnnotation;
+		command.assetid = scope.annotationEditor.currentAnnotatedAsset.assetData.id;
+		scope.annotationEditor.sendSocketCommand(command);
+
+	})
+
 	out.canvas.on('object:added', function(obj) {
 		var _ref;
 		

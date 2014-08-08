@@ -6,5 +6,6 @@ public interface AnnotationCommandListener
 {
 
 	void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message);
+	void annotationModified(AnnotationConnection annotationConnection, JSONObject json, String message);
 
 }

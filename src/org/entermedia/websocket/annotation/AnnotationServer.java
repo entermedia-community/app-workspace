@@ -82,6 +82,14 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
         session.addMessageHandler(connection);
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
+    public void annotationModified(AnnotationConnection annotationConnection, JSONObject json, String message)
+	{
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			annotationConnection2.sendMessage(json);
+		}
+	}
     
 	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message)
 	{
@@ -91,7 +99,6 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 			annotationConnection2.sendMessage(json);
 		}
 	}
-
     
 }    
 //    private static class EchoMessageHandlerBinary

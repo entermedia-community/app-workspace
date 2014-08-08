@@ -77,6 +77,11 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 				obj.put("stuff", "array of annotations");
 				remoteEndpointBasic.sendText(obj.toJSONString());
 			}
+			else if ("annotation.modified".equals(command))
+			{
+//				JSONObject obj = new JSONObject();
+				getAnnotationCommandListener().annotationModified(this, map, message);
+			}
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set

@@ -331,23 +331,26 @@ var AnnotationEditor = function(scope) {
 						}
 						else
 						{
+							// this should never happen
 							console.log("Already had annotation" + newannotation.id);
 						}
 
 					} 
+					else if (command.command == "annotation.modified")
+					{
+						/*
+						check if client has annotation (getAnnotationById)
+						if they don't have it, this is bad, so log it for now
+						if they do have it we'll need to enliven the command data
+						and replace the existing annotation, then re-render
+						currently we re-render by (switchToAsset)
+						*/
+						console.log(command);
+					}
 				};
-			// scope.add('connection', connection);
-			this.connection = connection; // should connection live on the editor instead? more explicit perhaps
+			this.connection = connection; // connection lives on the editor. more explicit
 			}
 			
-			//load user data
-			/*
-			$.getJSON( '/entermedia/services/json/users/status.json', function(data) {
-				console.log('from user auth:', data);
-				scope.add('currentUser',    jAngular.init(scope);
-				data);
-			});
-			*/
 		}
 		,
 		sendSocketCommand: function( inSocketCommand )
