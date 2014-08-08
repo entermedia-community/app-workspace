@@ -372,7 +372,7 @@ var FabricModel = function (scope) {
 		rather than appending it, and all receiving clients should
 		already have the object in their annotations list */
 		var currentAnnotation = scope.annotationEditor.currentAnnotatedAsset.currentAnnotation;
-		command = new SocketCommand("annotation.modified");
+		var command = new SocketCommand("annotation.modified");
 		command.annotationdata = currentAnnotation;
 		command.assetid = scope.annotationEditor.currentAnnotatedAsset.assetData.id;
 		scope.annotationEditor.sendSocketCommand(command);

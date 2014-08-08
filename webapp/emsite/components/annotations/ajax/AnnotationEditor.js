@@ -70,10 +70,24 @@ var AnnotationEditor = function(scope) {
 				if (annotation.id === inAnnotationId)
 				{
 					outAnnotation = annotation;
-					return false;
+					return true;
 				}
 			});
 			return outAnnotation;
+		}
+		,
+		getAnnotationIndexById: function(inAnnotationId)
+		{
+			var outAnnotationIndex = null;
+			$.each(scope.annotations, function(index, annotation)
+			{
+				if (annotation.id === inAnnotationId)
+				{
+					outAnnotationIndex = index;
+					return true;
+				}
+			});
+			return outAnnotationIndex;
 		}
 		,
 		removeAnnotation: function(annotationid)
@@ -219,7 +233,50 @@ var AnnotationEditor = function(scope) {
 			// need to reset currentAnnotation ? When would we not want to make a new annotation?
 			// the object:added event gets called seemingly more than it should
 
-			this.currentAnnotatedAsset.currentAnnotation = null;
+			// resetting this to null breaks object modified stuff
+			// try without it since we no longer null check here
+			// this.currentAnnotatedAsset.currentAnnotation = null;
+		}
+		,
+		addAnnotation: function(inAnnotation)
+		{
+			// update scope.annotations and currentAnnotationAsset
+			// might not be appropriate for all calls when the asset
+			// is not in scope, but it's here for now
+			this.currentAnnotatedAsset.annotations.push(inAnnotation);
+			scope.annotations = this.currentAnnotatedAsset.annotations;
+		}
+		,
+		modifyAnnotation: function(modifiedAnnotation)
+		{
+			var editor = this;
+			var inAnnotationId = modifiedAnnotation.id;
+			var foundAnnotationIndex = this.getAnnotationIndexById(inAnnotationId);
+			if (foundAnnotationIndex === null)
+			{
+				console.log("modifyAnnotation found no matching annotation for ", inAnnotationId);
+			}
+			else
+			{
+				var oldObjects = scope.annotations[foundAnnotationIndex].fabricObjects;
+
+				fabric.util.enlivenObjects(modifiedAnnotation.fabricObjects, function(group)
+				{
+					 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove;
+					 editor.scope.fabricModel.canvas.renderOnAddRemove = false;
+					 $.each(group, function(index, item) {
+					 	editor.fabricModel.canvas.remove(oldObjects[index]);
+					 	modifiedAnnotation.fabricObjects[index] = item;
+						editor.fabricModel.canvas.addInternal(item);
+					 });
+					 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+				})
+				scope.annotations[foundAnnotationIndex] =
+					editor.currentAnnotatedAsset.annotations[foundAnnotationIndex] = modifiedAnnotation;
+				// okay well currently the way to do this is to switch back to this asset
+				// kind of clumsy, but we can worry about it later
+				editor.scope.fabricModel.canvas.renderAll();
+			}
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -243,6 +300,7 @@ var AnnotationEditor = function(scope) {
 				if( asset.assetData.id == inAssetId )
 				{
 					outAsset = asset;
+					return true;
 				}
 			});
 			return outAsset;
@@ -345,7 +403,10 @@ var AnnotationEditor = function(scope) {
 						and replace the existing annotation, then re-render
 						currently we re-render by (switchToAsset)
 						*/
-						console.log(command);
+						console.log("annotation.modified: ", command);
+						modifiedAnnotation = new Annotation(command.annotationdata);
+						editor.modifyAnnotation(modifiedAnnotation);
+						editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
 					}
 				};
 			this.connection = connection; // connection lives on the editor. more explicit
