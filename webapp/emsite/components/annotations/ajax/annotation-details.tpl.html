@@ -83,7 +83,6 @@
         </div>
         <div class="col-md-3">
             <ul class="comment-list" id="annotationlist">
-<!--
                 <li class="user-input clearfix" ng-show="readyToComment">
                     <form id="annotation-input">
                         <textarea id="user-comment-input" name="user-input" rows="8" cols="40" ng-model="newCommentText"></textarea>
@@ -92,19 +91,18 @@
                             <button type="submit" name="user-add-comment" class="btn btn-primary" ng-click="addComment()">Add Comment</button>
                         </div>
                     </form>
+                     <div class="separator" ng-show="readyToComment"></div>
                 </li>
-                <li class="separator" ng-show="readyToComment"></li>
--->                
                 <li ng-repeat="annotation in annotations" >
-                    <div ng-when="normal" class="comment">
+                    <div ng-when="normal" class="comment" id="annotation{{annotation.id}}">
                         <div dynamic-id="comment-data" class="comment-holder">
                             <div class="user-gravatar">
                                 <img ng-src="http://www.gravatar.com/avatar/{{annotation.user.email}}" alt="" />
                             </div>
                             <div class="comment-content">
                                 <strong>{{annotation.getUserName()}}</strong>
-                                <p class="editable">
-                                    empty comment
+                                <p class="editableinput">
+                                    {{annotation.comment}}
                                 </p>
                                 <!-- text input that isn't smart... will have to update its data from a persistent source -->
                                 <!-- also needs to have scaling size -->
@@ -118,7 +116,7 @@
                             <div class="comment-meta">
                                 <span class="comment-id">{{annotation.indexCount}}</span>
                                 <button ng-click='scope.annotationEditor.removeAnnotation("{{annotation.id}}")'>remove</button>
-                                <button class="user-comment" ng-click='scope.annotationEditor.toggleCommentEdit("{{annotation.id}}")'>edit</button>
+                                <button ng-click='scope.annotationEditor.toggleCommentEdit("{{annotation.id}}")' class="user-comment" >edit</button>
                                 <span class="comment-timestamp pull-right">{{annotation.date}}</span>
                             </div>
                         </div>

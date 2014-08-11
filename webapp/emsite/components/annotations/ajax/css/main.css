@@ -30,3 +30,7 @@
 .main {
     padding-top: 70px;
 } */
+
+.em-workspace .comment-list li.user-input {
+	 display: none;
+}

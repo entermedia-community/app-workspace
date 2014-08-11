@@ -14,7 +14,6 @@ var AnnotationEditor = function(scope) {
 		connection: null,
 		loadSelectors : function()
 		{
-			//then what is really in here?
 		}
 		,
 		loadModels : function()
@@ -105,20 +104,9 @@ var AnnotationEditor = function(scope) {
 		,
 		toggleCommentEdit: function(annotationid)
 		{
-			$(".user-comment").click(
-				function()
-				{
-					textinput = $('#user-comment-input');
-					if (textinput.attr('readonly') === 'readonly')
-					{
-						textinput.removeAttr('readonly');
-						textinput.focus();
-					} else {
-						textinput.attr('readonly', 'readonly');
-					}
-
-				}
-			);
+			var html = jQuery("#annotation-input").html();
+			
+			jQuery("#annotation" + annotationid).html(html);
 		}
 		,
 		createAnnotatedAsset: function(assetData)

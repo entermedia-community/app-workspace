@@ -13,6 +13,7 @@ jQuery(document).ready(function()
 	jAngular.addScope("annoscope",scope);
 	
 	editor.loadModels();
+	editor.loadSelectors();
 	editor.connect();
 
 });
