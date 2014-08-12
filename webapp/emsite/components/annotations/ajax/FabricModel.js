@@ -126,7 +126,15 @@ var FabricModel = function (scope) {
 					}
 				],
 				events: {
-					mouseup: null,
+					mouseup: function(e, canvas) {
+						/*
+						 could fire object:modified on the canvas
+						 tricky bit is making sure the object we pass
+						 in is our shape and not some other object.
+						 It's probably always the right object though.
+						*/
+						canvas.fire("object:modified", e);
+					},
 					mousedown: function(e, canvas) {
 						var pointer, shape, spec, type, we;
 						pointer = canvas.getPointer(e.e);
