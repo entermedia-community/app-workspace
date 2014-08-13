@@ -281,8 +281,17 @@ var FabricModel = function (scope) {
 			});
 			
 		},
-		selectTool: function(toolname) {
+		selectTool: function(toolname,type) {
 		  var prop;
+		  
+		  var selected = type;
+		  if( !selected)
+		  {
+		  	selected = toolname;
+		  }
+		  $(".annotations-toolbar li").removeClass("active");
+		  $(".annotations-toolbar #" + selected + "tool").addClass("active");
+		  
 		  // if (scope.readyToComment != null) {
 		  if (true) {
 		    if (scope.annotationEditor.currentTool !== null && typeof(scope.annotationEditor.currentTool.whenDeselected) !== "undefined") {
@@ -301,7 +310,7 @@ var FabricModel = function (scope) {
 		  
 		},
 		setShapeTypeFromUi: function(shapename) {
-			_this.selectTool('shape');
+			_this.selectTool('shape',shapename);
 			_this.scope.annotationEditor.currentTool.type = shapename;
 		},
 		clearCanvas: function() {
