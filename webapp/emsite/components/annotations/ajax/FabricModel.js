@@ -83,15 +83,18 @@ var FabricModel = function (scope) {
 						name: 'circle',
 						type: fabric.Circle,
 						blank: {
-							radius: 1,
-							strokeWidth: 5,
+							radius: 2,
+							strokeWidth: 2,
 							selectable: false,
+							//hasControls: false,
+							//evented:true,
 							fill: "",
 							originX: 'left',
 							originY: 'top',
 							// lockScalingX: true,
 							// lockScalingY: true,
 							lockMovementX: true,
+							active:true,
 							lockMovementY: true
 						},
 						drawparams: function(pointer) {
@@ -100,14 +103,14 @@ var FabricModel = function (scope) {
 								radius: Math.abs(_this.lastClick.left - pointer.x)
 							};
 						}
-					}, {
+					}, {  //(target && target.selectable && !shouldGroup
 						name: 'rectangle',
 						type: fabric.Rect,
 						blank: {
-							height: 1,
-							width: 1,
+							height: 100,
+							width: 100,
 							strokeWidth: 5,
-							selectable: false,
+							selectable: true,
 							fill: "",
 							originX: 'left',
 							originY: 'top',
@@ -133,7 +136,10 @@ var FabricModel = function (scope) {
 						 in is our shape and not some other object.
 						 It's probably always the right object though.
 						*/
-						canvas.fire("object:modified", e);
+						if( e.target )
+						{
+						//	canvas.fire("object:modified", e);
+						}	
 					},
 					mousedown: function(e, canvas) {
 						var pointer, shape, spec, type, we;
@@ -150,7 +156,7 @@ var FabricModel = function (scope) {
 						canvas.add(shape);
 						
 					},
-					objectadded: null,
+					//objectadded: null,
 					mousemove: function(e, canvas) {
 						var pointer, shape, type, we;
 						pointer = canvas.getPointer(e.e);
@@ -161,7 +167,9 @@ var FabricModel = function (scope) {
 							type = _.findWhere(scope.annotationEditor.currentTool.types, {
 								name: scope.annotationEditor.currentTool.type
 							});
+							//_performTransformAction
 							shape.set(type.drawparams(pointer));
+							//canvas._transformObject(e);
 							canvas.renderAll();
 						}
 						
@@ -342,6 +350,8 @@ var FabricModel = function (scope) {
 		
 	});
 
+
+
 	out.canvas.on('mouse:up', function(e) {
 		var _ref;
 		// mouse down: e.e.which == 1
@@ -375,16 +385,11 @@ var FabricModel = function (scope) {
 
 	out.canvas.on('object:modified', function(e)
 	{
-		/* push the object through with a modified command
-		any modified object should replace the existing annotation
-		rather than appending it, and all receiving clients should
-		already have the object in their annotations list */
-		var currentAnnotation = scope.annotationEditor.currentAnnotatedAsset.currentAnnotation;
-		var command = new SocketCommand("annotation.modified");
-		command.annotationdata = currentAnnotation;
-		command.assetid = scope.annotationEditor.currentAnnotatedAsset.assetData.id;
-		scope.annotationEditor.sendSocketCommand(command);
-
+		var object = e.target;
+		var annotation = scope.annotationEditor.currentAnnotatedAsset.getAnnotationById(object.annotationid);
+		//TODO loop over all the objects looking for more canvas objects. annotation
+		annotation.fabricObjects[0] = object;
+		scope.annotationEditor.notifyAnnotationModified(annotation);
 	})
 
 	out.canvas.on('object:added', function(obj) {
@@ -396,7 +401,11 @@ var FabricModel = function (scope) {
 		}
 		
 		if (scope.annotationEditor.currentTool.annotating) {
-			scope.annotationEditor.fabricObjectAdded(obj.target);
+			var annotation = scope.annotationEditor.fabricObjectAdded(obj.target);
+			
+			obj.target.annotationid = annotation.id;
+			
+			scope.annotationEditor.notifyAnnotationAdded(annotation);
 		}
 		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 			if (typeof _ref.objectadded === "function") {
