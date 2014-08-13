@@ -62,51 +62,27 @@ var AnnotationEditor = function(scope) {
 			});
 		}
 		,
-		getAnnotationById: function(inAnnotationId) {
-			var outAnnotation = null;
-			$.each(scope.annotations, function(index, annotation)
-			{
-				if (annotation.id === inAnnotationId)
-				{
-					outAnnotation = annotation;
-					return true;
-				}
-			});
-			return outAnnotation;
-		}
-		,
-		getAnnotationIndexById: function(inAnnotationId)
-		{
-			var outAnnotationIndex = null;
-			$.each(scope.annotations, function(index, annotation)
-			{
-				if (annotation.id === inAnnotationId)
-				{
-					outAnnotationIndex = index;
-					return true;
-				}
-			});
-			return outAnnotationIndex;
-		}
-		,
-		removeAnnotation: function(annotationid)
-		{
-			var annotationToRemove = this.getAnnotationById(annotationid);
-			var editor = this;
-			$.each(annotationToRemove.fabricObjects, function(index, item)
-			{
-				editor.fabricModel.canvas.remove(item);
-			});
-			scope.annotations = editor.currentAnnotatedAsset.annotations = _.without(scope.annotations, annotationToRemove);
-			jAngular.render("#annotationlist");
-			
-		}
-		,
 		toggleCommentEdit: function(annotationid)
 		{
 			var html = jQuery("#annotation-input").html();
 			
 			jQuery("#annotation" + annotationid).html(html);
+		}
+		,
+		removeAnnotation: function(annotationid)
+		{
+			var editor = this;
+			
+			var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
+			
+			$.each(annotationToRemove.fabricObjects, function(index, item)
+			{
+				editor.fabricModel.canvas.remove(item);
+			});
+			editor.currentAnnotatedAsset.removeAnnotation(annotationid);
+			scope.annotations = editor.currentAnnotatedAsset.annotations;
+			jAngular.render("#annotationlist");
+					
 		}
 		,
 		createAnnotatedAsset: function(assetData)
@@ -142,6 +118,8 @@ var AnnotationEditor = function(scope) {
 					$.each(oldAnnotations, function(index, item)
 					{
 						// annotation.fabricObjects.push(item);
+						item.annotationid = annotation.id;
+						
 						editor.fabricModel.canvas.addInternal(item);
 					});
 				} 
@@ -154,6 +132,7 @@ var AnnotationEditor = function(scope) {
 						 $.each(group, function(index, item) {
 						 	 //item.junk = "21412124";
 							 annotation.fabricObjects[index] = item;
+							 item.annotationid = annotation.id;
 						     editor.scope.fabricModel.canvas.addInternal(item);
 						 });
 						 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
@@ -209,23 +188,23 @@ var AnnotationEditor = function(scope) {
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
 			jAngular.render("#annotationlist");
-			
+			return currentAnnotation;
+		},
+		notifyAnnotationAdded: function(currentAnnotation)
+		{
 			//Update network?
 			var command = SocketCommand("annotation.added");
 			command.annotationdata = currentAnnotation;
-			// if (!this.currentAnnotatedAsset.currentAnnotation.fromSocket)
-			// {
-				this.sendSocketCommand( command );
-			// }
-
-			// need to reset currentAnnotation ? When would we not want to make a new annotation?
-			// the object:added event gets called seemingly more than it should
-
-			// resetting this to null breaks object modified stuff
-			// try without it since we no longer null check here
-			// this.currentAnnotatedAsset.currentAnnotation = null;
+			this.sendSocketCommand( command );
+		},
+		notifyAnnotationModified: function(currentAnnotation)
+		{
+			//Update network?
+			var command = SocketCommand("annotation.modified");
+			command.annotationdata = currentAnnotation;
+			this.sendSocketCommand( command );
 		}
-		,
+/*		,
 		addAnnotation: function(inAnnotation)
 		{
 			// update scope.annotations and currentAnnotationAsset
@@ -234,37 +213,17 @@ var AnnotationEditor = function(scope) {
 			this.currentAnnotatedAsset.annotations.push(inAnnotation);
 			scope.annotations = this.currentAnnotatedAsset.annotations;
 		}
+*/		
 		,
 		modifyAnnotation: function(modifiedAnnotation)
 		{
-			var editor = this;
-			var inAnnotationId = modifiedAnnotation.id;
-			var foundAnnotationIndex = this.getAnnotationIndexById(inAnnotationId);
-			if (foundAnnotationIndex === null)
-			{
-				console.log("modifyAnnotation found no matching annotation for ", inAnnotationId);
-			}
-			else
-			{
-				var oldObjects = scope.annotations[foundAnnotationIndex].fabricObjects;
-
-				fabric.util.enlivenObjects(modifiedAnnotation.fabricObjects, function(group)
-				{
-					 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove;
-					 editor.scope.fabricModel.canvas.renderOnAddRemove = false;
-					 $.each(group, function(index, item) {
-					 	editor.fabricModel.canvas.remove(oldObjects[index]);
-					 	modifiedAnnotation.fabricObjects[index] = item;
-						editor.fabricModel.canvas.addInternal(item);
-					 });
-					 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
-				})
-				scope.annotations[foundAnnotationIndex] =
-					editor.currentAnnotatedAsset.annotations[foundAnnotationIndex] = modifiedAnnotation;
-				// okay well currently the way to do this is to switch back to this asset
-				// kind of clumsy, but we can worry about it later
-				editor.scope.fabricModel.canvas.renderAll();
-			}
+			var modasset = this.getAnnotatedAsset(modifiedAnnotation.assetid);
+			var foundAnnotationIndex = modasset.getAnnotationIndexById(modifiedAnnotation.id);
+			modasset.annotations[foundAnnotationIndex] = modifiedAnnotation;
+			
+			//For now, render it all. later select parts
+			this.setCurrentAnnotatedAsset(this.currentAnnotatedAsset);
+			
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -302,7 +261,7 @@ var AnnotationEditor = function(scope) {
 			console.log( "trying to get ", inAssetId);
 			console.log( "got ", toAsset);
 			this.setCurrentAnnotatedAsset(toAsset);
-			jAngular.render("#annotationtab");
+			//jAngular.render("#annotationtab");
 		}
 		,
 		connect : function()
@@ -364,15 +323,12 @@ var AnnotationEditor = function(scope) {
 						var newannotation = new Annotation(data);
 						console.log(newannotation);
 						// newannotation.fromSocket = true;
-						if (editor.getAnnotationById(newannotation.id) == null)
+						if (anonasset.getAnnotationById(newannotation.id) == null)
 						{
 							anonasset.pushAnnotation( newannotation );
 							
-							
 							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
 
-							// scope.add("annotations", editor.currentAnnotatedAsset.annotations);
-							// jAngular.render("#annotationlist");
 							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
 						}
 						else
@@ -392,9 +348,12 @@ var AnnotationEditor = function(scope) {
 						currently we re-render by (switchToAsset)
 						*/
 						console.log("annotation.modified: ", command);
-						modifiedAnnotation = new Annotation(command.annotationdata);
+						var modifiedAnnotation = new Annotation(command.annotationdata);
 						editor.modifyAnnotation(modifiedAnnotation);
-						editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+						if( editor.currentAnnotatedAsset.assetData.id == modifiedAnnotation.assetid )
+						{
+							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+						}	
 					}
 				};
 			this.connection = connection; // connection lives on the editor. more explicit
@@ -433,6 +392,39 @@ var AnnotatedAsset = function() {
 		},
 		nextIndex: function() {
 			return this.annotationIndex++;
+		},
+		getAnnotationById: function(inAnnotationId) {
+			var outAnnotation = null;
+			$.each(this.annotations, function(index, annotation)
+			{
+				if (annotation.id === inAnnotationId)
+				{
+					outAnnotation = annotation;
+					return true;
+				}
+			});
+			return outAnnotation;
+		}
+		,
+		getAnnotationIndexById: function(inAnnotationId)
+		{
+			var outAnnotationIndex = -1;
+			$.each(this.annotations, function(index, annotation)
+			{
+				if (annotation.id === inAnnotationId)
+				{
+					outAnnotationIndex = index;
+					return true;
+				}
+			});
+			return outAnnotationIndex;
+		}
+		,
+		removeAnnotation: function(annotationid)
+		{
+			var annotationToRemove = this.getAnnotationById(annotationid);
+			this.annotations = _.without(this.annotations, annotationToRemove);
+			
 		}
 	};
 	return out; 

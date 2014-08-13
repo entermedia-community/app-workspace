@@ -99,8 +99,27 @@ var FabricModel = function (scope) {
 						},
 						drawparams: function(pointer) {
 							var lastClick = _this.lastClick;
+							
+							var originX = 'left';
+							var originY =  'top';
+							
+							if(  pointer.y < _this.lastClick.top )
+							{
+								originY = "bottom";
+							}
+							if(  pointer.x < _this.lastClick.left )
+							{
+								originX = "right";
+							}
+							
+							var radiusX = Math.abs((_this.lastClick.left - pointer.x) / 2);
+							var radiusY = Math.abs((_this.lastClick.top - pointer.y) / 2);
+							var radius = Math.min(radiusX,radiusY);
+							
 							return {
-								radius: Math.abs(_this.lastClick.left - pointer.x)
+								radius: radius,
+								originX: originX,
+								originY: originY
 							};
 						}
 					}, {  //(target && target.selectable && !shouldGroup
@@ -136,10 +155,14 @@ var FabricModel = function (scope) {
 						 in is our shape and not some other object.
 						 It's probably always the right object though.
 						*/
-						if( e.target )
+						//Just for circles
+						
+						var annotation =  scope.annotationEditor.currentTool.currentAnnotation;
+						if( annotation )
 						{
-						//	canvas.fire("object:modified", e);
-						}	
+							scope.annotationEditor.notifyAnnotationModified(annotation);
+						}
+		
 					},
 					mousedown: function(e, canvas) {
 						var pointer, shape, spec, type, we;
@@ -368,8 +391,20 @@ var FabricModel = function (scope) {
 		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
 			if (typeof _ref.mouseup === "function") {
 				_ref.mouseup(e, _this.canvas);
+				
+				/*
+				var objects = _this.canvas.getObjects();
+				for (_i = 0, _len = objects.length; _i < _len; _i++) {
+					var klass = objects[_i];
+					klass.setCoords();
+				}
+				*/
+				
 			}
 		}
+		scope.annotationEditor.fabricModel.selectTool("move");
+		
+		
 		
 	});
 
@@ -386,10 +421,13 @@ var FabricModel = function (scope) {
 	out.canvas.on('object:modified', function(e)
 	{
 		var object = e.target;
-		var annotation = scope.annotationEditor.currentAnnotatedAsset.getAnnotationById(object.annotationid);
-		//TODO loop over all the objects looking for more canvas objects. annotation
-		annotation.fabricObjects[0] = object;
-		scope.annotationEditor.notifyAnnotationModified(annotation);
+		if( object && object.annotationid)
+		{
+			var annotation = scope.annotationEditor.currentAnnotatedAsset.getAnnotationById(object.annotationid);
+			//TODO loop over all the objects looking for more canvas objects. annotation
+			annotation.fabricObjects[0] = object;
+			scope.annotationEditor.notifyAnnotationModified(annotation);
+		}
 	})
 
 	out.canvas.on('object:added', function(obj) {
@@ -404,7 +442,7 @@ var FabricModel = function (scope) {
 			var annotation = scope.annotationEditor.fabricObjectAdded(obj.target);
 			
 			obj.target.annotationid = annotation.id;
-			
+			scope.annotationEditor.currentTool.currentAnnotation = annotation;
 			scope.annotationEditor.notifyAnnotationAdded(annotation);
 		}
 		if ((_ref = scope.annotationEditor.currentTool.events) != null) {
