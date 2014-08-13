@@ -32,7 +32,7 @@ var FabricModel = function (scope) {
 				annotating: true,
 				whenSelected: function() {
 			      _this.canvas.freeDrawingBrush.color = scope.colorpicker.hex;
-			      _this.canvas.freeDrawingBrush.width = 5;
+			      _this.canvas.freeDrawingBrush.width = 3;
 				}
 			}, {
 				name: 'move',
