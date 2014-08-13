@@ -84,7 +84,7 @@ var FabricModel = function (scope) {
 						type: fabric.Circle,
 						blank: {
 							radius: 2,
-							strokeWidth: 2,
+							strokeWidth: 3,
 							selectable: false,
 							//hasControls: false,
 							//evented:true,
@@ -126,9 +126,9 @@ var FabricModel = function (scope) {
 						name: 'rectangle',
 						type: fabric.Rect,
 						blank: {
-							height: 100,
-							width: 100,
-							strokeWidth: 5,
+							height: 5,
+							width: 5,
+							strokeWidth: 3,
 							selectable: true,
 							fill: "",
 							originX: 'left',
