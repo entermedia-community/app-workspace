@@ -19,7 +19,7 @@ import org.openedit.entermedia.modules.AdminModule;
 
 import com.openedit.OpenEditException;
 
-public class AnnotationConnection implements MessageHandler.Whole<String>
+public class AnnotationConnection implements MessageHandler.Partial<String>
 {
 	private static final Log log = LogFactory.getLog(AnnotationConnection.class);
 	private final RemoteEndpoint.Basic remoteEndpointBasic;
@@ -29,6 +29,10 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 	protected HttpSession fieldSession;
 	protected JSONParser fieldJSONParser;
 	protected AnnotationCommandListener fieldAnnotationCommandListener;
+	
+	protected StringBuffer fieldBufferedMessage;
+	
+	
 	public AnnotationCommandListener getAnnotationCommandListener()
 	{
 		return fieldAnnotationCommandListener;
@@ -42,6 +46,16 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 		return fieldJSONParser;
 	}
 
+	protected StringBuffer getBufferedMessage()
+	{
+		if (fieldBufferedMessage == null)
+		{
+			fieldBufferedMessage = new StringBuffer();
+		}
+
+		return fieldBufferedMessage;
+	}
+	
 	public void setJSONParser(JSONParser fieldJSONParser)
 	{
 		this.fieldJSONParser = fieldJSONParser;
@@ -59,9 +73,18 @@ public class AnnotationConnection implements MessageHandler.Whole<String>
 	public HttpSession getSession() {
 		return fieldSession;
 	}
+
 	@Override
-	public void onMessage(String message)
-	{
+	public synchronized void onMessage(String inData, boolean completed)
+	{		
+		getBufferedMessage().append(inData);
+		if(!completed)
+		{
+			return;
+		}
+		String message = getBufferedMessage().toString();
+		fieldBufferedMessage = null;
+		
 //		if (remoteEndpointBasic != null)
 //		{
 //			return;
