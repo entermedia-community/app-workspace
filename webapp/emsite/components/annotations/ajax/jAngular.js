@@ -6,18 +6,30 @@ var Scope = function() {
 				add: function(name, model) {
 						this[name] = model;
 				},
-				get: function(name) 
+				eval: function(name) 
 				{
+						var scope = this;				
+						
 						var command = name;
-						if( !name.indexOf("if") == 0 )  //starts with
+						if( name.indexOf("if") == 0 || name.indexOf("scope") == 0 ) //see if it starts with scope.
 						{
-								command = "this." + name;
+							//do nothing
 						}
+						else
+						{
+							command = "this." + name;
+						}
+						
 						var found = eval(command);
 						if( parentScope != null && found == null )
 						{
-								return parentScope.get(name);
+								return parentScope.eval(name);
 						}
+						return found;				
+				},
+				get: function(name) 
+				{
+						var found = this[name];
 						return found;
 				},
 				createScope: function()
@@ -52,7 +64,7 @@ var Replacer = function() {
 								var value = null;
 								try
 								{
-										value = scope.get(key); //check for property
+										value = scope.eval(key); //check for property
 								} 
 								catch ( err )
 								{
@@ -84,8 +96,9 @@ jAngular.livequery = function()
 {
 		//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 		
-		$( "[ng-click]").livequery('click', function()
+		$( "[ng-click]").livequery('click', function(e)
 		{
+				e.preventDefault();
 				var theel = jQuery(this);
 				var code = theel.attr("ng-click");
 				var scope = jAngular.findScopeFor(theel);
@@ -132,32 +145,30 @@ jAngular.addScope = function(scopename, inScope)
 		jAngularScopes[scopename] = inScope; 
 }
 
-jAngular.render = function(div)
+jAngular.replace = function(selector, scope)
 {
-		/*
-		when rendering ng-repeat for the image carousel
-		we will need to only loop maximum editor.imageCarouselPageAssetCount times
-
-		begin asset rendering at Asset# editor.imageCarouselPageIndex*editor.imageCarouselPageAssetCount+1
-		*/
 		var replacer = new Replacer();
-		
-		if( div )
+		var div = $(selector);
+		var element = div.get(0);
+		var origContent = element.origContent;
+		if( typeof( origContent ) === 'undefined' )
 		{
-				div = div + " ";
-		} 
-		else
-		{
-				div = "";
+				origContent = div.html();
+
+				element.origContent = origContent; 
 		}
-		
-		var toplevel = $(div);
-		
-		var scope = jAngular.findScopeFor(toplevel); 
-		if( !scope) 
+		var evalcontent = replacer.replace(origContent,scope);
+		if( evalcontent != origContent)
 		{
-				alert( "No ng-scope= defined for " + div);
-		}
+			div.html(evalcontent);
+		}	
+
+}
+
+jAngular.replaceRows = function(div , scope)
+{
+		var replacer = new Replacer();
+
 		var selector = div + 'li[ng-repeat]';
 		
 		//Live query this?
@@ -171,7 +182,7 @@ jAngular.render = function(div)
 				var rowname = vars.substring(0,split);
 				var loopname = vars.substring(split + 4,vars.length );
 				
-				var rows = scope.get(loopname);  //TODO: Find the name
+				var rows = scope.eval(loopname);  //TODO: Find the name
 				
 				//set a local scope of asset = rows[i];
 				var origContent = this.origContent;
@@ -193,113 +204,70 @@ jAngular.render = function(div)
 								var evalcontent = replacer.replace(origContent,localscope);
 								evalcontent = evalcontent.replace("ng-src","src");
 								li.append(evalcontent);
-								var lidr = li.contents().attr("id");
-								
+								//var lidr = li.contents().attr("id");
 						});
 				 }
-				
 		});
-		
-		// my possibly crappy dynamic-id replacement code
+}
 
-		$("[dynamic-id]")
-		.each(function(index)
-					{
-						var theel = $(this);
-						$.each(theel.children(), function(child_index)
-									 {
-										var child = $(this);
-										child.data("id", index);
-									 });
-					});
+jAngular.render = function(div, scope)
+{
+		/*
+		when rendering ng-repeat for the image carousel
+		we will need to only loop maximum editor.imageCarouselPageAssetCount times
 
-		/* 
-		TODO: move below code to a more appropriate location or genericize it
+		begin asset rendering at Asset# editor.imageCarouselPageIndex*editor.imageCarouselPageAssetCount+1
 		*/
-		$("button.user-comment").click(function()
-				// only problem here is that element.contents() only goes one layer deep
-				// therefore the button.editable is never seen. has to be a btter way of selecting, then
-				{
-					var butt = $(this);
-					var lookup = butt.data("id");
-					console.log("clicked button");
-					$("[dynamic-id]")
-					.contents()
-					.filter(".editable")
-					.filter(function()
-									{
-										var me = $(this);
-										console.log("checkin ", me)
-										return me.data("id") === lookup;
-									})
-					.each(function()
-								{
-									var me = $(this);
-									console.log("button each: ", me)
-									drawEditor(me);
-								});
-				});
-		var drawEditor = function($el) {
-				$el.unbind();
-				var temp = $el.text();
-				var t = $("<span class='inline-editor'><input type='text' /></span>");
-				$el.html(t);
-				
-				var input = $el.find('input');
-				input
-						.val($el.data('text'))
-						.focus()
-						.select()
-						.blur(function(){
-								$el.data('text', input.val());
-								drawText($el);
-						})
-						.keyup(function(e) {
-								if (e.keyCode === 13) {
-										input.blur();
-								}
-								if (e.keyCode === 27) {
-										input.val(temp);
-										input.blur();
-								}
-						});
-		}
-
-		var drawText = function($el) {
-				if (! $el.data('text')) {
-						$el.data('text', $el.text());
-				}
-						
-				$el.unbind();
-				$el
-						.text($el.data('text'))
-						.click(function(evt) {
-								evt.preventDefault();
-								drawEditor($el);
-						});
-		}
-
-
-		$(div + ".jq-replace").each(function()
+		var replacer = new Replacer();
+		
+		if( div )
 		{
-						// possible fix to having to add class:
-						// check in each filter function for .text() OR defined origContent with brackets
-						var element = $(this); // cast to jQuery object
-						var origContent = this.origContent;
-						if( typeof( origContent ) === 'undefined' )
-						{
-								origContent = element.text();
-								//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-								this.origContent = origContent;
-						}
-						var text = origContent;
-						var regex = /{{([^{]+)}}/g;
-						var m;
-						while ((m = regex.exec(text)) !== null)
-						{
-								text = text.replace(m[0], eval(m[1]));
-						}
-						element.text(text);
+				div = div + " ";
+		} 
+		else
+		{
+				div = "";
+		}
+		
+		var toplevel = $(div);
+		
+		if( !scope)
+		{
+			scope = jAngular.findScopeFor(toplevel);
+		}	 
+		if( !scope) 
+		{
+				alert( "No ng-scope= defined for " + div);
+		}
+		jAngular.replaceRows(div, scope);
+
+		$(div + " .jangular-render" ).each(function()
+		{
+			// possible fix to having to add class:
+			// check in each filter function for .text() OR defined origContent with brackets
+			var element = $(this); // cast to jQuery object
+			var origContent = this.origContent;
+			if( typeof( origContent ) === 'undefined' )
+			{
+					origContent = element.text();
+					//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
+					this.origContent = origContent;
+			}
+			var text = origContent;
+			var regex = /{{([^{]+)}}/g;
+			var m;
+			while ((m = regex.exec(text)) !== null)
+			{
+				try
+				{
+					text = text.replace(m[0], eval(m[1]));
+				}
+				catch( err )
+				{
+					//Dont log?
+				}	
+			}
+			element.text(text);
 
 		});
 };

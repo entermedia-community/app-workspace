@@ -62,13 +62,6 @@ var AnnotationEditor = function(scope) {
 			});
 		}
 		,
-		toggleCommentEdit: function(annotationid)
-		{
-			var html = jQuery("#annotation-input").html();
-			
-			jQuery("#annotation" + annotationid).html(html);
-		}
-		,
 		removeAnnotation: function(annotationid)
 		{
 			var editor = this;
@@ -94,6 +87,33 @@ var AnnotationEditor = function(scope) {
 			//TODO: Get Annotations from server on session instantiation
 			
 			return aa;
+		}
+		,
+		toggleCommentEdit: function(annotationid)
+		{
+			var annotation = this.currentAnnotatedAsset.getAnnotationById(annotationid);
+			var html = jQuery("#annotation-template").html();
+			
+			jQuery("#annotation" + annotationid).html(html); //replace div
+			var localscope = this.scope.createScope();
+			localscope.annotation = annotation;
+			jAngular.replace("#annotation" + annotationid, localscope);
+		}
+		,
+		saveComment: function(annotationid)
+		{
+			var annotation = this.currentAnnotatedAsset.getAnnotationById(annotationid);
+		
+			var comment = $("#annotation" + annotationid + " .user-comment-input").val();
+		
+			annotation.comment = comment;
+			
+			//update UI?
+			
+			this.notifyAnnotationModified(annotation);
+			jAngular.render("#annotationtab");
+		
+		
 		}
 		,
 		setCurrentAnnotatedAsset: function(annotatedAsset)

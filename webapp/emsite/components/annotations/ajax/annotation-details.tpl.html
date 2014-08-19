@@ -79,19 +79,19 @@
                     </li>
                 </ul>
             </div>
-            <h3 class="jq-replace">{{scope.annotationEditor.currentAnnotatedAsset.assetData.name}}</h3>
+            <h3 class="jangular-render">{{scope.annotationEditor.currentAnnotatedAsset.assetData.name}}</h3>
         </div>
         <div class="col-md-3">
             <ul class="comment-list" id="annotationlist">
-                <li class="user-input clearfix" ng-show="readyToComment">
-                    <form id="annotation-input">
-                        <textarea id="user-comment-input" name="user-input" rows="8" cols="40" ng-model="newCommentText"></textarea>
+                <li class="user-input clearfix" id="annotation-template">
+                    <form id="annotation-input{{scope.annotation.id}}" >
+                        <textarea class="user-comment-input" name="user-input" rows="8" cols="40" >{{scope.annotation.comment}}</textarea>
                         <div class="pull-right">
-                            <button name="user-add-comment" class="btn btn-danger" ng-click="cancelComment()">Cancel</button>
-                            <button type="submit" name="user-add-comment" class="btn btn-primary" ng-click="addComment()">Add Comment</button>
+                            <button name="user-add-comment" class="btn btn-danger" ng-click='scope.annotationEditor.cancelComment("{{scope.annotation.id}}")'>Cancel</button>
+                            <button name="user-add-comment" class="btn btn-primary" ng-click='scope.annotationEditor.saveComment("{{scope.annotation.id}}")'>Add Comment</button>
                         </div>
                     </form>
-                     <div class="separator" ng-show="readyToComment"></div>
+                     <div class="separator" ></div>
                 </li>
                 <li ng-repeat="annotation in annotations" >
                     <div ng-when="normal" class="comment" id="annotation{{annotation.id}}">

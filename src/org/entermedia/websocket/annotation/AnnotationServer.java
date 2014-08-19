@@ -42,6 +42,14 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
+	 
+	 @Override
+	public void onError(Session session, Throwable throwable)
+	{
+		// TODO Auto-generated method stub
+		super.onError(session, throwable);
+	}
+	 
 	@Override
 	public void onClose(Session session, CloseReason closeReason) {
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
