@@ -94,16 +94,18 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 //			message = message.replaceAll("null", "\"null\"");
 			JSONObject map = (JSONObject)getJSONParser().parse(new StringReader(message));
 			String command = (String)map.get("command");
-			if ("list".equals(command)) //Return all the annotation on this asset
+			String catalogid = (String)map.get("catalogid");
+			String collectionid = (String)map.get("collectionid");
+			String assetid = (String)map.get("assetid");
+			
+			if ("server.getAnnotatedAsset".equals(command)) //Return all the annotation on this asset
 			{
-				JSONObject obj = new JSONObject();
-				obj.put("stuff", "array of annotations");
-				remoteEndpointBasic.sendText(obj.toJSONString());
+				getAnnotationCommandListener().loadAnnotatedAsset(this,catalogid, collectionid,assetid);
 			}
 			else if ("annotation.modified".equals(command))
 			{
 //				JSONObject obj = new JSONObject();
-				getAnnotationCommandListener().annotationModified(this, map, message);
+				getAnnotationCommandListener().annotationModified(this, map, message, catalogid, collectionid,assetid);
 			}
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
@@ -113,7 +115,7 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 				//command.annotationdata
 				//obj.put("stuff", "array of annotations");
 				//remoteEndpointBasic.sendText(message);
-				getAnnotationCommandListener().annotationAdded(this, map, message);
+				getAnnotationCommandListener().annotationAdded(this, map, message, catalogid, collectionid,assetid);
 			}
 		}
 		catch (Exception e)

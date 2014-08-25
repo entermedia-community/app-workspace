@@ -49,6 +49,7 @@ var AnnotationEditor = function(scope) {
 					scope.colorpicker = colorpicker;
 					
 					scope.annotationEditor.fabricModel.selectTool("draw");
+					//Grab list of users and annotations for assets
 					
 				},
 				failure: function(errMsg) {
@@ -113,7 +114,6 @@ var AnnotationEditor = function(scope) {
 			this.notifyAnnotationModified(annotation);
 			jAngular.render("#annotationtab");
 		
-		
 		}
 		,
 		cancelComment: function(annotationid)
@@ -131,8 +131,14 @@ var AnnotationEditor = function(scope) {
 
 			this.fabricModel.setBackgroundImage(url);
 
-			var editor = this;
+			var command = SocketCommand("server.getAnnotatedAsset");
+			command.collectionid = this.scope.collectionid;
+			command.assetid = editor.currentAnnotatedAsset.assetData.id;
+			this.sendCommand(command);
 
+		},
+		renderAnnotatedAsset: function(inAnnotatedAsset)
+		{		
 			this.scope.annotations = annotatedAsset.annotations;
 			$.each(editor.scope.annotations, function(index, annotation)
 			{
@@ -162,8 +168,6 @@ var AnnotationEditor = function(scope) {
 						 });
 						 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
 						});
-					// annotation.fromSocket = false;
-				
 				}
 
 				// below code might be needed for recreating objects from JSON data
@@ -177,8 +181,8 @@ var AnnotationEditor = function(scope) {
 			// DONE: Clear canvas state, refresh with AnnotatedAsset data
 			// DONE: Clear comments, refresh with AnnotatedAsset data
 			// TODO: above two things with server persisted data instead of client for when page is refreshed
-
-
+		
+		
 		}
 		,
 		createNewAnnotation: function(annotatedAsset)
@@ -312,10 +316,6 @@ var AnnotationEditor = function(scope) {
 				{
 					//console.log('Opened a connection!');
 					//console.log(e);
-					
-					var command = SocketCommand("list");
-					command.assetid = editor.currentAnnotatedAsset.assetData.id;
-					connection.sendCommand(command);    
 				};
 				connection.onclose = function(e)
 				{
@@ -336,6 +336,24 @@ var AnnotationEditor = function(scope) {
 				 	var received_msg = e.data;
 					var command = JSON.parse(received_msg);
 					
+				  	if (command.command == "asset.loaded")
+					{
+						var json = command.annotatedAssetJson;
+						
+						var annotatedAsset = new AnnotatedAsset(json);
+						
+						$.each(editor.annotatedAssets,function(index,asset)
+						{
+							if( asset.assetData.id == annotatedAsset.assetData.id )
+							{
+								editor.annotatedAssets[index] = annotatedAsset;
+								return true;
+							}
+						});
+						//show on screen
+						editor.renderAnnotatedAsset(annotatedAsset);
+					
+					}
 					if( command.command == "annotation.added" )
 					{
 						//Show it on the screen
@@ -390,6 +408,9 @@ var AnnotationEditor = function(scope) {
 		{
 			// send out info here
 			// too many layers?
+			inSocketCommand.catalogid = this.scope.catalogid;
+			inSocketCommand.collectionid = this.scope.collectionid;
+			
 			this.connection.sendCommand( inSocketCommand );
 		}
 	}
@@ -405,20 +426,31 @@ var SocketCommand = function(inCommand) {
 	return out; 
 }
 
-var AnnotatedAsset = function() {   
+var AnnotatedAsset = function(inAssetData) {   
 	var out = {
 		assetData: null,
 		annotations : [],
 		currentAnnotation: null,
-		annotationIndex: 1,
-		pushAnnotation: function( inAnnotation )
+		annotationIndex: 1
+	};
+	if (inAssetData)
+	{
+		$.each(Object.keys(out), function(index, key)
+		{
+			out[key] = inAssetData[key];  //have to update the object referencces before we define our methods
+		});
+		
+		//todo: clean up the annotaations array with real objects
+	}
+		
+	out.pushAnnotation = function( inAnnotation )
 		{
 			this.annotations.push( inAnnotation );
-		},
-		nextIndex: function() {
+		};
+	out.nextIndex = function() {
 			return this.annotationIndex++;
-		},
-		getAnnotationById: function(inAnnotationId) {
+		};
+	out.getAnnotationById = function(inAnnotationId) {
 			var outAnnotation = null;
 			$.each(this.annotations, function(index, annotation)
 			{
@@ -429,9 +461,8 @@ var AnnotatedAsset = function() {
 				}
 			});
 			return outAnnotation;
-		}
-		,
-		getAnnotationIndexById: function(inAnnotationId)
+		};
+	out.getAnnotationIndexById = function(inAnnotationId)
 		{
 			var outAnnotationIndex = -1;
 			$.each(this.annotations, function(index, annotation)
@@ -443,14 +474,12 @@ var AnnotatedAsset = function() {
 				}
 			});
 			return outAnnotationIndex;
-		}
-		,
-		removeAnnotation: function(annotationid)
+		};
+		out.removeAnnotation = function(annotationid)
 		{
 			var annotationToRemove = this.getAnnotationById(annotationid);
 			this.annotations = _.without(this.annotations, annotationToRemove);
-			
-		}
+		};
 	};
 	return out; 
 }
@@ -468,7 +497,6 @@ var Annotation = function(inAnnotationData) {
 	};
 	if (inAnnotationData)
 	{
-		var inAnnotation = arguments[0];
 		$.each(Object.keys(out), function(index, key)
 		{
 			out[key] = inAnnotationData[key];

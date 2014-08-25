@@ -16,23 +16,17 @@
  */
 package org.entermedia.websocket.annotation;
 
-import groovy.json.JsonSlurper;
-
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
 import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 
+import org.entermedia.cache.CacheManager;
 import org.json.simple.JSONObject;
 import org.openedit.data.SearcherManager;
 
@@ -43,6 +37,24 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
 	 
+	 private static final String CACHENAME = "AnnotationServer";
+	 
+	 protected CacheManager fieldCacheManager;
+	 
+	 public CacheManager getCacheManager()
+	{
+		if (fieldCacheManager == null)
+		{
+			fieldCacheManager = new CacheManager();
+		}
+
+		return fieldCacheManager;
+	}
+	public void setCacheManager(CacheManager inCacheManager)
+	{
+		fieldCacheManager = inCacheManager;
+	}
+	
 	 @Override
 	public void onError(Session session, Throwable throwable)
 	{
@@ -90,7 +102,22 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
         session.addMessageHandler(connection);
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
     }
-    public void annotationModified(AnnotationConnection annotationConnection, JSONObject json, String message)
+    public void annotationModified(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
+	{
+    	//TODO: update our map
+    	//See if it exists, then update the array of annotations
+    	
+    	
+    	getCacheManager().put(CACHENAME, catalogid + inCollectionId + inAssetId, command.get("annotat"));
+    	
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			annotationConnection2.sendMessage(command);
+		}
+	}
+    
+	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
@@ -99,15 +126,19 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		}
 	}
     
-	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message)
+	public void loadAnnotatedAsset(AnnotationConnection annotationConnection, String catalogid, String inCollectionId, String inAssetId)
 	{
-		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
-		{
-			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
-			annotationConnection2.sendMessage(json);
-		}
+		JSONObject newcommand = new JSONObject(); //Get this from our map of annotatedAssets
+		newcommand.put("command", "asset.loaded");
+		
+		JSONObject annotatedAssetJson = new JSONObject();  				//TODO: get from MAP
+		newcommand.put("annotatedAssetJson", annotatedAssetJson);
+		
+		annotationConnection.sendMessage(newcommand);
 	}
-    
+
+
+	
 }    
 //    private static class EchoMessageHandlerBinary
 //            implements MessageHandler.Partial<ByteBuffer> {
