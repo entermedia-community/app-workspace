@@ -116,6 +116,11 @@ var AnnotationEditor = function(scope) {
 		
 		}
 		,
+		cancelComment: function(annotationid)
+		{
+			jAngular.render("#annotationtab");
+		}
+		,
 		setCurrentAnnotatedAsset: function(annotatedAsset)
 		{
 			this.currentAnnotatedAsset = annotatedAsset;
