@@ -23,39 +23,7 @@ var AnnotationEditor = function(scope) {
 			loadFabricModel(scope);
 
 			// load asset data
-
-			jQuery.ajax({
-				type: "GET",
-				url: "" + scope.apphome + "/components/annotations/json/viewassets.json?id=" + scope.collectionid,
-				async: false,
-				error: function(data, status, err) {
-					console.log('from error:', data);
-				},
-				success: function(data) {
-					// console.log('from success:', data);
-					scope.add('assets', data);
-					if( data.length > 0 )
-					{
-						$.each(data, function(index, annotation)
-						{
-							var annotationToAdd = scope.annotationEditor.createAnnotatedAsset(annotation);
-							scope.annotationEditor.annotatedAssets.push(annotationToAdd);
-						});
-						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
-					}
-					var colors = ["#723421","#523421","#323421","#123421", "#fff000"];
-			
-					var colorpicker = {hex:colors[4]};
-					scope.colorpicker = colorpicker;
-					
-					scope.annotationEditor.fabricModel.selectTool("draw");
-					//Grab list of users and annotations for assets
-					
-				},
-				failure: function(errMsg) {
-					alert(errMsg);
-				}
-			});
+			this.connect();
 
 			// get user data, should this be in connect?
 			$.getJSON('/entermedia/services/json/users/status.json', function(data) {
@@ -293,6 +261,42 @@ var AnnotationEditor = function(scope) {
 			//jAngular.render("#annotationtab");
 		}
 		,
+		loadAssetList: function()
+		{
+			jQuery.ajax({
+				type: "GET",
+				url: "" + scope.apphome + "/components/annotations/json/viewassets.json?id=" + scope.collectionid,
+				async: false,
+				error: function(data, status, err) {
+					console.log('from error:', data);
+				},
+				success: function(data) {
+					// console.log('from success:', data);
+					scope.add('assets', data);
+					if( data.length > 0 )
+					{
+						$.each(data, function(index, annotation)
+						{
+							var annotationToAdd = scope.annotationEditor.createAnnotatedAsset(annotation);
+							scope.annotationEditor.annotatedAssets.push(annotationToAdd);
+						});
+						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
+					}
+					var colors = ["#723421","#523421","#323421","#123421", "#fff000"];
+			
+					var colorpicker = {hex:colors[4]};
+					scope.colorpicker = colorpicker;
+					
+					scope.annotationEditor.fabricModel.selectTool("draw");
+					//Grab list of users and annotations for assets
+					
+				},
+				failure: function(errMsg) {
+					alert(errMsg);
+				}
+			});
+		}
+		,
 		connect : function()
 		{
 			//socket initialization
@@ -316,6 +320,9 @@ var AnnotationEditor = function(scope) {
 				{
 					//console.log('Opened a connection!');
 					//console.log(e);
+					
+					editor.loadAssetList();
+					
 				};
 				connection.onclose = function(e)
 				{

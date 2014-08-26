@@ -14,6 +14,5 @@ jQuery(document).ready(function()
 	
 	editor.loadModels();
 	editor.loadSelectors();
-	editor.connect();
 
 });
