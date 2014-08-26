@@ -133,8 +133,8 @@ var AnnotationEditor = function(scope) {
 
 			var command = SocketCommand("server.getAnnotatedAsset");
 			command.collectionid = this.scope.collectionid;
-			command.assetid = editor.currentAnnotatedAsset.assetData.id;
-			this.sendCommand(command);
+			command.assetid = this.currentAnnotatedAsset.assetData.id;
+			this.sendSocketCommand(command);
 
 		},
 		renderAnnotatedAsset: function(inAnnotatedAsset)
@@ -480,7 +480,7 @@ var AnnotatedAsset = function(inAssetData) {
 			var annotationToRemove = this.getAnnotationById(annotationid);
 			this.annotations = _.without(this.annotations, annotationToRemove);
 		};
-	};
+	
 	return out; 
 }
 
