@@ -99,16 +99,15 @@ var AnnotationEditor = function(scope) {
 
 			this.fabricModel.setBackgroundImage(url);
 
-			var command = SocketCommand("server.getAnnotatedAsset");
-			command.collectionid = this.scope.collectionid;
-			command.assetid = this.currentAnnotatedAsset.assetData.id;
-			this.sendSocketCommand(command);
+			var command = SocketCommand("server.loadAnnotatedAsset");
+			this.sendSocketCommand(command,annotatedAsset.assetData.id);
 
 		},
 		renderAnnotatedAsset: function(inAnnotatedAsset)
 		{		
-			this.scope.annotations = annotatedAsset.annotations;
-			$.each(editor.scope.annotations, function(index, annotation)
+			var editor = this;
+			this.scope.annotations = inAnnotatedAsset.annotations;
+			$.each(this.scope.annotations, function(index, annotation)
 			{
 				var oldAnnotations = annotation.fabricObjects;
 				// annotation.fabricObjects = [];
@@ -192,25 +191,15 @@ var AnnotationEditor = function(scope) {
 			//Update network?
 			var command = SocketCommand("annotation.added");
 			command.annotationdata = currentAnnotation;
-			this.sendSocketCommand( command );
+			this.sendSocketCommand( command,currentAnnotation.assetid );
 		},
 		notifyAnnotationModified: function(currentAnnotation)
 		{
 			//Update network?
 			var command = SocketCommand("annotation.modified");
 			command.annotationdata = currentAnnotation;
-			this.sendSocketCommand( command );
+			this.sendSocketCommand( command,currentAnnotation.assetid );
 		}
-/*		,
-		addAnnotation: function(inAnnotation)
-		{
-			// update scope.annotations and currentAnnotationAsset
-			// might not be appropriate for all calls when the asset
-			// is not in scope, but it's here for now
-			this.currentAnnotatedAsset.annotations.push(inAnnotation);
-			scope.annotations = this.currentAnnotatedAsset.annotations;
-		}
-*/		
 		,
 		modifyAnnotation: function(modifiedAnnotation)
 		{
@@ -219,7 +208,7 @@ var AnnotationEditor = function(scope) {
 			modasset.annotations[foundAnnotationIndex] = modifiedAnnotation;
 			
 			//For now, render it all. later select parts
-			this.setCurrentAnnotatedAsset(this.currentAnnotatedAsset);
+			//this.setCurrentAnnotatedAsset(this.currentAnnotatedAsset);
 			
 		}
 		,
@@ -411,13 +400,16 @@ var AnnotationEditor = function(scope) {
 			
 		}
 		,
-		sendSocketCommand: function( inSocketCommand )
+		sendSocketCommand: function( inSocketCommand, assetid )
 		{
 			// send out info here
 			// too many layers?
 			inSocketCommand.catalogid = this.scope.catalogid;
 			inSocketCommand.collectionid = this.scope.collectionid;
-			
+			if( assetid )
+			{
+				inSocketCommand.assetid = assetid;
+			}
 			this.connection.sendCommand( inSocketCommand );
 		}
 	}
@@ -448,6 +440,8 @@ var AnnotatedAsset = function(inAssetData) {
 		});
 		
 		//todo: clean up the annotaations array with real objects
+		
+		
 	}
 		
 	out.pushAnnotation = function( inAnnotation )

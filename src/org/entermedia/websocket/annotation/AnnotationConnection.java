@@ -98,7 +98,7 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 			String collectionid = (String)map.get("collectionid");
 			String assetid = (String)map.get("assetid");
 			
-			if ("server.getAnnotatedAsset".equals(command)) //Return all the annotation on this asset
+			if ("server.loadAnnotatedAsset".equals(command)) //Return all the annotation on this asset
 			{
 				getAnnotationCommandListener().loadAnnotatedAsset(this,catalogid, collectionid,assetid);
 			}

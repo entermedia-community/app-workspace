@@ -16,6 +16,8 @@
  */
 package org.entermedia.websocket.annotation;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -28,6 +30,7 @@ import javax.websocket.Session;
 
 import org.entermedia.cache.CacheManager;
 import org.json.simple.JSONObject;
+import org.openedit.Data;
 import org.openedit.data.SearcherManager;
 
 import com.openedit.ModuleManager;
@@ -40,8 +43,30 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	 private static final String CACHENAME = "AnnotationServer";
 	 
 	 protected CacheManager fieldCacheManager;
+	 protected ModuleManager fieldModuleManager;
+	 protected SearcherManager fieldSearcherManager;
 	 
-	 public CacheManager getCacheManager()
+	 public SearcherManager getSearcherManager()
+	{
+		if (fieldSearcherManager == null)
+		{
+			fieldSearcherManager =  (SearcherManager)getModuleManager().getBean("searcherManager");
+		}
+		return fieldSearcherManager;
+	}
+	public void setSearcherManager(SearcherManager inSearcherManager)
+	{
+		fieldSearcherManager = inSearcherManager;
+	}
+	public ModuleManager getModuleManager()
+	{
+		return fieldModuleManager;
+	}
+	public void setModuleManager(ModuleManager inModuleManager)
+	{
+		fieldModuleManager = inModuleManager;
+	}
+	public CacheManager getCacheManager()
 	{
 		if (fieldCacheManager == null)
 		{
@@ -90,14 +115,19 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
         String catalogid = session.getPathParameters().get("catalogid");
         String collectionid = session.getPathParameters().get("collectionid");
          
-        ModuleManager manager  = (ModuleManager)http.getAttribute("moduleManager");
-        
-        SearcherManager searchers = (SearcherManager)manager.getBean("searcherManager");
+        if( getModuleManager() == null)
+        {
+	        ModuleManager manager  = (ModuleManager)http.getAttribute("moduleManager");
+	        if( manager != null )
+	        {
+	        	setModuleManager(manager);
+	        }
+        }
         
         //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
         
-        //TODO: Load from spring
-        AnnotationConnection connection = new AnnotationConnection(searchers,catalogid, collectionid,http,remoteEndpointBasic, this);
+        //TODO: Load from spring0
+        AnnotationConnection connection = new AnnotationConnection(getSearcherManager(),catalogid, collectionid,http,remoteEndpointBasic, this);
         connections.add(connection);	
         session.addMessageHandler(connection);
       //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
@@ -105,10 +135,21 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
     public void annotationModified(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
     	//TODO: update our map
-    	//See if it exists, then update the array of annotations
-    	
-    	
-    	getCacheManager().put(CACHENAME, catalogid + inCollectionId + inAssetId, command.get("annotat"));
+    	JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
+		Collection annotations = (Collection)obj.get("annotations");
+		JSONObject annotation = (JSONObject)command.get("annotationdata");
+		String id = (String)annotation.get("id");
+		for (Iterator iterator = annotations.iterator(); iterator.hasNext();)
+		{
+			JSONObject existing = (JSONObject) iterator.next();
+			if( id.equals( annotation.get("id") ) )
+			{
+				annotations.remove(existing);
+				annotations.add(annotation);
+				break;
+			}
+		}
+    	//getCacheManager().put(CACHENAME, catalogid + inCollectionId + inAssetId, command.get("annotat"));
     	
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
@@ -117,12 +158,18 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		}
 	}
     
-	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject json, String message, String catalogid, String inCollectionId, String inAssetId)
+	public void annotationAdded(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
+		JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
+		Collection annotations = (Collection)obj.get("annotations");
+		
+		JSONObject annotation = (JSONObject)command.get("annotationdata");
+		annotations.add(annotation);
+		
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
 			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
-			annotationConnection2.sendMessage(json);
+			annotationConnection2.sendMessage(command);
 		}
 	}
     
@@ -131,11 +178,30 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		JSONObject newcommand = new JSONObject(); //Get this from our map of annotatedAssets
 		newcommand.put("command", "asset.loaded");
 		
-		JSONObject annotatedAssetJson = new JSONObject();  				//TODO: get from MAP
-		newcommand.put("annotatedAssetJson", annotatedAssetJson);
+		JSONObject asset = loadAnnotatedAsset(catalogid,inCollectionId, inAssetId);
+		newcommand.put("annotatedAssetJson", asset);
 		
 		annotationConnection.sendMessage(newcommand);
 	}
+	protected JSONObject loadAnnotatedAsset(String inCatalogId, String inCollection, String inAssetId)
+	{
+    	JSONObject obj = (JSONObject)getCacheManager().get(CACHENAME, inCatalogId + inCollection + inAssetId);
+		if( obj == null)
+		{
+			//Goto database and load it?
+			obj = new JSONObject();
+			JSONObject assetData = new JSONObject();
+			assetData.put("id",inAssetId);
+			Data asset = getSearcherManager().getData(inCatalogId, "asset", inAssetId);
+			assetData.put("sourcepath",asset.getSourcePath()); 
+			obj.put("assetData",assetData);
+			obj.put("annotations", new ArrayList());
+			obj.put("annotationIndex", new Integer(1));
+			getCacheManager().put(CACHENAME, inCatalogId + inCollection + inAssetId,obj);
+		}
+		return obj;
+	}
+	
 
 
 	
