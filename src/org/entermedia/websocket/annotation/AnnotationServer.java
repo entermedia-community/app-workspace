@@ -42,9 +42,13 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected CacheManager fieldCacheManager;
+	 protected static CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
+	 
+	public AnnotationServer()
+	{
+	}
 	 
 	 public SearcherManager getSearcherManager()
 	{
@@ -185,7 +189,8 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	}
 	protected JSONObject loadAnnotatedAsset(String inCatalogId, String inCollection, String inAssetId)
 	{
-    	JSONObject obj = (JSONObject)getCacheManager().get(CACHENAME, inCatalogId + inCollection + inAssetId);
+		String id = inCatalogId + "_" + inCollection + "_" + inAssetId;
+    	JSONObject obj = (JSONObject)getCacheManager().get(CACHENAME, id);
 		if( obj == null)
 		{
 			//Goto database and load it?
@@ -197,7 +202,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 			obj.put("assetData",assetData);
 			obj.put("annotations", new ArrayList());
 			obj.put("annotationIndex", new Integer(1));
-			getCacheManager().put(CACHENAME, inCatalogId + inCollection + inAssetId,obj);
+			getCacheManager().put(CACHENAME, id,obj);
 		}
 		return obj;
 	}

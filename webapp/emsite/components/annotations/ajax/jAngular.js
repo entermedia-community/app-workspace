@@ -182,6 +182,7 @@ jAngular.replaceRows = function(div , scope)
 				var rowname = vars.substring(0,split);
 				var loopname = vars.substring(split + 4,vars.length );
 				
+				
 				var rows = scope.eval(loopname);  //TODO: Find the name
 				
 				//set a local scope of asset = rows[i];
@@ -198,6 +199,9 @@ jAngular.replaceRows = function(div , scope)
 						$.each(rows, function(index, value) {
 								//TODO: replace scope variables
 								var localscope = scope.createScope();
+								localscope.add("loopcountzero",index);
+								localscope.add("loopcountone",index + 1);
+								
 								localscope.add(rowname,value);
 								//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 		
