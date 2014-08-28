@@ -436,12 +436,20 @@ var AnnotatedAsset = function(inAssetData) {
 	{
 		$.each(Object.keys(out), function(index, key)
 		{
-			out[key] = inAssetData[key];  //have to update the object referencces before we define our methods
+			if (key == "annotations")
+			{
+				var tempAnnotations = [];
+				$.each(inAssetData.annotations, function(index, annotationData)
+				{
+					tempAnnotations.push(new Annotation(annotationData));
+				})
+				out.annotations = tempAnnotations;
+			}
+			else
+			{
+				out[key] = inAssetData[key];  //have to update the object references before we define our methods
+			}
 		});
-		
-		//todo: clean up the annotaations array with real objects
-		
-		
 	}
 		
 	out.pushAnnotation = function( inAnnotation )
