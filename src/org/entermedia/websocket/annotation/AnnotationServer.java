@@ -42,13 +42,9 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected static CacheManager fieldCacheManager;
+	 protected CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
-	 
-	public AnnotationServer()
-	{
-	}
 	 
 	 public SearcherManager getSearcherManager()
 	{
@@ -146,7 +142,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		for (Iterator iterator = annotations.iterator(); iterator.hasNext();)
 		{
 			JSONObject existing = (JSONObject) iterator.next();
-			if( id.equals( annotation.get("id") ) )
+			if( id.equals( existing.get("id") ) )
 			{
 				annotations.remove(existing);
 				annotations.add(annotation);
@@ -189,8 +185,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	}
 	protected JSONObject loadAnnotatedAsset(String inCatalogId, String inCollection, String inAssetId)
 	{
-		String id = inCatalogId + "_" + inCollection + "_" + inAssetId;
-    	JSONObject obj = (JSONObject)getCacheManager().get(CACHENAME, id);
+    	JSONObject obj = (JSONObject)getCacheManager().get(CACHENAME, inCatalogId + inCollection + inAssetId);
 		if( obj == null)
 		{
 			//Goto database and load it?
@@ -202,7 +197,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 			obj.put("assetData",assetData);
 			obj.put("annotations", new ArrayList());
 			obj.put("annotationIndex", new Integer(1));
-			getCacheManager().put(CACHENAME, id,obj);
+			getCacheManager().put(CACHENAME, inCatalogId + inCollection + inAssetId, obj);
 		}
 		return obj;
 	}
