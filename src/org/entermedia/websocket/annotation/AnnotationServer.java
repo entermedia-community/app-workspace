@@ -19,6 +19,7 @@ package org.entermedia.websocket.annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -42,7 +43,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected CacheManager fieldCacheManager;
+	 protected static CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
 	 
@@ -136,7 +137,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	{
     	//TODO: update our map
     	JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
-		Collection annotations = (Collection)obj.get("annotations");
+		List annotations = (List)obj.get("annotations");
 		JSONObject annotation = (JSONObject)command.get("annotationdata");
 		String id = (String)annotation.get("id");
 		for (Iterator iterator = annotations.iterator(); iterator.hasNext();)
@@ -144,8 +145,16 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 			JSONObject existing = (JSONObject) iterator.next();
 			if( id.equals( existing.get("id") ) )
 			{
+				int loc = annotations.indexOf(existing);
 				annotations.remove(existing);
-				annotations.add(annotation);
+				if( loc > -1)
+				{
+					annotations.add(loc, annotation);
+				}
+				else
+				{
+					annotations.add(annotation);
+				}
 				break;
 			}
 		}
