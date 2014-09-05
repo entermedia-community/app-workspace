@@ -326,6 +326,20 @@ var AnnotationEditor = function(scope) {
 				};
 				connection.onmessage = function(e)
 				{
+				
+				/**
+			
+				Steps to add annotation:
+				1. UI calls switchToAsset that calls setCurrentAnnotatedAsset
+				2. setCurrentAnnotatedAsset calls server to return asset.loaded
+				3. asset.loaded updates the currentAnnotatedAsset with server side data and calls renderAnnotatedAsset
+				4. renderAnnotatedAsset reloads the canvas
+				5. Use clicks mouse events calls fabricObjectAdded
+				6. creates an Annotation and calls notifyAnnotationAdded and notifyAnnotationModified
+				7. annotation.added
+				*/
+				
+				
 				 	var received_msg = e.data;
 					var command = JSON.parse(received_msg);
 					
