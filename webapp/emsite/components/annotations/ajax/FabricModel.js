@@ -191,9 +191,12 @@ var FabricModel = function (scope) {
 								name: scope.annotationEditor.currentTool.type
 							});
 							//_performTransformAction
+							if (shape)
+							{
 							shape.set(type.drawparams(pointer));
 							//canvas._transformObject(e);
 							canvas.renderAll();
+							}
 						}
 						
 					}

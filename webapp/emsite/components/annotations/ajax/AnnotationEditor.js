@@ -361,8 +361,10 @@ var AnnotationEditor = function(scope) {
 						
 						var newannotation = new Annotation(data);
 						console.log(newannotation);
-						// newannotation.fromSocket = true;
-						if (anonasset.getAnnotationById(newannotation.id) == null)
+
+						var existing = anonasset.getAnnotationById(newannotation.id);
+
+						if (existing == null)
 						{
 							anonasset.pushAnnotation( newannotation );
 							
@@ -501,8 +503,7 @@ var Annotation = function(inAnnotationData) {
 		comment: "",
 		date : [],
 		fabricObjects: [], 
-		assetid: null,
-		fromSocket: false
+		assetid: null
 	};
 	if (inAnnotationData)
 	{
