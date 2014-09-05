@@ -167,11 +167,9 @@ var AnnotationEditor = function(scope) {
 		{
 			//if( this.currentAnnotatedAsset.currentAnnotation == null )
 			//{
-			this.currentAnnotatedAsset.currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);
-				
-			this.currentAnnotatedAsset.pushAnnotation( this.currentAnnotatedAsset.currentAnnotation );
 			
-			var currentAnnotation = this.currentAnnotatedAsset.currentAnnotation;
+			var currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);				
+			
 			// need to make sure the object is not selectable by default
 			// we have mouse:move events which may be the best bet for toggling
 			// can also toggle it off on selection:cleared? maybe that is too expensive
@@ -180,6 +178,8 @@ var AnnotationEditor = function(scope) {
 			// make object immobile ?
 			fabricObject.evented = false;
 			currentAnnotation.pushFabricObject(fabricObject);
+
+			this.currentAnnotatedAsset.pushAnnotation( currentAnnotation );
 			
 			this.scope.add("annotations",this.currentAnnotatedAsset.annotations);
 			
@@ -206,9 +206,6 @@ var AnnotationEditor = function(scope) {
 			var modasset = this.getAnnotatedAsset(modifiedAnnotation.assetid);
 			var foundAnnotationIndex = modasset.getAnnotationIndexById(modifiedAnnotation.id);
 			modasset.annotations[foundAnnotationIndex] = modifiedAnnotation;
-			
-			//For now, render it all. later select parts
-			//this.setCurrentAnnotatedAsset(this.currentAnnotatedAsset);
 			
 		}
 		,
@@ -346,6 +343,9 @@ var AnnotationEditor = function(scope) {
 								return true;
 							}
 						});
+						
+						editor.currentAnnotatedAsset = editor.getAnnotatedAsset(editor.currentAnnotatedAsset.assetData.id);
+						
 						//show on screen
 						editor.renderAnnotatedAsset(annotatedAsset);
 					
@@ -370,7 +370,7 @@ var AnnotationEditor = function(scope) {
 							
 							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
 
-							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
 						}
 						else
 						{
@@ -393,7 +393,7 @@ var AnnotationEditor = function(scope) {
 						editor.modifyAnnotation(modifiedAnnotation);
 						if( editor.currentAnnotatedAsset.assetData.id == modifiedAnnotation.assetid )
 						{
-							editor.switchToAsset(editor.currentAnnotatedAsset.assetData.id);
+							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
 						}	
 					}
 				};
