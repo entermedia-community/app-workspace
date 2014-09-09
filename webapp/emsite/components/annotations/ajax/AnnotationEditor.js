@@ -268,10 +268,11 @@ var AnnotationEditor = function(scope) {
 						});
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
 					}
-					var colors = ["#723421","#523421","#323421","#123421", "#fff000"];
-			
-					var colorpicker = {hex:colors[4]};
-					scope.colorpicker = colorpicker;
+					
+				
+					//var colorpicker = {hex:colors[4]};
+					//scope.colorpicker = colorpicker;
+					scpe.colorpicker = scope.userData.defaultcolor;
 					
 					scope.annotationEditor.fabricModel.selectTool("draw");
 					//Grab list of users and annotations for assets
