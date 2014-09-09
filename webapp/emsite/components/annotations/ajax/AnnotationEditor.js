@@ -13,8 +13,7 @@ var AnnotationEditor = function(scope) {
 		currentTool: null,
 		connection: null,
 		loadSelectors : function()
-		{
-		}
+		{}
 		,
 		loadModels : function()
 		{
@@ -269,10 +268,9 @@ var AnnotationEditor = function(scope) {
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
 					}
 					
-				
-					//var colorpicker = {hex:colors[4]};
-					//scope.colorpicker = colorpicker;
-					scpe.colorpicker = scope.userData.defaultcolor;
+					scope.userColor = scope.annotationEditor.userData.defaultcolor;
+					
+					jAngular.replace("#annotation-toolbar", scope);
 					
 					scope.annotationEditor.fabricModel.selectTool("draw");
 					//Grab list of users and annotations for assets
