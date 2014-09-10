@@ -454,7 +454,13 @@ var AnnotationEditor = function(scope) {
 						var assetid = command.assetid;
 						if( editor.currentAnnotatedAsset.assetData.id == assetid )
 						{
+							/*
+							
+							// the following line causes duplication of objects on the canvas (leading to false removal failure)
+							
 							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset); //Make sure canvas items are all loaded
+							
+							*/
 							
 							var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
 							
