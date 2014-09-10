@@ -136,6 +136,11 @@ var AnnotationEditor = function(scope) {
 		},
 		renderAnnotatedAsset: function(inAnnotatedAsset)
 		{		
+			/*
+			// Maybe this entire function is not necessary.
+			// I put the enlivening code into a new function called 'refreshAnnotation'
+			// Right now all this really does is renderAll and refresh the tab
+			
 			var editor = this;
 			this.scope.annotations = inAnnotatedAsset.annotations;
 			$.each(this.scope.annotations, function(index, annotation)
@@ -156,15 +161,18 @@ var AnnotationEditor = function(scope) {
 				{
 					fabric.util.enlivenObjects(oldAnnotations, function(group)
 						{
-						 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
-						 editor.scope.fabricModel.canvas.renderOnAddRemove = false
-						 $.each(group, function(index, item) {
-						 	 //item.junk = "21412124";
-							 annotation.fabricObjects[index] = item;
-							 item.annotationid = annotation.id;
-						     editor.scope.fabricModel.canvas.addInternal(item);
-						 });
-						 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+						 if (editor.getAnnotationById(annotation.id) == null)
+						 {
+							 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove
+							 editor.scope.fabricModel.canvas.renderOnAddRemove = false
+							 $.each(group, function(index, item) {
+							 	 //item.junk = "21412124";
+								 annotation.fabricObjects[index] = item;
+								 item.annotationid = annotation.id;
+							     editor.scope.fabricModel.canvas.addInternal(item);
+							 });
+							 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+						 }
 						});
 				}
 
@@ -173,6 +181,7 @@ var AnnotationEditor = function(scope) {
 
 				
 			});
+			*/
 			this.scope.fabricModel.canvas.renderAll();
 			jAngular.render("#annotationtab");
 			// this method also needs to clear the canvas and comments and update from the persisted data
@@ -194,10 +203,24 @@ var AnnotationEditor = function(scope) {
 			return annot;
 		}
 		,
+		refreshAnnotation: function(inAnnotation) 
+		{
+			fabric.util.enlivenObjects(inAnnotation.fabricObjects, function(group)
+			{
+				 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove;
+				 editor.scope.fabricModel.canvas.renderOnAddRemove = false;
+				 $.each(group, function(index, item)
+				 {
+					inAnnotation.fabricObjects[index] = item;
+					item.annotationid = inAnnotation.id;
+					// editor.scope.fabricModel.canvas.addInternal(item); // try without it?
+				 });
+				 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+			});
+		}
+		,
 		fabricObjectAdded: function(fabricObject)
 		{
-			//if( this.currentAnnotatedAsset.currentAnnotation == null )
-			//{
 			
 			var currentAnnotation = this.createNewAnnotation(this.currentAnnotatedAsset);				
 			
@@ -205,8 +228,11 @@ var AnnotationEditor = function(scope) {
 			// we have mouse:move events which may be the best bet for toggling
 			// can also toggle it off on selection:cleared? maybe that is too expensive
 			// looks like easiest way to implement move tool is a loop through the existing objects on selectTool
+			
 			fabricObject.selectable = false;
+			
 			// make object immobile ?
+			
 			fabricObject.evented = false;
 			currentAnnotation.pushFabricObject(fabricObject);
 
@@ -377,6 +403,12 @@ var AnnotationEditor = function(scope) {
 				7. annotation.added
 				*/
 				
+				/*
+					calling renderAnnotatedAsset all the time causes more problems than it solves.
+					this function is causing duplication of objects and erroneous handling of !live objects
+					this function should not be in charge of enlivening objects
+					this and addition of annotationid should only be added to the objects once (on server reply)
+				*/
 				
 				 	var received_msg = e.data;
 					var command = JSON.parse(received_msg);
@@ -387,7 +419,7 @@ var AnnotationEditor = function(scope) {
 						
 						var annotatedAsset = new AnnotatedAsset(json);
 						
-						$.each(editor.annotatedAssets,function(index,asset)
+						$.each(editor.annotatedAssets, function(index,asset)
 						{
 							if( asset.assetData.id == annotatedAsset.assetData.id )
 							{
@@ -412,6 +444,9 @@ var AnnotationEditor = function(scope) {
 						// we only want to push the annotation if it doesn't already exist
 						
 						var newannotation = new Annotation(data);
+						
+						editor.refreshAnnotation(newannotation);
+						
 						console.log(newannotation);
 
 						var existing = anonasset.getAnnotationById(newannotation.id);
@@ -422,7 +457,7 @@ var AnnotationEditor = function(scope) {
 							
 							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
 
-							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
+							// editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
 						}
 						else
 						{
@@ -442,11 +477,19 @@ var AnnotationEditor = function(scope) {
 						*/
 						console.log("annotation.modified: ", command);
 						var modifiedAnnotation = new Annotation(command.annotationdata);
+						
+						editor.refreshAnnotation(modifiedAnnotation);
+						
 						editor.modifyAnnotation(modifiedAnnotation);
+						
+						/*
 						if( editor.currentAnnotatedAsset.assetData.id == modifiedAnnotation.assetid )
 						{
 							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
-						}	
+						}
+						*/
+						
+							
 					}
 					else if (command.command == "annotation.removed")
 					{
@@ -462,6 +505,16 @@ var AnnotationEditor = function(scope) {
 							
 							*/
 							
+							/*
+							$.each(editor.fabricModel.canvas.getObjects(), function(index, item)
+							{
+								if (item.annotationid == annotationid)
+								{
+									editor.fabricModel.canvas.remove(item);
+								}
+							});
+							
+							*/
 							var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
 							
 							$.each(annotationToRemove.fabricObjects, function(index, item)
@@ -469,6 +522,7 @@ var AnnotationEditor = function(scope) {
 								//isLive()?
 								editor.fabricModel.canvas.remove(item);
 							});
+							
 							editor.fabricModel.canvas.renderAll();
 							
 							editor.currentAnnotatedAsset.removeAnnotation(annotationid);
@@ -607,7 +661,7 @@ var Annotation = function(inAnnotationData) {
 		};
 		out.isLive = function() 
 		{
-			if (this.fabricObjects.length > 0 && this.fabricObjects[0].canvas)
+			if (this.fabricObjects.length > 0 && this.fabricObjects[0].annotationid)
 			{
 				return true;
 			}
