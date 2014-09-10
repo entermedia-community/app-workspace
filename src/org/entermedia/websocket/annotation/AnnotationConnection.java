@@ -149,6 +149,11 @@ public class AnnotationConnection  extends Endpoint implements MessageHandler.Pa
 //				JSONObject obj = new JSONObject();
 				getAnnotationServer().annotationModified(this, map, message, catalogid, collectionid,assetid);
 			}
+			else if ("annotation.removed".equals(command))
+			{
+//				JSONObject obj = new JSONObject();
+				getAnnotationServer().annotationRemoved(this, map, message, catalogid, collectionid,assetid);
+			}
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
 				//see if ID is set

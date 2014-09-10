@@ -131,6 +131,29 @@ public class AnnotationServer  {
 		}
 	}
     
+	public void annotationRemoved(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
+	{
+		JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
+		Collection annotations = (Collection)obj.get("annotations");
+		
+		String removed = (String)command.get("annotationid");
+		for (Iterator iterator = annotations.iterator(); iterator.hasNext();)
+		{
+			JSONObject existing = (JSONObject) iterator.next();
+			String annotationid = (String)existing.get("id");
+			if( removed.equals( annotationid ) )
+			{
+				annotations.remove(existing);
+				break;
+			}
+		}
+		
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			annotationConnection2.sendMessage(command);
+		}
+	}
 	
 	
 	public void loadAnnotatedAsset(AnnotationConnection annotationConnection, String catalogid, String inCollectionId, String inAssetId)

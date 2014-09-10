@@ -1,4 +1,5 @@
 //jAnqular controller
+
 jQuery(document).ready(function() 
 { 
 	var scope = new Scope();

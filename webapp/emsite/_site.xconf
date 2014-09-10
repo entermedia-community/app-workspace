@@ -7,13 +7,7 @@
   <property name="applicationid">emsite</property>
   
   <path-action name="SessionValue.loadSessionVariable" bean="moduleManager" />
-  
-    <script id="fabric" src="/${applicationid}/components/javascript/fabric/dist/fabric.js">     </script>
-  <!--
-  <script id="angularjs"  src="/${applicationid}/components/javascript/angular/angular.js">  </script>
-  -->
- 
    <script id="jangular" src="/${applicationid}/components/annotations/ajax/jAngular.js"></script>
- 
+  
   
 </page>

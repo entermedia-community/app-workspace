@@ -12,15 +12,42 @@ var AnnotationEditor = function(scope) {
 		imageCarouselPageIndex: 1,
 		currentTool: null,
 		connection: null,
+		colorPicker: null,
 		loadSelectors : function()
-		{}
+		{
+			jQuery(".colorpicker-input").livequery(function()
+			{
+				var picker = $(this);
+				var dialog = picker.colorpicker(
+					{
+						autoOpen:false,closeOnOutside:false,
+						select: function(event,color) {
+							var val = color.formatted;
+							scope.userColor = "#" + val;
+						},
+						close: function(event,color) {
+							jAngular.replace("#colortoolbararea", scope);
+							var tool = scope.annotationEditor.currentTool.name;
+							var type = scope.annotationEditor.currentTool.type;
+							
+							scope.annotationEditor.fabricModel.selectTool(tool,type);
+						}
+					});
+				out.colorPicker = dialog;
+			});
+		}
+		,
+		showColorPicker: function()
+		{
+			this.colorPicker.colorpicker('open');
+		}
 		,
 		loadModels : function()
 		{
 			var scope = this.scope;
 
 			loadFabricModel(scope);
-
+			
 			// load asset data
 			this.connect();
 
@@ -35,14 +62,19 @@ var AnnotationEditor = function(scope) {
 			var editor = this;
 			
 			var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
-			
+
+			/*			
 			$.each(annotationToRemove.fabricObjects, function(index, item)
 			{
 				editor.fabricModel.canvas.remove(item);
 			});
-			editor.currentAnnotatedAsset.removeAnnotation(annotationid);
-			scope.annotations = editor.currentAnnotatedAsset.annotations;
-			jAngular.render("#annotationlist");
+			*/
+			
+			this.notifyAnnotationRemoved(annotationToRemove);
+			
+			//editor.currentAnnotatedAsset.removeAnnotation(annotationid);
+			//scope.annotations = editor.currentAnnotatedAsset.annotations;
+			//jAngular.render("#annotationlist");
 					
 		}
 		,
@@ -194,9 +226,15 @@ var AnnotationEditor = function(scope) {
 		},
 		notifyAnnotationModified: function(currentAnnotation)
 		{
-			//Update network?
 			var command = SocketCommand("annotation.modified");
 			command.annotationdata = currentAnnotation;
+			this.sendSocketCommand( command,currentAnnotation.assetid );
+		}
+		,
+		notifyAnnotationRemoved: function(currentAnnotation)
+		{
+			var command = SocketCommand("annotation.removed");
+			command.annotationid = currentAnnotation.id;
 			this.sendSocketCommand( command,currentAnnotation.assetid );
 		}
 		,
@@ -270,7 +308,8 @@ var AnnotationEditor = function(scope) {
 					
 					scope.userColor = scope.annotationEditor.userData.defaultcolor;
 					
-					jAngular.replace("#annotation-toolbar", scope);
+					//jAngular.replace("#annotation-toolbar", scope);
+					jAngular.replace("#colortoolbararea", scope);
 					
 					scope.annotationEditor.fabricModel.selectTool("draw");
 					//Grab list of users and annotations for assets
@@ -363,7 +402,7 @@ var AnnotationEditor = function(scope) {
 						editor.renderAnnotatedAsset(annotatedAsset);
 					
 					}
-					if( command.command == "annotation.added" )
+					else if( command.command == "annotation.added" )
 					{
 						//Show it on the screen
 						var data = command.annotationdata;
@@ -408,6 +447,28 @@ var AnnotationEditor = function(scope) {
 						{
 							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
 						}	
+					}
+					else if (command.command == "annotation.removed")
+					{
+						var annotationid = command.annotationid;
+						var assetid = command.assetid;
+						if( editor.currentAnnotatedAsset.assetData.id == assetid )
+						{
+							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset); //Make sure canvas items are all loaded
+							
+							var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
+							
+							$.each(annotationToRemove.fabricObjects, function(index, item)
+							{
+								//isLive()?
+								editor.fabricModel.canvas.remove(item);
+							});
+							editor.fabricModel.canvas.renderAll();
+							
+							editor.currentAnnotatedAsset.removeAnnotation(annotationid);
+							scope.annotations = editor.currentAnnotatedAsset.annotations;
+							jAngular.render("#annotationlist");
+						}
 					}
 				};
 			this.connection = connection; // connection lives on the editor. more explicit

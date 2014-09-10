@@ -94,8 +94,6 @@ var jAngularScopes = {};
 
 jAngular.livequery = function()
 {
-		//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
-		
 		$( "[ng-click]").livequery('click', function(e)
 		{
 				e.preventDefault();
@@ -203,7 +201,6 @@ jAngular.replaceRows = function(div , scope)
 								localscope.add("loopcountone",index + 1);
 								
 								localscope.add(rowname,value);
-								//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 		
 								var evalcontent = replacer.replace(origContent,localscope);
 								evalcontent = evalcontent.replace("ng-src","src");
@@ -254,7 +251,6 @@ jAngular.render = function(div, scope)
 			if( typeof( origContent ) === 'undefined' )
 			{
 					origContent = element.text();
-					//  $("div.annotations-carousel a img[ng-click], ul.annotations-toolbar li[ng-click], div.comment-meta button[ng-click]").livequery('click', function() 
 					this.origContent = origContent;
 			}
 			var text = origContent;
