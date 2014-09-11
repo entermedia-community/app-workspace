@@ -43,7 +43,7 @@ public class AnnotationServer  {
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected static CacheManager fieldCacheManager;
+	 protected CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
 	 

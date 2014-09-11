@@ -102,7 +102,7 @@ var FabricModel = function (scope) {
 							
 							var originX = 'left';
 							var originY =  'top';
-							
+							//TODO: Dont change top left anchor, instead change top left px locations based on mouse
 							if(  pointer.y < _this.lastClick.top )
 							{
 								originY = "bottom";
@@ -114,7 +114,7 @@ var FabricModel = function (scope) {
 							
 							var radiusX = Math.abs((_this.lastClick.left - pointer.x) / 2);
 							var radiusY = Math.abs((_this.lastClick.top - pointer.y) / 2);
-							var radius = Math.min(radiusX,radiusY);
+							var radius = Math.max(radiusX,radiusY);
 							
 							return {
 								radius: radius,

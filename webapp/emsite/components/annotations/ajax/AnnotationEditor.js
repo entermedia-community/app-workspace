@@ -143,6 +143,7 @@ var AnnotationEditor = function(scope) {
 			
 			var editor = this;
 			this.scope.annotations = inAnnotatedAsset.annotations;
+			editor.fabricModel.clearCanvas();
 			$.each(this.scope.annotations, function(index, annotation)
 			{
 				var oldAnnotations = annotation.fabricObjects;
@@ -153,7 +154,6 @@ var AnnotationEditor = function(scope) {
 					{
 						// annotation.fabricObjects.push(item);
 						item.annotationid = annotation.id;
-						
 						editor.fabricModel.canvas.addInternal(item);
 					});
 				} 
