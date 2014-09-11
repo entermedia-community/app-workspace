@@ -98,29 +98,26 @@ var FabricModel = function (scope) {
 							lockMovementY: true
 						},
 						drawparams: function(pointer) {
-							var lastClick = _this.lastClick;
-							
-							var originX = 'left';
-							var originY =  'top';
-							//TODO: Dont change top left anchor, instead change top left px locations based on mouse
-							if(  pointer.y < _this.lastClick.top )
-							{
-								originY = "bottom";
-							}
-							if(  pointer.x < _this.lastClick.left )
-							{
-								originX = "right";
-							}
-							
-							var radiusX = Math.abs((_this.lastClick.left - pointer.x) / 2);
-							var radiusY = Math.abs((_this.lastClick.top - pointer.y) / 2);
-							var radius = Math.max(radiusX,radiusY);
+							var initX = _this.lastClick.left;
+							var initY = _this.lastClick.top;
+							var curX = pointer.x;
+							var curY = pointer.y;
+							// pretend we're drawing a rectangle which has a top/left of either initX/Y or pointerX/Y
+							// pythagorean theorem states that:
+							var a = curX - initX;
+							var b = curY - initY;
+							var c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+							var radius = c / 2;
+							// this is a basic 2d distance formula and is always true regardless of where the circle is
+							// now that we have the size of the circle, it needs to be positioned correctly
+							var midX = initX + a/2;
+							var midY = initY + b/2;
 							
 							return {
 								radius: radius,
-								originX: originX,
-								originY: originY
-							};
+								top: midY - radius,
+								left: midX - radius
+								}
 						}
 					}, {  //(target && target.selectable && !shouldGroup
 						name: 'rectangle',
