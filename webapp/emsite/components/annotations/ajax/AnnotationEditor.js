@@ -205,18 +205,20 @@ var AnnotationEditor = function(scope) {
 		,
 		refreshAnnotation: function(inAnnotation) 
 		{
+			var editor = this;
 			fabric.util.enlivenObjects(inAnnotation.fabricObjects, function(group)
 			{
-				 origRenderOnAddRemove = editor.scope.fabricModel.canvas.renderOnAddRemove;
-				 editor.scope.fabricModel.canvas.renderOnAddRemove = false;
+				 origRenderOnAddRemove = editor.fabricModel.canvas.renderOnAddRemove;
+				 editor.fabricModel.canvas.renderOnAddRemove = false;
 				 $.each(group, function(index, item)
 				 {
 					inAnnotation.fabricObjects[index] = item;
 					item.annotationid = inAnnotation.id;
-					// editor.scope.fabricModel.canvas.addInternal(item); // try without it?
+					// editor.fabricModel.canvas.addInternal(item); // try without it?
 				 });
-				 editor.scope.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
+				 editor.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
 			});
+			editor.fabricModel.canvas.renderAll();
 		}
 		,
 		fabricObjectAdded: function(fabricObject)
