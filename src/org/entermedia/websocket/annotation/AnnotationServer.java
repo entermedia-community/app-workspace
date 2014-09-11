@@ -176,7 +176,8 @@ public class AnnotationServer  {
 			JSONObject assetData = new JSONObject();
 			assetData.put("id",inAssetId);
 			Data asset = getSearcherManager().getData(inCatalogId, "asset", inAssetId);
-			assetData.put("sourcepath",asset.getSourcePath()); 
+			assetData.put("sourcepath",asset.getSourcePath());
+			assetData.put("name", asset.getName());
 			obj.put("assetData",assetData);
 			obj.put("annotations", new ArrayList());
 			obj.put("users", new ArrayList());
