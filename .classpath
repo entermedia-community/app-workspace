@@ -6,11 +6,11 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/tomcat8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/entermedia-server"/>
 	<classpathentry kind="lib" path="lib/compile/websocket-api.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/entermedia-core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extension-ooffice"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/extension-openedit"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/tomcat8"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
