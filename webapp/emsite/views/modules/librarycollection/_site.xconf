@@ -1,0 +1,14 @@
+<page>
+
+ 	<script id="fabric" src="/${applicationid}/components/javascript/fabric/dist/fabric.js" />
+  
+	<script id="fabricmodel" src="/${applicationid}/components/annotations/ajax/FabricModel.js" />
+    <script id="annotationeditor" src="/${applicationid}/components/annotations/ajax/AnnotationEditor.js" />
+    <script id="colorpicker" src="/${applicationid}/components/javascript/colorpicker-master/jquery.colorpicker.js" />
+  
+    <style id="annotationmain" href="/${applicationid}/components/annotations/ajax/css/main.css" />
+    <style id="fabric" href="/${applicationid}/components/annotations/ajax/css/fabric.css" />
+    <style id="annotationtool" href="/${applicationid}/components/annotations/ajax/css/highlights.css" />
+    <style id="colorpickercss" href="/${applicationid}/components/javascript/colorpicker-master/jquery.colorpicker.css"/>
+ 
+</page>

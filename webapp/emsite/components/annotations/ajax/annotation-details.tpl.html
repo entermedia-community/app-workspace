@@ -6,7 +6,7 @@
 
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
 
-    <ul class="annotations-toolbar" >
+    <ul id="annotation-toolbar" class="annotations-toolbar" >
         <!-- try to reference the right object -->
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('move')" id="movetool">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
@@ -14,8 +14,8 @@
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('draw')" id="drawtool">
             <svg class="icon icon-draw" viewBox="0 0 32 32"><use xlink:href="#icon-draw"></use></svg>
         </li>
-        <li ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('rectangle')">
-            <svg class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle" id="rectangletool"></use></svg>
+        <li ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('rectangle')" id="rectangletool">
+            <svg class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle" ></use></svg>
 <!--             <ul class="tool-options">
                 <li ng-click="scope.fabricModel.setShapeTypeFromUi('circle')">
                     <svg  class="icon icon-circle" viewBox="0 0 32 32"><use xlink:href="#icon-circle"></use></svg>
@@ -45,13 +45,16 @@
         <li ng-click="exportCanvas()">
             <svg class="icon icon-load-images" viewBox="0 0 32 32"><use xlink:href="#icon-load-images"></use></svg>
         </li>
-       
-        <li class="last colorpicker-li">
-            <div colorpicker colorpicker-position="bottom" ng-model="colorpicker.hex" colorpicker class="clearfix">
-            <svg fill="{{colorpicker.hex}}" class="icon icon-colorpicker" viewBox="0 0 32 32"><use xlink:href="#icon-colorpicker"></use></svg>
+       -->
+        <li id="colortoolbararea" ng-click="scope.annotationEditor.showColorPicker('color')" class="last colorpicker-li">
+            <input type="hidden" id="color-hidden-input" class="colorpicker-input" value="{{scope.userColor}}" size="7">
+            <div colorpicker-position="bottom" colorpicker class="clearfix">
+            	<svg fill="{{scope.userColor}}" class="icon icon-colorpicker" viewBox="0 0 32 32"><use xlink:href="#icon-colorpicker"></use></svg>
             </div>
+            
+            
         </li>
-		
+		<!--
         <li class="comment" ng-click="fabric.selectTool('comment')"><span class="icon glyphicon glyphicon-pushpin"></span></li>
         <li class="colorpicker" ng-click="fabric.selectTool('colorpicker')"><span class="icon glyphicon glyphicon-tint colorpicker"></span></li>
         <li class="comments"><span class="icon glyphicon glyphicon-comment"></span><span class="additional-info">{{comments.length}}</span></li>

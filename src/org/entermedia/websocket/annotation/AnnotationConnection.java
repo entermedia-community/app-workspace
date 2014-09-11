@@ -1,41 +1,89 @@
 package org.entermedia.websocket.annotation;
 
-import groovy.json.JsonSlurper;
-
-import java.io.IOException;
 import java.io.StringReader;
-import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.CloseReason;
+import javax.websocket.Endpoint;
+import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.RemoteEndpoint;
+import javax.websocket.Session;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.openedit.data.SearcherManager;
-import org.openedit.entermedia.modules.AdminModule;
 
-import com.openedit.OpenEditException;
-
-public class AnnotationConnection implements MessageHandler.Partial<String>
+public class AnnotationConnection  extends Endpoint implements MessageHandler.Partial<String>
 {
 	private static final Log log = LogFactory.getLog(AnnotationConnection.class);
-	private final RemoteEndpoint.Basic remoteEndpointBasic;
+	private  RemoteEndpoint.Basic remoteEndpointBasic;
 	protected SearcherManager fieldSearcherManager;
 	protected String fieldCollectionId;
 	protected String fieldCatalogId;
 	protected HttpSession fieldSession;
 	protected JSONParser fieldJSONParser;
-	protected AnnotationCommandListener fieldAnnotationCommandListener;
+	protected AnnotationServer fieldAnnotationServer;
 	
 	protected StringBuffer fieldBufferedMessage;
-	
-	
-	public AnnotationCommandListener getAnnotationCommandListener()
+
+	 @Override
+	public void onError(Session session, Throwable throwable)
 	{
-		return fieldAnnotationCommandListener;
+		// TODO Auto-generated method stub
+		super.onError(session, throwable);
+	}
+	 
+	@Override
+	public void onClose(Session session, CloseReason closeReason) {
+		getAnnotationServer().removeConnection(this);
+		super.onClose(session, closeReason);
+	}
+   @Override
+   public void onOpen(Session session, EndpointConfig endpointConfig) 
+   {
+       javax.servlet.http.HttpSession http = (javax.servlet.http.HttpSession)session.getUserProperties().get("javax.servlet.http.HttpSession");
+//       Enumeration<String> enuma = http.getAttributeNames();
+//       while(enuma.hasMoreElements())
+//       {
+//           System.out.println(enuma.nextElement());
+//       }
+       
+       String catalogid = session.getPathParameters().get("catalogid");
+       String collectionid = session.getPathParameters().get("collectionid");
+//        
+//       if( getModuleManager() == null)
+//       {
+//	        ModuleManager manager  = (ModuleManager)http.getAttribute("moduleManager");
+//	        if( manager != null )
+//	        {
+//	        	setModuleManager(manager);
+//	        }
+//       }
+        AnnotationServer server = (AnnotationServer)session.getUserProperties().get("AnnotationServer");
+        fieldAnnotationServer = server;
+        
+     	remoteEndpointBasic = session.getBasicRemote();
+   		fieldCatalogId = catalogid;
+   		fieldCollectionId = collectionid;
+   		fieldSession = http;
+       
+       //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
+       
+       //TODO: Load from spring0
+       //AnnotationConnection connection = new AnnotationConnection(getSearcherManager(),catalogid, collectionid,http,remoteEndpointBasic, this);
+       getAnnotationServer().addConnection(this);	
+       session.addMessageHandler(this);
+     //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
+   }
+	
+	
+	public AnnotationServer getAnnotationServer()
+	{
+		
+		return fieldAnnotationServer;
 	}
 	
 	public JSONParser getJSONParser()
@@ -61,19 +109,13 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 		this.fieldJSONParser = fieldJSONParser;
 	}
 
-	protected AnnotationConnection(SearcherManager searchers, String inCatalogId, String collectionid, HttpSession http, RemoteEndpoint.Basic remoteEndpointBasic, AnnotationCommandListener inListener )
-	{
-		this.remoteEndpointBasic = remoteEndpointBasic;
-		fieldSearcherManager = searchers;
-		fieldCatalogId = inCatalogId;
-		fieldCollectionId = collectionid;
-		fieldSession = http;
-		fieldAnnotationCommandListener = inListener;
-	}
+	
 	public HttpSession getSession() {
 		return fieldSession;
 	}
 
+	
+	
 	@Override
 	public synchronized void onMessage(String inData, boolean completed)
 	{		
@@ -100,12 +142,17 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 			
 			if ("server.loadAnnotatedAsset".equals(command)) //Return all the annotation on this asset
 			{
-				getAnnotationCommandListener().loadAnnotatedAsset(this,catalogid, collectionid,assetid);
+				getAnnotationServer().loadAnnotatedAsset(this,catalogid, collectionid,assetid);
 			}
 			else if ("annotation.modified".equals(command))
 			{
 //				JSONObject obj = new JSONObject();
-				getAnnotationCommandListener().annotationModified(this, map, message, catalogid, collectionid,assetid);
+				getAnnotationServer().annotationModified(this, map, message, catalogid, collectionid,assetid);
+			}
+			else if ("annotation.removed".equals(command))
+			{
+//				JSONObject obj = new JSONObject();
+				getAnnotationServer().annotationRemoved(this, map, message, catalogid, collectionid,assetid);
 			}
 			else if ("annotation.added".equals(command)) //Return all the annotation on this asset
 			{
@@ -115,7 +162,7 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 				//command.annotationdata
 				//obj.put("stuff", "array of annotations");
 				//remoteEndpointBasic.sendText(message);
-				getAnnotationCommandListener().annotationAdded(this, map, message, catalogid, collectionid,assetid);
+				getAnnotationServer().annotationAdded(this, map, message, catalogid, collectionid,assetid);
 			}
 		}
 		catch (Exception e)
@@ -147,5 +194,11 @@ public class AnnotationConnection implements MessageHandler.Partial<String>
 			log.error(e);
 //			throw new OpenEditException(e);
 		}
+	}
+	
+	public  RemoteEndpoint.Basic getRemoteEndpointBasic()
+	{
+		return remoteEndpointBasic;
+		
 	}
 }

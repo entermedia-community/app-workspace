@@ -28,16 +28,17 @@ import org.entermedia.websocket.annotation.AnnotationServer;
 
 public class AnnotationServerConfig implements ServerApplicationConfig
 {
+	GetHttpSessionConfigurator configurator = new GetHttpSessionConfigurator();
+	
 	@Override
 	public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> scanned)
 	{
 		Set<ServerEndpointConfig> result = new HashSet<>();
-		if (scanned.contains(AnnotationServer.class))
+		if (scanned.contains(AnnotationConnection.class))
 		{
-
 			ServerEndpointConfig conf = ServerEndpointConfig.Builder.create(
-					AnnotationServer.class, "/entermedia/services/websocket/echoProgrammatic")
-					.configurator(new GetHttpSessionConfigurator()).build();
+					AnnotationConnection.class, "/entermedia/services/websocket/echoProgrammatic")
+					.configurator(configurator).build();
 			result.add(conf);
 		}
 		return result;

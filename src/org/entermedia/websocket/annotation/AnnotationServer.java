@@ -36,14 +36,14 @@ import org.openedit.data.SearcherManager;
 
 import com.openedit.ModuleManager;
 
-public class AnnotationServer extends Endpoint implements AnnotationCommandListener  {
+public class AnnotationServer  {
 
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected static CacheManager fieldCacheManager;
+	 protected CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
 	 
@@ -71,7 +71,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 	{
 		if (fieldCacheManager == null)
 		{
-			fieldCacheManager = new CacheManager();
+			fieldCacheManager = (CacheManager)getModuleManager().getBean("cacheManager");//new CacheManager();
 		}
 
 		return fieldCacheManager;
@@ -81,58 +81,7 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		fieldCacheManager = inCacheManager;
 	}
 	
-	 @Override
-	public void onError(Session session, Throwable throwable)
-	{
-		// TODO Auto-generated method stub
-		super.onError(session, throwable);
-	}
-	 
-	@Override
-	public void onClose(Session session, CloseReason closeReason) {
-		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
-		{
-			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
-			if (session == annotationConnection2.getSession())
-			{
-				connections.remove(annotationConnection2);
-				break;
-			}
-		}
-		super.onClose(session, closeReason);
-	}
-    @Override
-    public void onOpen(Session session, EndpointConfig endpointConfig) 
-    {
-        RemoteEndpoint.Basic remoteEndpointBasic = session.getBasicRemote();
-        
-        javax.servlet.http.HttpSession http = (javax.servlet.http.HttpSession)session.getUserProperties().get("javax.servlet.http.HttpSession");
-//        Enumeration<String> enuma = http.getAttributeNames();
-//        while(enuma.hasMoreElements())
-//        {
-//            System.out.println(enuma.nextElement());
-//        }
-        
-        String catalogid = session.getPathParameters().get("catalogid");
-        String collectionid = session.getPathParameters().get("collectionid");
-         
-        if( getModuleManager() == null)
-        {
-	        ModuleManager manager  = (ModuleManager)http.getAttribute("moduleManager");
-	        if( manager != null )
-	        {
-	        	setModuleManager(manager);
-	        }
-        }
-        
-        //ws://localhost:8080/entermedia/services/websocket/echoProgrammatic?catalogid=emsite/catalog&collectionid=102
-        
-        //TODO: Load from spring0
-        AnnotationConnection connection = new AnnotationConnection(getSearcherManager(),catalogid, collectionid,http,remoteEndpointBasic, this);
-        connections.add(connection);	
-        session.addMessageHandler(connection);
-      //  session.addMessageHandler(new EchoMessageHandlerBinary(remoteEndpointBasic));
-    }
+
     public void annotationModified(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
     	//TODO: update our map
@@ -182,6 +131,31 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 		}
 	}
     
+	public void annotationRemoved(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
+	{
+		JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
+		Collection annotations = (Collection)obj.get("annotations");
+		
+		String removed = (String)command.get("annotationid");
+		for (Iterator iterator = annotations.iterator(); iterator.hasNext();)
+		{
+			JSONObject existing = (JSONObject) iterator.next();
+			String annotationid = (String)existing.get("id");
+			if( removed.equals( annotationid ) )
+			{
+				annotations.remove(existing);
+				break;
+			}
+		}
+		
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			annotationConnection2.sendMessage(command);
+		}
+	}
+	
+	
 	public void loadAnnotatedAsset(AnnotationConnection annotationConnection, String catalogid, String inCollectionId, String inAssetId)
 	{
 		JSONObject newcommand = new JSONObject(); //Get this from our map of annotatedAssets
@@ -205,14 +179,30 @@ public class AnnotationServer extends Endpoint implements AnnotationCommandListe
 			assetData.put("sourcepath",asset.getSourcePath()); 
 			obj.put("assetData",assetData);
 			obj.put("annotations", new ArrayList());
+			obj.put("users", new ArrayList());
 			obj.put("annotationIndex", new Integer(1));
 			getCacheManager().put(CACHENAME, inCatalogId + inCollection + inAssetId, obj);
 		}
 		return obj;
 	}
-	
-
-
+	public void removeConnection(AnnotationConnection inAnnotationConnection)
+	{
+		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
+		{
+			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
+			
+			if (inAnnotationConnection == annotationConnection2)
+			{
+				connections.remove(annotationConnection2);
+				break;
+			}
+		}
+	}
+	public void addConnection(AnnotationConnection inConnection)
+	{
+		// TODO Auto-generated method stub
+		connections.add(inConnection);
+	}
 	
 }    
 //    private static class EchoMessageHandlerBinary
