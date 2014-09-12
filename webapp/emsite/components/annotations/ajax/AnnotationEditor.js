@@ -139,6 +139,10 @@ var AnnotationEditor = function(scope) {
 			var editor = this;
 			// need to go through annotations and put them on the newly instantiated canvas
 			// this is safe to do now because the only place this is called is in loading from network
+
+			this.scope.annotations = inAnnotatedAsset.annotations;
+			editor.fabricModel.clearCanvas();
+
 			$.each(inAnnotatedAsset.annotations, function(index, annotation)
 			{
 				editor.addAnnotationToCanvas(annotation);
@@ -454,6 +458,9 @@ var AnnotationEditor = function(scope) {
 							
 							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
 							editor.addAnnotationToCanvas(newannotation);
+							
+							scope.annotations = newannotation.annotations;
+							jAngular.render("#annotationlist");
 						}
 						else
 						{
@@ -526,14 +533,14 @@ var AnnotationEditor = function(scope) {
 			console.log("Starting remove",editor.fabricModel.canvas.getObjects());
 			//TODO: Make sure we are on the right assetid
 			// var objectsToRemove = [];
-			var canvasObjects = editor.fabricModel.canvas.getObjects();
+			var canvasObjects = editor.fabricModel.canvas.getObjects().slice();
 			$.each(canvasObjects, function(index, item)
 			{
 				if (item.annotationid == annotationid)
 				{
 					//objectsToRemove.push(item);
 					editor.fabricModel.canvas.remove(item);
-					canvasObjects.remove(index);
+					//canvasObjects.remove(index);
 				}
 			});
 			//$.each(objectsToRemove, function(index, item)
@@ -542,6 +549,13 @@ var AnnotationEditor = function(scope) {
 			//});
 			editor.fabricModel.canvas.renderAll();
 
+		}
+		,
+		selectAnnotation: function(annotationid)
+		{
+			console.log(annotationid);
+			$("#annotationlist .comment").removeClass("selected");
+			$("#annotation" + annotationid).addClass("selected");
 		}
 		,
 		sendSocketCommand: function( inSocketCommand, assetid )

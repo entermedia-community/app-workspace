@@ -175,6 +175,11 @@
   background: #fff;
   display: block;
 }
+
+.em-workspace .comment-list div.selected {
+  background: yellow;
+}
+
 .em-workspace .comment-list li .pull-right {
   margin-top: 5px;
 }

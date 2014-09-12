@@ -189,10 +189,27 @@ public class AnnotationServer  {
 		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "annotation");
 		HitTracker hits = searcher.query().match("assetid", inAssetId).match("collectionid", inCollection).search();
 		
-		//List 
-		 //= new JSONObject();
+		List list = new ArrayList();
+		for (Iterator iterator = hits.iterator(); iterator.hasNext();)
+		{
+			Data annotation = (Data) iterator.next();
+			JSONObject json = new JSONObject();
+			//json.put("id", annotation.getId() );
+			json.putAll(annotation.getProperties() );
+//			json.put("comment", annotation.get("comment") );
+//			//indexCount: null,
+//			//user: null,
+//			comment: "",
+//			date : [],
+//			fabricObjects: [], 
+//			assetid: null
+			list.add(json);
+		}
 		
-		return new ArrayList();
+		//List 
+		 //
+		
+		return list;
 	}
 	public void removeConnection(AnnotationConnection inAnnotationConnection)
 	{
