@@ -135,7 +135,14 @@ var AnnotationEditor = function(scope) {
 
 		},
 		renderAnnotatedAsset: function(inAnnotatedAsset)
-		{		
+		{	
+			var editor = this;
+			// need to go through annotations and put them on the newly instantiated canvas
+			// this is safe to do now because the only place this is called is in loading from network
+			$.each(inAnnotatedAsset.annotations, function(index, annotation)
+			{
+				editor.addAnnotationToCanvas(annotation);
+			});
 			/*
 			// Maybe this entire function is not necessary.
 			// I put the enlivening code into a new function called 'refreshAnnotation'
@@ -182,8 +189,9 @@ var AnnotationEditor = function(scope) {
 				
 			});
 			*/
-			this.scope.fabricModel.canvas.renderAll();
+			editor.fabricModel.canvas.renderAll();
 			jAngular.render("#annotationtab");
+			jAngular.render("#annotationlist"); // shouldn't have to do this
 			// this method also needs to clear the canvas and comments and update from the persisted data
 			// DONE: Clear canvas state, refresh with AnnotatedAsset data
 			// DONE: Clear comments, refresh with AnnotatedAsset data
@@ -517,14 +525,21 @@ var AnnotationEditor = function(scope) {
 			var editor = this;
 			console.log("Starting remove",editor.fabricModel.canvas.getObjects());
 			//TODO: Make sure we are on the right assetid
-			$.each(editor.fabricModel.canvas.getObjects(), function(index, item)
+			// var objectsToRemove = [];
+			var canvasObjects = editor.fabricModel.canvas.getObjects();
+			$.each(canvasObjects, function(index, item)
 			{
-				console.log(item);
 				if (item.annotationid == annotationid)
 				{
+					//objectsToRemove.push(item);
 					editor.fabricModel.canvas.remove(item);
+					canvasObjects.remove(index);
 				}
 			});
+			//$.each(objectsToRemove, function(index, item)
+			//{
+			//	editor.fabricModel.canvas.remove(item);
+			//});
 			editor.fabricModel.canvas.renderAll();
 
 		}
