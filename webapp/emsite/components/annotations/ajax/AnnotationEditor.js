@@ -558,6 +558,11 @@ var AnnotationEditor = function(scope) {
 			$("#annotation" + annotationid).addClass("selected");
 		}
 		,
+		deselectAnnotation: function()
+		{
+			$("#annotationlist .comment").removeClass("selected");
+		}
+		,
 		sendSocketCommand: function( inSocketCommand, assetid )
 		{
 			// send out info here

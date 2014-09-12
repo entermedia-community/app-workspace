@@ -447,6 +447,15 @@ var FabricModel = function (scope) {
 			scope.annotationEditor.selectAnnotation(object.annotationid);
 		}
 	})
+	
+	out.canvas.on('selection:cleared', function(e)
+	{
+		//var object = e.target;
+		//if( object && object.annotationid)
+		//{
+			scope.annotationEditor.deselectAnnotation();
+		//}
+	})
 
 	out.canvas.on('object:added', function(obj) {
 		var _ref;
