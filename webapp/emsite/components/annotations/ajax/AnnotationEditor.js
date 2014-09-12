@@ -203,7 +203,7 @@ var AnnotationEditor = function(scope) {
 			return annot;
 		}
 		,
-		refreshAnnotation: function(inAnnotation) 
+		addAnnotationToCanvas: function(inAnnotation) 
 		{
 			var editor = this;
 			fabric.util.enlivenObjects(inAnnotation.fabricObjects, function(group)
@@ -214,7 +214,7 @@ var AnnotationEditor = function(scope) {
 				 {
 					inAnnotation.fabricObjects[index] = item;
 					item.annotationid = inAnnotation.id;
-					// editor.fabricModel.canvas.addInternal(item); // try without it?
+					editor.fabricModel.canvas.addInternal(item); // try without it?
 				 });
 				 editor.fabricModel.canvas.renderOnAddRemove = origRenderOnAddRemove;
 			});
@@ -264,14 +264,6 @@ var AnnotationEditor = function(scope) {
 			var command = SocketCommand("annotation.removed");
 			command.annotationid = currentAnnotation.id;
 			this.sendSocketCommand( command,currentAnnotation.assetid );
-		}
-		,
-		modifyAnnotation: function(modifiedAnnotation)
-		{
-			var modasset = this.getAnnotatedAsset(modifiedAnnotation.assetid);
-			var foundAnnotationIndex = modasset.getAnnotationIndexById(modifiedAnnotation.id);
-			modasset.annotations[foundAnnotationIndex] = modifiedAnnotation;
-			
 		}
 		,
 		findAssetData: function(inAssetId)
@@ -442,14 +434,9 @@ var AnnotationEditor = function(scope) {
 						var data = command.annotationdata;
 						console.log("Got message" + data);
 						var anonasset = editor.getAnnotatedAsset( data.assetid );
-
 						// we only want to push the annotation if it doesn't already exist
 						
 						var newannotation = new Annotation(data);
-						
-						editor.refreshAnnotation(newannotation);
-						
-						console.log(newannotation);
 
 						var existing = anonasset.getAnnotationById(newannotation.id);
 
@@ -458,8 +445,7 @@ var AnnotationEditor = function(scope) {
 							anonasset.pushAnnotation( newannotation );
 							
 							editor.currentAnnotatedAsset.currentAnnotation = newannotation;
-
-							// editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
+							editor.addAnnotationToCanvas(newannotation);
 						}
 						else
 						{
@@ -478,20 +464,19 @@ var AnnotationEditor = function(scope) {
 						currently we re-render by (switchToAsset)
 						*/
 						console.log("annotation.modified: ", command);
+						
 						var modifiedAnnotation = new Annotation(command.annotationdata);
+
+						var modasset = editor.getAnnotatedAsset(modifiedAnnotation.assetid);
+						var foundAnnotationIndex = modasset.getAnnotationIndexById(modifiedAnnotation.id);
+						modasset.annotations[foundAnnotationIndex] = modifiedAnnotation;
 						
-						editor.refreshAnnotation(modifiedAnnotation);
-						
-						editor.modifyAnnotation(modifiedAnnotation);
-						
-						/*
 						if( editor.currentAnnotatedAsset.assetData.id == modifiedAnnotation.assetid )
 						{
-							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset);
+							editor.removeAnnotationFromCanvas(modifiedAnnotation.assetid,modifiedAnnotation.id);
+							editor.addAnnotationToCanvas(modifiedAnnotation);
 						}
-						*/
-						
-							
+													
 					}
 					else if (command.command == "annotation.removed")
 					{
@@ -506,28 +491,17 @@ var AnnotationEditor = function(scope) {
 							editor.renderAnnotatedAsset(editor.currentAnnotatedAsset); //Make sure canvas items are all loaded
 							
 							*/
-							
-							/*
-							$.each(editor.fabricModel.canvas.getObjects(), function(index, item)
-							{
-								if (item.annotationid == annotationid)
-								{
-									editor.fabricModel.canvas.remove(item);
-								}
-							});
-							
-							*/
-							var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
-							
-							$.each(annotationToRemove.fabricObjects, function(index, item)
-							{
-								//isLive()?
-								editor.fabricModel.canvas.remove(item);
-							});
-							
-							editor.fabricModel.canvas.renderAll();
-							
 							editor.currentAnnotatedAsset.removeAnnotation(annotationid);
+							editor.removeAnnotationFromCanvas(assetid,annotationid);
+							
+//							var annotationToRemove = editor.currentAnnotatedAsset.getAnnotationById(annotationid);
+							
+//							$.each(annotationToRemove.fabricObjects, function(index, item)
+//							{
+//								//isLive()?
+//								editor.fabricModel.canvas.remove(item);
+//							});
+							
 							scope.annotations = editor.currentAnnotatedAsset.annotations;
 							jAngular.render("#annotationlist");
 						}
@@ -536,6 +510,23 @@ var AnnotationEditor = function(scope) {
 			this.connection = connection; // connection lives on the editor. more explicit
 			}
 			
+		}
+		,
+		removeAnnotationFromCanvas: function(assetid,annotationid)
+		{
+			var editor = this;
+			console.log("Starting remove",editor.fabricModel.canvas.getObjects());
+			//TODO: Make sure we are on the right assetid
+			$.each(editor.fabricModel.canvas.getObjects(), function(index, item)
+			{
+				console.log(item);
+				if (item.annotationid == annotationid)
+				{
+					editor.fabricModel.canvas.remove(item);
+				}
+			});
+			editor.fabricModel.canvas.renderAll();
+
 		}
 		,
 		sendSocketCommand: function( inSocketCommand, assetid )

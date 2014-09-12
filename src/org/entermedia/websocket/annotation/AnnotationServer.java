@@ -23,18 +23,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import javax.websocket.CloseReason;
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.RemoteEndpoint;
-import javax.websocket.Session;
-
 import org.entermedia.cache.CacheManager;
 import org.json.simple.JSONObject;
 import org.openedit.Data;
+import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
 
 import com.openedit.ModuleManager;
+import com.openedit.hittracker.HitTracker;
 
 public class AnnotationServer  {
 
@@ -43,7 +39,7 @@ public class AnnotationServer  {
 	 
 	 private static final String CACHENAME = "AnnotationServer";
 	 
-	 protected static CacheManager fieldCacheManager;
+	 protected CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
 	 
@@ -176,15 +172,26 @@ public class AnnotationServer  {
 			JSONObject assetData = new JSONObject();
 			assetData.put("id",inAssetId);
 			Data asset = getSearcherManager().getData(inCatalogId, "asset", inAssetId);
-			assetData.put("sourcepath",asset.getSourcePath());
-			assetData.put("name", asset.getName());
+			assetData.put("sourcepath",asset.getSourcePath()); 
 			obj.put("assetData",assetData);
-			obj.put("annotations", new ArrayList());
+			List annotations = loadAnnotations(inCatalogId,inCollection,inAssetId);
+			obj.put("annotations", annotations);
+			
 			obj.put("users", new ArrayList());
 			obj.put("annotationIndex", new Integer(1));
 			getCacheManager().put(CACHENAME, inCatalogId + inCollection + inAssetId, obj);
 		}
 		return obj;
+	}
+	protected List loadAnnotations(String inCatalogId, String inCollection, String inAssetId)
+	{
+		Searcher searcher = getSearcherManager().getSearcher(inCatalogId, "annotation");
+		HitTracker hits = searcher.query().match("assetid", inAssetId).match("collectionid", inCollection).search();
+		
+		//List 
+		 //= new JSONObject();
+		
+		return new ArrayList();
 	}
 	public void removeConnection(AnnotationConnection inAnnotationConnection)
 	{
