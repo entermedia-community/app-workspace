@@ -195,7 +195,7 @@ var AnnotationEditor = function(scope) {
 			*/
 			editor.fabricModel.canvas.renderAll();
 			jAngular.render("#annotationtab");
-			jAngular.render("#annotationlist"); // shouldn't have to do this
+			// jAngular.render("#annotationlist"); // shouldn't have to do this
 			// this method also needs to clear the canvas and comments and update from the persisted data
 			// DONE: Clear canvas state, refresh with AnnotatedAsset data
 			// DONE: Clear comments, refresh with AnnotatedAsset data
