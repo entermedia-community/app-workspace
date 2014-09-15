@@ -6,9 +6,8 @@
     <script id="annotationeditor" src="/${applicationid}/components/annotations/ajax/AnnotationEditor.js" />
     <script id="colorpicker" src="/${applicationid}/components/javascript/colorpicker-master/jquery.colorpicker.js" />
   
-    <style id="annotationmain" href="/${applicationid}/components/annotations/ajax/css/main.css" />
+    <style id="annotations" href="/${applicationid}/components/annotations/ajax/css/annotations.css" />
     <style id="fabric" href="/${applicationid}/components/annotations/ajax/css/fabric.css" />
-    <style id="annotationtool" href="/${applicationid}/components/annotations/ajax/css/highlights.css" />
-    <style id="colorpickercss" href="/${applicationid}/components/javascript/colorpicker-master/jquery.colorpicker.css"/>
+    <style id="colorpickercss" href="/${applicationid}/components/annotations/ajax/css/colorpicker.css"/>
  
 </page>
