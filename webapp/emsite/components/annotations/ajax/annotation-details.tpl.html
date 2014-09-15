@@ -89,6 +89,13 @@
                 <li class="user-input clearfix" id="annotation-template">
                     <form id="annotation-input{{scope.annotation.id}}" >
                         <textarea class="user-comment-input" name="user-input" rows="8" cols="40" >{{scope.annotation.comment}}</textarea>
+						Notify:                        
+                        <select name="select">
+                        	<option id="">No one</option>
+                        	<option id="everyone">All Collection Users</option>
+                        	<option id="everyone">All Project Users</option>
+                        </select>
+                        
                         <div class="pull-right">
                             <button name="user-add-comment" class="btn btn-danger" ng-click='scope.annotationEditor.cancelComment("{{scope.annotation.id}}")'>Cancel</button>
                             <button name="user-add-comment" class="btn btn-primary" ng-click='scope.annotationEditor.saveComment("{{scope.annotation.id}}")'>Add Comment</button>
@@ -127,4 +134,3 @@
                 </li>
             </ul>
         </div>
-    </div>

@@ -23,8 +23,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.entermedia.cache.CacheManager;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openedit.Data;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
@@ -34,6 +39,8 @@ import com.openedit.hittracker.HitTracker;
 
 public class AnnotationServer  {
 
+	private static final Log log = LogFactory.getLog(AnnotationServer.class);
+
 	 private static final Set<AnnotationConnection> connections =
 	            new CopyOnWriteArraySet<>();
 	 
@@ -42,7 +49,16 @@ public class AnnotationServer  {
 	 protected CacheManager fieldCacheManager;
 	 protected ModuleManager fieldModuleManager;
 	 protected SearcherManager fieldSearcherManager;
-	 
+	 protected JSONParser fieldJSONParser;
+
+	 public JSONParser getJSONParser()
+	 {
+		if (fieldJSONParser == null) {
+			fieldJSONParser = new JSONParser();
+		}
+		return fieldJSONParser;
+	 } 
+
 	 public SearcherManager getSearcherManager()
 	{
 		if (fieldSearcherManager == null)
@@ -76,7 +92,6 @@ public class AnnotationServer  {
 	{
 		fieldCacheManager = inCacheManager;
 	}
-	
 
     public void annotationModified(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
@@ -100,11 +115,11 @@ public class AnnotationServer  {
 				{
 					annotations.add(annotation);
 				}
+				saveAnnotationData(catalogid, inCollectionId, inAssetId, existing);
 				break;
 			}
 		}
     	//getCacheManager().put(CACHENAME, catalogid + inCollectionId + inAssetId, command.get("annotat"));
-    	
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
 			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
@@ -120,6 +135,8 @@ public class AnnotationServer  {
 		JSONObject annotation = (JSONObject)command.get("annotationdata");
 		annotations.add(annotation);
 		
+		saveAnnotationData(catalogid,inCollectionId,inAssetId, annotation);
+		
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
 			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
@@ -127,6 +144,36 @@ public class AnnotationServer  {
 		}
 	}
     
+	protected void saveAnnotationData(String inCatalogid, String inCollectionId, String inAssetId, JSONObject inAnnotation)
+	{
+		String annotationid = (String)inAnnotation.get("id");
+		
+		Searcher searcher = getSearcherManager().getSearcher(inCatalogid, "annotation");
+		Data data = (Data)searcher.searchById(annotationid);
+		if( data == null)
+		{
+			data = searcher.createNewData();
+		}
+		
+		data.setProperty("id", annotationid);
+		data.setProperty("date", (String)inAnnotation.get("date"));
+		data.setProperty("user", (String)inAnnotation.get("user"));
+		data.setProperty("comment", (String)inAnnotation.get("comment"));
+		data.setProperty("assetid", (String)inAnnotation.get("assetid"));
+		
+		JSONArray array = (JSONArray)inAnnotation.get("fabricObjects");
+		if( array != null)
+		{
+			data.setProperty("fabricObjects", array.toJSONString());
+		}
+		//user: null,
+//		comment: "",
+//		date : [],
+//		fabricObjects: [], 
+//		assetid: null
+		searcher.saveData(data, null);
+		
+	}
 	public void annotationRemoved(AnnotationConnection annotationConnection, JSONObject command, String message, String catalogid, String inCollectionId, String inAssetId)
 	{
 		JSONObject obj = loadAnnotatedAsset(catalogid,inCollectionId,inAssetId);
@@ -143,7 +190,9 @@ public class AnnotationServer  {
 				break;
 			}
 		}
-		
+		Searcher searcher = getSearcherManager().getSearcher(catalogid, "annotation");
+		Data data = (Data)searcher.searchById(removed);
+		searcher.delete(data, null);
 		for (Iterator iterator = connections.iterator(); iterator.hasNext();)
 		{
 			AnnotationConnection annotationConnection2 = (AnnotationConnection) iterator.next();
@@ -196,6 +245,20 @@ public class AnnotationServer  {
 			JSONObject json = new JSONObject();
 			//json.put("id", annotation.getId() );
 			json.putAll(annotation.getProperties() );
+			String obj = (String)json.get("fabricObjects");
+			if( obj != null)
+			{
+				try
+				{
+					Collection parsed = (List)getJSONParser().parse(obj);
+					json.put("fabricObjects", parsed);
+				}
+				catch (ParseException e)
+				{
+					// TODO Auto-generated catch block
+					log.error(e);
+				}
+			}
 //			json.put("comment", annotation.get("comment") );
 //			//indexCount: null,
 //			//user: null,
@@ -205,9 +268,6 @@ public class AnnotationServer  {
 //			assetid: null
 			list.add(json);
 		}
-		
-		//List 
-		 //
 		
 		return list;
 	}

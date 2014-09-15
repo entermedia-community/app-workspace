@@ -1,6 +1,6 @@
 <page>
 
- 	<script id="fabric" src="/${applicationid}/components/javascript/fabric/dist/fabric.js" />
+	<script id="fabric" src="/${applicationid}/components/javascript/fabric/dist/fabric.js" />
   
 	<script id="fabricmodel" src="/${applicationid}/components/annotations/ajax/FabricModel.js" />
     <script id="annotationeditor" src="/${applicationid}/components/annotations/ajax/AnnotationEditor.js" />
@@ -9,5 +9,6 @@
     <style id="annotations" href="/${applicationid}/components/annotations/ajax/css/annotations.css" />
     <style id="fabric" href="/${applicationid}/components/annotations/ajax/css/fabric.css" />
     <style id="colorpickercss" href="/${applicationid}/components/annotations/ajax/css/colorpicker.css"/>
- 
+    
+ 	<inner-layout>./viewassets.html</inner-layout>
 </page>
