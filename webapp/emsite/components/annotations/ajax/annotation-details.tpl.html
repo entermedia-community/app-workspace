@@ -16,19 +16,9 @@
         </li>
         <li ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('rectangle')" id="rectangletool">
             <svg class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle" ></use></svg>
-<!--             <ul class="tool-options">
-                <li ng-click="scope.fabricModel.setShapeTypeFromUi('circle')">
-                    <svg  class="icon icon-circle" viewBox="0 0 32 32"><use xlink:href="#icon-circle"></use></svg>
-                </li>
-            </ul> -->
         </li>
         <li ng-show="shapeToolType == 'circle'" ng-click="scope.annotationEditor.fabricModel.setShapeTypeFromUi('circle')" id="circletool">
             <svg class="icon icon-circle" viewBox="0 0 32 32"><use xlink:href="#icon-circle"></use></svg>
-<!--             <ul class="tool-options">
-                <li ng-click="scope.fabricModel.setShapeTypeFromUi('rectangle')">
-                    <svg  class="icon icon-rectangle" viewBox="0 0 32 32"><use xlink:href="#icon-rectangle"></use></svg>
-                </li>
-            </ul> -->
         </li>
         <!--<li ng-click="scope.annotationEditor.fabricModel.selectTool('arrow')" ng-class="{ 'active': currentTool.name == 'arrow' }">
             <svg class="icon icon-arrow" viewBox="0 0 32 32"><use xlink:href="#icon-arrow"></use></svg>
@@ -92,8 +82,8 @@
 						Notify:                        
                         <select name="select">
                         	<option id="">No one</option>
-                        	<option id="everyone">All Collection Users</option>
-                        	<option id="everyone">All Project Users</option>
+                        	<option id="collectionusers">All Collection Users</option>
+                        	<option id="projectusers">All Project Users</option>
                         </select>
                         
                         <div class="pull-right">
@@ -127,7 +117,7 @@
                                 <span class="comment-id">{{loopcountone}}</span>
                                 <button ng-click='scope.annotationEditor.removeAnnotation("{{annotation.id}}")'>remove</button>
                                 <button ng-click='scope.annotationEditor.toggleCommentEdit("{{annotation.id}}")' class="user-comment" >edit</button>
-                                <span class="comment-timestamp pull-right">{{annotation.date}}</span>
+                                <span class="comment-timestamp pull-right">{{annotation.getFormattedDate()}}</span>
                             </div>
                         </div>
                     </div>

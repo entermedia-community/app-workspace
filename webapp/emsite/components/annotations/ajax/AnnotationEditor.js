@@ -222,7 +222,7 @@ var AnnotationEditor = function(scope) {
 			annot.assetid = annotatedAsset.assetData.id;
 			annot.id = Math.floor(Math.random() * 100000000).toString();
 			annot.indexCount = annotatedAsset.nextIndex();
-			annot.date = new Date();
+			annot.setDate(new Date());
 			return annot;
 		}
 		,
@@ -267,7 +267,8 @@ var AnnotationEditor = function(scope) {
 			
 			jAngular.render("#annotationlist");
 			return currentAnnotation;
-		},
+		}
+		,
 		notifyAnnotationAdded: function(currentAnnotation)
 		{
 			//Update network?
@@ -673,7 +674,7 @@ var Annotation = function(inAnnotationData) {
 		indexCount: null,
 		user: null,
 		comment: "",
-		date : null,
+		date: null,
 		fabricObjects: [], 
 		assetid: null
 	};
@@ -708,6 +709,20 @@ var Annotation = function(inAnnotationData) {
 		out.hasObject = function(inObj)
 		{
 			return $.inArray(inObj, this.fabricObjects) !== -1;
+		};
+		out.getFormattedDate = function()
+		{
+			var inDate = new Date(this.date);
+			var timestring = inDate.toTimeString();
+			return $.datepicker.formatDate($.datepicker._defaults.dateFormat, inDate) + " " + timestring.substring(0, timestring.indexOf("GMT")-1);
+			
+		};
+		out.setDate = function(inDate)
+		{
+			var datestring = inDate.toISOString().replace("T", " ");
+			var zonestring = inDate.toString();
+			this.date = datestring.substring(0, datestring.indexOf("Z")-4) + " " + zonestring.substring(zonestring.indexOf("GMT") + 3, zonestring.indexOf("(")- 1)
+					
 		};
 	return out; 
 }
