@@ -15,6 +15,7 @@ var AnnotationEditor = function(scope) {
 		colorPicker: null,
 		loadSelectors : function()
 		{
+			var editor = this;
 			jQuery(".colorpicker-input").livequery(function()
 			{
 				var picker = $(this);
@@ -34,6 +35,16 @@ var AnnotationEditor = function(scope) {
 						}
 					});
 				out.colorPicker = dialog;
+			});
+			
+			$("#annotation-list .comment").livequery(function()
+			{
+				var div = $(this);
+				if( div.data("author") != editor.userData.id)
+				{
+					//hide edit buttons
+					div.find("button").hide();
+				}
 			});
 		}
 		,
@@ -662,7 +673,7 @@ var Annotation = function(inAnnotationData) {
 		indexCount: null,
 		user: null,
 		comment: "",
-		date : [],
+		date : null,
 		fabricObjects: [], 
 		assetid: null
 	};

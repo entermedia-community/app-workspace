@@ -115,7 +115,7 @@ public class AnnotationServer  {
 				{
 					annotations.add(annotation);
 				}
-				saveAnnotationData(catalogid, inCollectionId, inAssetId, existing);
+				saveAnnotationData(catalogid, inCollectionId, inAssetId, annotation);
 				break;
 			}
 		}
@@ -156,10 +156,11 @@ public class AnnotationServer  {
 		}
 		
 		data.setProperty("id", annotationid);
+		data.setProperty("collectionid", inCollectionId);
+		data.setProperty("assetid", inAssetId);
 		data.setProperty("date", (String)inAnnotation.get("date"));
 		data.setProperty("user", (String)inAnnotation.get("user"));
 		data.setProperty("comment", (String)inAnnotation.get("comment"));
-		data.setProperty("assetid", (String)inAnnotation.get("assetid"));
 		
 		JSONArray array = (JSONArray)inAnnotation.get("fabricObjects");
 		if( array != null)
@@ -244,8 +245,16 @@ public class AnnotationServer  {
 			Data annotation = (Data) iterator.next();
 			JSONObject json = new JSONObject();
 			//json.put("id", annotation.getId() );
-			json.putAll(annotation.getProperties() );
-			String obj = (String)json.get("fabricObjects");
+			for (Iterator iterator2 = annotation.getProperties().keySet().iterator(); iterator2.hasNext();)
+			{
+				String key = (String) iterator2.next();
+				String value = annotation.get(key);
+				if( value != null)
+				{
+					json.put(key,value);
+				}
+			}
+			String obj = (String)annotation.get("fabricObjects");
 			if( obj != null)
 			{
 				try

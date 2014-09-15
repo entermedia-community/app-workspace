@@ -104,7 +104,7 @@
                      <div class="separator" ></div>
                 </li>
                 <li ng-repeat="annotation in annotations" >
-                    <div ng-when="normal" class="comment" id="annotation{{annotation.id}}">
+                    <div ng-when="normal" class="comment" id="annotation{{annotation.id}}" data-author="{{annotation.user}}">
                         <div dynamic-id="comment-data" class="comment-holder">
                             <div class="user-gravatar">
                                 <img ng-src="http://www.gravatar.com/avatar/{{annotation.user.email}}" alt="" />
