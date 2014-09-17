@@ -135,7 +135,7 @@ var AnnotationEditor = function(scope) {
 		{
 			this.currentAnnotatedAsset = annotatedAsset;
 			//  appname    prefixmedium   sourcepath appendix
-			var url = this.scope.apphome + "/views/modules/asset/downloads/preview/large/" + annotatedAsset.assetData.sourcepath + "/image.jpg";
+			var url = this.scope.apphome + "/views/modules/asset/downloads/preview/extralarge/" + annotatedAsset.assetData.sourcepath + "/image.jpg";
 			
 			this.fabricModel.clearCanvas();
 

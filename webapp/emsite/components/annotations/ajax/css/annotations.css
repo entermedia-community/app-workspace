@@ -69,10 +69,11 @@ Below css from old highlights.css
   list-style: none;
   margin: 0;
   padding: 0;
-  margin: 15px 0;
-  height: 38px;
+  margin: 12px 12px 15px 0;
+  height: 0px;
   position: relative;
   z-index: 999;
+  float: right;
 }
 .em-workspace .annotations-toolbar li {
   float: left;
@@ -144,15 +145,21 @@ Below css from old highlights.css
   border: 1px solid #752123;
 }
 .em-workspace .canvas-holder {
-  background: #fff;
+  background: #444;
   border: 10px solid #fff;
-  overflow: scroll;
+  /* overflow: scroll; */
+  padding: 43px 0px 0px 0px;
 }
+.em-workspace .canvas-container {
+	 margin: 0 auto;	
+}
+ 
 .em-workspace .canvas-holder .annotations-canvas {
   margin: 0 auto;
   width: 800px;
   height: 600px;
 }
+
 .em-workspace .annotations-carousel {
   height: 93px;
   background: #000;
@@ -210,10 +217,11 @@ Below css from old highlights.css
   margin: 0;
   padding: 0;
 }
-.em-workspace .comment-list li {
-  margin: 10px 0;
-  background: #fff;
+.em-workspace  div.comment {
+  margin: 10px 10px 0px 0px;
+  background: #EDF1F5;
   display: block;
+  padding: 9px;
 }
 
 .em-workspace .comment-list div.selected {
@@ -295,3 +303,26 @@ Below css from old highlights.css
 .em-workspace .comment-list li.comment.normal .comment-meta .comment-timestamp {
   color: #87cbe6;
 }
+.tab-pane
+{
+	background-color: white;
+	border-top: 2px solid #eee;
+	margin-top: -2px;
+}
+#settings.tab-pane
+{
+	padding: 20px;	
+	
+}
+#settings.tab-pane div#default-fields
+{
+	background-color: #eee;	
+	
+}
+#settings.tab-pane div#default-fields .emdatafield
+{
+	padding: 0px 30px 0px 30px;	
+	
+}
+
+

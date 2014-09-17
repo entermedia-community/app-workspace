@@ -5,9 +5,12 @@
     <script src="$home$apphome/components/annotations/ajax/main.js"></script>
 
 	$pages.include("$apphome/components/annotations/ajax/svg/svg-definitions.tpl.html")
-
-    <ul id="annotation-toolbar" class="annotations-toolbar" >
-        <!-- try to reference the right object -->
+ 
+    <div class="row">
+        <div class="col-md-9">
+        
+ 	   <ul id="annotation-toolbar" class="annotations-toolbar" >
+               <!-- try to reference the right object -->
         <li ng-click="scope.annotationEditor.fabricModel.selectTool('move')" id="movetool">
             <svg class="icon icon-move" viewBox="0 0 32 32"><use xlink:href="#icon-move"></use></svg>
         </li>
@@ -52,8 +55,6 @@
         <li class="rejected"><span class="icon glyphicon glyphicon-thumbs-down"></span><span class="additional-info">{{getRejections().length}}</span></li>
         -->
     </ul>
-    <div class="row">
-        <div class="col-md-9">
             <div class="canvas-holder">
                 <canvas id="annotation_canvas" class="annotations-canvas" width="800" height="600"></canvas>
             </div>
