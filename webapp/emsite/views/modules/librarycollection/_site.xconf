@@ -8,7 +8,7 @@
   
     <style id="annotations" href="/${applicationid}/components/annotations/ajax/css/annotations.css" />
     <style id="fabric" href="/${applicationid}/components/annotations/ajax/css/fabric.css" />
-    <style id="colorpickercss" href="/${applicationid}/components/annotations/ajax/css/colorpicker.css"/>
+    <style id="colorpickercss" href="/${applicationid}/components/javascript/colorpicker-master/jquery.colorpicker.css"/>
     
  	<inner-layout>./viewassets.html</inner-layout>
 </page>
