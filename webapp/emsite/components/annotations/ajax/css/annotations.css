@@ -206,7 +206,7 @@ Below css from old highlights.css
   height: 77px;
   padding: 0;
   display: block;
-  /* width: 111px; */
+  width: 111px; 
   float:  right;
   margin-right: 10px;
   margin-top: -7px;
@@ -215,6 +215,7 @@ Below css from old highlights.css
 }
 .em-workspace .annotations-carousel ul li a.thumb  img {
   height: 100%;
+  width: 100%;
   
 }
 .em-workspace .annotations-carousel ul a.thumb:hover {
