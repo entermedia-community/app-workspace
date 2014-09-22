@@ -350,7 +350,7 @@ var AnnotationEditor = function(scope) {
 						});
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
 					} else {
-						$("#view-picker-content").html("Please add media to the collection.");
+						$("#annotationtab").html("Please add media to the collection.");
 						return;
 					}
 					
@@ -613,7 +613,7 @@ var AnnotatedAsset = function(inAssetData) {
 	};
 	if (inAssetData)
 	{
-		$.each(Object.keys(out), function(index, key)
+		$.each(Object.keys(inAssetData), function(index, key)
 		{
 			if (key == "annotations")
 			{
@@ -685,7 +685,7 @@ var Annotation = function(inAnnotationData) {
 	};
 	if (inAnnotationData)
 	{
-		$.each(Object.keys(out), function(index, key)
+		$.each(Object.keys(inAnnotationData), function(index, key)
 		{
 			out[key] = inAnnotationData[key];
 		});

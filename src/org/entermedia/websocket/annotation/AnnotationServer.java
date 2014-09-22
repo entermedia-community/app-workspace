@@ -33,6 +33,7 @@ import org.json.simple.parser.ParseException;
 import org.openedit.Data;
 import org.openedit.data.Searcher;
 import org.openedit.data.SearcherManager;
+import org.openedit.util.DateStorageUtil;
 
 import com.openedit.ModuleManager;
 import com.openedit.hittracker.HitTracker;
@@ -161,6 +162,7 @@ public class AnnotationServer  {
 		data.setProperty("date", (String)inAnnotation.get("date"));
 		data.setProperty("user", (String)inAnnotation.get("user"));
 		data.setProperty("comment", (String)inAnnotation.get("comment"));
+		data.setProperty("color", (String)inAnnotation.get("color"));
 		
 		JSONArray array = (JSONArray)inAnnotation.get("fabricObjects");
 		if( array != null)
@@ -251,8 +253,12 @@ public class AnnotationServer  {
 				String value = annotation.get(key);
 				if( value != null)
 				{
-					json.put(key,value);
+					if( "date".equals(key) )
+					{
+						value = DateStorageUtil.getStorageUtil().checkFormat(value);
+					}
 				}
+				json.put(key,value);
 			}
 			String obj = (String)annotation.get("fabricObjects");
 			if( obj != null)
