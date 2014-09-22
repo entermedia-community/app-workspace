@@ -223,6 +223,7 @@ var AnnotationEditor = function(scope) {
 			annot.id = Math.floor(Math.random() * 100000000).toString();
 			annot.indexCount = annotatedAsset.nextIndex();
 			annot.setDate(new Date());
+			annot.color = scope.userColor;
 			return annot;
 		}
 		,
@@ -675,6 +676,7 @@ var Annotation = function(inAnnotationData) {
 		user: null,
 		comment: "",
 		date: null,
+		color: null,
 		fabricObjects: [], 
 		assetid: null
 	};

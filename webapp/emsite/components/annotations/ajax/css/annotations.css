@@ -68,12 +68,14 @@ Below css from old highlights.css
 .em-workspace .annotations-toolbar {
   list-style: none;
   margin: 0;
-  padding: 0;
-  margin: 12px 12px 15px 0;
-  height: 0px;
-  position: relative;
-  z-index: 999;
+  /* margin-right: 5px; */
+  margin: 0px 18px 10px 0;
+  /* height: 20px; */
+  /* position: relative; */
+  /* z-index: 999; */
   float: right;
+  /* width: 300px; */
+  /* background-color: #888; */
 }
 .em-workspace .annotations-toolbar li {
   float: left;
@@ -145,26 +147,30 @@ Below css from old highlights.css
   border: 1px solid #752123;
 }
 .em-workspace .canvas-holder {
-  background: #444;
-  border: 10px solid #fff;
-  /* overflow: scroll; */
-  padding: 43px 0px 0px 0px;
+ 
+  /* border: 10px solid #fff; */
+  overflow: scroll;
+ 
+  clear: both;
+  background-color: #444;
+  padding: 10px;
 }
 .em-workspace .canvas-container {
 	 margin: 0 auto;	
 }
  
 .em-workspace .canvas-holder .annotations-canvas {
-  margin: 0 auto;
+  /* margin: 0 auto; */
   width: 800px;
   height: 600px;
 }
 
 .em-workspace .annotations-carousel {
   height: 93px;
-  background: #000;
+  background: #181818;
   padding: 0;
-  margin: 0;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 .em-workspace .annotations-carousel ul {
   margin: 0;
@@ -173,23 +179,48 @@ Below css from old highlights.css
 }
 .em-workspace .annotations-carousel ul li {
   height: 60px;
-  background: #fff;
+  
   float: left;
   margin: 15px 0 0 12px;
   text-align: center;
   border-radius: 0;
+  cursor: pointer;
 }
 .em-workspace .annotations-carousel ul li.thumb {
   padding: 5px;
+  /* margin: 15px 40px; */
 }
-.em-workspace .annotations-carousel ul li.thumb img {
-  height: 100%;
+.em-workspace .annotations-carousel ul li.thumb a {
+  margin: 0px 0px 0px 15px;
+  background: #fff;
+  width: 98px;
+  height: 80px;
+  display: block;
+  float: right;
+  padding: 4px;
+  
+  /* margin: 15px 40px; */
+}
+
+.em-workspace .annotations-carousel ul li a.thumb  {
+  height: 77px;
   padding: 0;
+  display: block;
+  width: 111px;
+  float:  right;
+  margin-right: 10px;
+  margin-top: -7px;
+  background-color: #fff;
+  padding:  4px;
 }
-.em-workspace .annotations-carousel ul li.thumb:hover {
+.em-workspace .annotations-carousel ul li a.thumb  img {
+  height: 100%;
+  
+}
+.em-workspace .annotations-carousel ul a.thumb:hover {
   background: #fff;
 }
-.em-workspace .annotations-carousel ul li.thumb.active {
+.em-workspace .annotations-carousel ul a.thumb.active {
   background: #abdcef;
 }
 .em-workspace .annotations-carousel ul li.previous,
@@ -197,6 +228,7 @@ Below css from old highlights.css
   width: 25px;
   background: none;
   cursor: pointer;
+  padding-top: 18px;
 }
 .em-workspace .annotations-carousel ul li.previous .icon,
 .em-workspace .annotations-carousel ul li.next .icon {
@@ -221,13 +253,13 @@ Below css from old highlights.css
   margin: 10px 10px 0px 0px;
   background: #EDF1F5;
   display: block;
-  padding: 9px;
+  padding: 9px 9px 27px 9px;
 }
 
 .em-workspace .comment-list div.selected {
   background: yellow;
 }
-
+colornumber
 .em-workspace .comment-list li .pull-right {
   margin-top: 5px;
 }
@@ -325,4 +357,23 @@ Below css from old highlights.css
 	
 }
 
+#annotation-holder 
+{
+	padding-top: 10px;
+	background: #EDF1F5;
+	margin-left: 10px; 
+}
 
+.comment-content
+{
+	padding-top: 10px;
+	
+}
+.colornumber
+{
+	display: inline;
+	padding: 10px 15px;
+	font-size: 3.2em;
+	font-weight: bold;
+	
+}
