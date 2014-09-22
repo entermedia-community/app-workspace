@@ -349,6 +349,9 @@ var AnnotationEditor = function(scope) {
 							scope.annotationEditor.annotatedAssets.push(annotationToAdd);
 						});
 						scope.annotationEditor.setCurrentAnnotatedAsset(scope.annotationEditor.annotatedAssets[0]);
+					} else {
+						$("#view-picker-content").html("Please add media to the collection.");
+						return;
 					}
 					
 					scope.userColor = scope.annotationEditor.userData.defaultcolor;
